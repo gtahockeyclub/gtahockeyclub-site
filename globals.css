@@ -1,0 +1,37 @@
+# GTA Hockey Club MVP Starter
+
+This is a starter MVP for www.gtahockeyclub.com.
+
+## Includes
+
+- Homepage with main hockey image and logo
+- Upcoming games
+- Arena map placeholder
+- Game details
+- Public roster display
+- Simple signup form: name, phone, email
+- Automatic roster or waitlist placement
+- E-transfer payment instructions
+- Organizer feature section
+- Admin demo to add games and mark players paid
+
+## Local setup
+
+```bash
+npm install
+npm run dev
+```
+
+Open http://localhost:3000
+
+## Deploy to Vercel
+
+1. Upload these files to your GitHub repository named `gtahockeyclub-site`.
+2. Go to Vercel.
+3. Import the GitHub repo.
+4. Click Deploy.
+5. Add your domain: www.gtahockeyclub.com.
+
+## Important
+
+This MVP stores demo data in the browser using localStorage. The next step is to connect Supabase so games, players, rosters, organizers, and payments are stored permanently.

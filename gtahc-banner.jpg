@@ -1,0 +1,69 @@
+import { Game } from "./types";
+
+export const seedGames: Game[] = [
+  {
+    id: "game-1",
+    arena: "Canlan Sports York",
+    address: "989 Murray Ross Pkwy",
+    city: "North York",
+    date: "Thursday, May 7",
+    time: "9:30 PM to 10:30 PM",
+    cost: 25,
+    maxSkaters: 20,
+    maxGoalies: 2,
+    skill: "Recreational Intermediate",
+    organizer: "GTA Hockey Club",
+    etransferEmail: "payments@gtahockeyclub.com",
+    notes: "Dark and white jerseys. No slap shots. Respect the room.",
+    lat: 43.774,
+    lng: -79.508,
+    roster: [
+      { id: "p1", firstName: "Anthony", lastInitial: "G.", phone: "", email: "", paid: true, role: "Skater" },
+      { id: "p2", firstName: "Mike", lastInitial: "R.", phone: "", email: "", paid: true, role: "Skater" },
+      { id: "p3", firstName: "Dave", lastInitial: "P.", phone: "", email: "", paid: false, role: "Skater" },
+      { id: "p4", firstName: "Steve", lastInitial: "M.", phone: "", email: "", paid: true, role: "Goalie" }
+    ],
+    waitlist: []
+  },
+  {
+    id: "game-2",
+    arena: "Paramount Ice",
+    address: "1107 Finch Ave W",
+    city: "North York",
+    date: "Sunday, May 10",
+    time: "8:00 PM to 9:00 PM",
+    cost: 22,
+    maxSkaters: 18,
+    maxGoalies: 2,
+    skill: "Recreational",
+    organizer: "North GTA Shinny",
+    etransferEmail: "organizer@example.com",
+    notes: "Friendly skate. Goalies play free when confirmed by organizer.",
+    lat: 43.768,
+    lng: -79.476,
+    roster: [
+      { id: "p5", firstName: "John", lastInitial: "S.", phone: "", email: "", paid: true, role: "Skater" },
+      { id: "p6", firstName: "Rob", lastInitial: "K.", phone: "", email: "", paid: false, role: "Skater" }
+    ],
+    waitlist: []
+  },
+  {
+    id: "game-3",
+    arena: "Chesswood Arena",
+    address: "4000 Chesswood Dr",
+    city: "North York",
+    date: "Tuesday, May 12",
+    time: "10:00 PM to 11:00 PM",
+    cost: 20,
+    maxSkaters: 20,
+    maxGoalies: 2,
+    skill: "Mixed Recreational",
+    organizer: "GTA Hockey Club",
+    etransferEmail: "payments@gtahockeyclub.com",
+    notes: "Bring both jerseys. Roster will be balanced before puck drop.",
+    lat: 43.760,
+    lng: -79.487,
+    roster: [],
+    waitlist: []
+  }
+];
