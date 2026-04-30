@@ -64,17 +64,26 @@ export default function Home() {
             <p>Level: {game.level}</p>
 
             <button
-              style={{
-                background: "#e53935",
-                color: "white",
-                border: "none",
-                padding: "10px 15px",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
-            >
-              Join Game
-            </button>
+  onClick={() => {
+    const name = prompt("Enter your name");
+    const phone = prompt("Enter your phone number");
+    const email = prompt("Enter your email");
+
+    if (name && phone && email) {
+      alert("You are added to the game (for now demo)");
+    }
+  }}
+  style={{
+    background: "#e53935",
+    color: "white",
+    border: "none",
+    padding: "10px 15px",
+    borderRadius: "5px",
+    cursor: "pointer",
+  }}
+>
+  Join Game
+</button>
           </div>
         ))}
       </div>
