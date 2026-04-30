@@ -34,7 +34,7 @@ export default function Home() {
   alt="GTA Hockey Club Banner"
   style={{
     width: "100%",
-    height: "300px",
+    height: "220px",
     objectFit: "cover",
     display: "block"
   }}
