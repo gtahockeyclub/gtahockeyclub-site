@@ -30,17 +30,7 @@ src="/GTAHOCKEYCLUBBANNER.png"
   }}
 />
       {/* HERO BANNER */}
-      <section
-        style={{
-          minHeight: "520px",
-          backgroundImage: "url('/banner.jpg')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          display: "flex",
-          alignItems: "flex-end",
-          padding: "40px"
-        }}
-      >
+
         <div
           style={{
             background: "rgba(0,0,0,0.65)",
