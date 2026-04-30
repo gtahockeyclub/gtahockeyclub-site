@@ -21,21 +21,30 @@ export default function Home() {
   return (
     <div style={{ fontFamily: "Arial, sans-serif", margin: 0 }}>
 
-      {/* HERO BANNER */}
       <div
         style={{
-          backgroundImage: "url('/GTAHOCKEYCLUBBANNER.png')",
-          backgroundSize: "contain",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center",
+          width: "100%",
           backgroundColor: "#07152b",
-          height: "420px",
+          display: "flex",
+          justifyContent: "center",
         }}
-      />
+      >
+        <img
+          src="/GTAHOCKEYCLUBBANNER.png"
+          alt="GTA Hockey Club Banner"
+          style={{
+            width: "100%",
+            maxWidth: "1200px",
+            height: "auto",
+            display: "block",
+          }}
+        />
+      </div>
 
-      {/* CONTENT */}
       <div style={{ padding: "40px 20px" }}>
-        <h2 style={{ textAlign: "center" }}>Upcoming Games</h2>
+        <h2 style={{ textAlign: "center", fontSize: "32px" }}>
+          Upcoming Games
+        </h2>
 
         {games.map((game, index) => (
           <div
