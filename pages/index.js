@@ -6,7 +6,7 @@ export default function Home() {
       time: "9:30 PM",
       cost: "$20",
       spots: "10 / 20 spots filled",
-      level: "Recreational"
+      level: "Recreational",
     },
     {
       arena: "Canlan York",
@@ -14,104 +14,77 @@ export default function Home() {
       time: "10:00 PM",
       cost: "$25",
       spots: "14 / 22 spots filled",
-      level: "Intermediate"
-    }
+      level: "Intermediate",
+    },
   ];
 
   return (
-    <div style={{ fontFamily: "Arial, sans-serif", margin: 0, background: "#07152b" }}>
-      <img
-        src="/GTAHOCKEYCLUBBANNER.png"
-        alt="GTA Hockey Club Banner"
+    <div style={{ fontFamily: "Arial, sans-serif", margin: 0 }}>
+
+      {/* 🔥 HERO BANNER */}
+      <div
         style={{
-          width: "100%",
-          height: "auto",
-          display: "block"
+          backgroundImage: "url('/GTAHOCKEYCLUBBANNER.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          height: "320px",
+          display: "flex",
+          alignItems: "flex-end",
         }}
-      />
-<img
-  src="/GTAHOCKEYCLUBBANNER.png"
-  alt="GTA Hockey Club Banner"
-  style={{
-    width: "100%",
-    height: "220px",
-    objectFit: "cover",
-    display: "block"
-  }}
-/>
-      <section style={{ padding: "40px 24px", color: "white", textAlign: "center" }}>
-        <h1 style={{ fontSize: "42px", margin: "0 0 10px" }}>
-          GTA Hockey Club
-        </h1>
-
-        <p style={{ color: "#ffd42a", fontSize: "22px", fontWeight: "bold" }}>
-          Good people. Great games. Better hockey.
-        </p>
-
-        <p style={{ maxWidth: "720px", margin: "0 auto", fontSize: "18px", lineHeight: "1.5" }}>
-          Find recreational pickup hockey games across the GTA. Organizers post games. Players join in.
-        </p>
-      </section>
-
-      <section style={{ padding: "40px 24px", background: "#ffffff", color: "#07152b" }}>
-        <h2 style={{ textAlign: "center", fontSize: "34px" }}>
-          Upcoming Games
-        </h2>
-
-        <div style={{ maxWidth: "900px", margin: "30px auto", display: "grid", gap: "20px" }}>
-          {games.map((game) => (
-            <div
-              key={game.arena}
-              style={{
-                background: "#f7f7f7",
-                padding: "24px",
-                borderRadius: "12px",
-                border: "1px solid #ddd"
-              }}
-            >
-              <h3 style={{ marginTop: 0, fontSize: "26px" }}>{game.arena}</h3>
-              <p><strong>{game.date}</strong> • {game.time}</p>
-              <p>{game.cost} • {game.spots}</p>
-              <p>Level: {game.level}</p>
-
-              <button
-                style={{
-                  background: "#e31b23",
-                  color: "white",
-                  border: "none",
-                  padding: "12px 20px",
-                  borderRadius: "6px",
-                  fontWeight: "bold",
-                  cursor: "pointer"
-                }}
-              >
-                Join Game
-              </button>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section style={{ padding: "40px 24px", background: "#ffd42a", color: "#07152b", textAlign: "center" }}>
-        <h2>Organizers Post Games. Players Join In.</h2>
-        <p>Run weekly pickup hockey? Post games, manage your roster, and grow your group.</p>
-        <button
+      >
+        <div
           style={{
-            background: "#07152b",
+            background: "rgba(0,0,0,0.6)",
+            padding: "20px 30px",
+            width: "100%",
             color: "white",
-            border: "none",
-            padding: "12px 20px",
-            borderRadius: "6px",
-            fontWeight: "bold"
           }}
         >
-          Organizer Access Coming Soon
-        </button>
-      </section>
+          <h1 style={{ margin: 0 }}>GTA Hockey Club</h1>
+          <p style={{ color: "#ffd42a", margin: "5px 0" }}>
+            Good people. Great games. Better hockey.
+          </p>
+        </div>
+      </div>
 
-      <footer style={{ padding: "20px", textAlign: "center", color: "white" }}>
-        GTA Hockey Club • Community Driven. Hockey Focused.
-      </footer>
+      {/* 🔥 CONTENT */}
+      <div style={{ padding: "40px 20px" }}>
+        <h2 style={{ textAlign: "center" }}>Upcoming Games</h2>
+
+        {games.map((game, index) => (
+          <div
+            key={index}
+            style={{
+              border: "1px solid #ddd",
+              borderRadius: "10px",
+              padding: "20px",
+              margin: "20px auto",
+              maxWidth: "600px",
+            }}
+          >
+            <h3>{game.arena}</h3>
+            <p>
+              {game.date} • {game.time}
+            </p>
+            <p>{game.cost}</p>
+            <p>{game.spots}</p>
+            <p>Level: {game.level}</p>
+
+            <button
+              style={{
+                background: "#e53935",
+                color: "white",
+                border: "none",
+                padding: "10px 15px",
+                borderRadius: "5px",
+                cursor: "pointer",
+              }}
+            >
+              Join Game
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
