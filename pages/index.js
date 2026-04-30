@@ -21,7 +21,7 @@ export default function Home() {
   return (
     <div style={{ fontFamily: "Arial, sans-serif", margin: 0 }}>
 <img
-  src="/GTAHOCKEYCLUBBANNER.PNG"
+src="/GTAHOCKEYCLUBBANNER.png"
   alt="GTA Hockey Club Banner"
   style={{
     width: "100%",
