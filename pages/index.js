@@ -20,7 +20,15 @@ export default function Home() {
 
   return (
     <div style={{ fontFamily: "Arial, sans-serif", margin: 0 }}>
-
+<img
+  src="/GTAHOCKEYCLUBBANNER.PNG"
+  alt="GTA Hockey Club Banner"
+  style={{
+    width: "100%",
+    height: "auto",
+    display: "block"
+  }}
+/>
       {/* HERO BANNER */}
       <section
         style={{
