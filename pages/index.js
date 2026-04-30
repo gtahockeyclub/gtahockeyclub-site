@@ -19,109 +19,32 @@ export default function Home() {
   ];
 
   return (
-    <div style={{ fontFamily: "Arial, sans-serif", margin: 0 }}>
-<img
-src="/GTAHOCKEYCLUBBANNER.png"
-  alt="GTA Hockey Club Banner"
-  style={{
-    width: "100%",
-    height: "auto",
-    display: "block"
-  }}
-/>
-      {/* HERO BANNER */}
+    <div style={{ fontFamily: "Arial, sans-serif", margin: 0, background: "#07152b" }}>
+      <img
+        src="/GTAHOCKEYCLUBBANNER.png"
+        alt="GTA Hockey Club Banner"
+        style={{
+          width: "100%",
+          height: "auto",
+          display: "block"
+        }}
+      />
 
-        <div
-          style={{
-            background: "rgba(0,0,0,0.65)",
-            padding: "24px",
-            borderRadius: "10px",
-            maxWidth: "600px",
-            color: "white"
-          }}
-        >
-          <h1 style={{ fontSize: "48px", margin: 0 }}>
-            GTA Hockey Club
-          </h1>
+      <section style={{ padding: "40px 24px", color: "white", textAlign: "center" }}>
+        <h1 style={{ fontSize: "42px", margin: "0 0 10px" }}>
+          GTA Hockey Club
+        </h1>
 
-          <p style={{ fontSize: "22px", color: "#ffd42a", fontWeight: "bold" }}>
-            Good people. Great games. Better hockey.
-          </p>
+        <p style={{ color: "#ffd42a", fontSize: "22px", fontWeight: "bold" }}>
+          Good people. Great games. Better hockey.
+        </p>
 
-          <p style={{ fontSize: "18px" }}>
-            Find recreational pickup hockey games across the GTA. Organizers post games. Players join in.
-          </p>
-
-          <div style={{ marginTop: "20px" }}>
-            <a
-              href="#games"
-              style={{
-                background: "#e31b23",
-                color: "white",
-                padding: "12px 20px",
-                borderRadius: "6px",
-                textDecoration: "none",
-                fontWeight: "bold",
-                marginRight: "10px"
-              }}
-            >
-              View Games
-            </a>
-
-            <a
-              href="#organizers"
-              style={{
-                background: "#ffd42a",
-                color: "#000",
-                padding: "12px 20px",
-                borderRadius: "6px",
-                textDecoration: "none",
-                fontWeight: "bold"
-              }}
-            >
-              Post a Game
-            </a>
-          </div>
-        </div>
+        <p style={{ maxWidth: "720px", margin: "0 auto", fontSize: "18px", lineHeight: "1.5" }}>
+          Find recreational pickup hockey games across the GTA. Organizers post games. Players join in.
+        </p>
       </section>
 
-      {/* VALUE SECTION */}
-      <section style={{ padding: "50px 30px", background: "#0b1f3f", color: "white" }}>
-        <h2 style={{ textAlign: "center", fontSize: "34px" }}>
-          Find a Group. Get Out and Play.
-        </h2>
-
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-            gap: "20px",
-            maxWidth: "1000px",
-            margin: "30px auto"
-          }}
-        >
-          {[
-            "Looking to get back into playing?",
-            "New to the area?",
-            "Want to meet new people?",
-            "Just love the game?"
-          ].map((text) => (
-            <div
-              key={text}
-              style={{
-                background: "#102b55",
-                padding: "20px",
-                borderRadius: "10px"
-              }}
-            >
-              ✓ {text}
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* GAMES */}
-      <section id="games" style={{ padding: "50px 30px", background: "#f4f4f4" }}>
+      <section style={{ padding: "40px 24px", background: "#ffffff", color: "#07152b" }}>
         <h2 style={{ textAlign: "center", fontSize: "34px" }}>
           Upcoming Games
         </h2>
@@ -131,14 +54,14 @@ src="/GTAHOCKEYCLUBBANNER.png"
             <div
               key={game.arena}
               style={{
-                background: "white",
-                padding: "20px",
-                borderRadius: "10px",
-                boxShadow: "0 4px 10px rgba(0,0,0,0.1)"
+                background: "#f7f7f7",
+                padding: "24px",
+                borderRadius: "12px",
+                border: "1px solid #ddd"
               }}
             >
-              <h3 style={{ marginTop: 0 }}>{game.arena}</h3>
-              <p>{game.date} • {game.time}</p>
+              <h3 style={{ marginTop: 0, fontSize: "26px" }}>{game.arena}</h3>
+              <p><strong>{game.date}</strong> • {game.time}</p>
               <p>{game.cost} • {game.spots}</p>
               <p>Level: {game.level}</p>
 
@@ -147,9 +70,10 @@ src="/GTAHOCKEYCLUBBANNER.png"
                   background: "#e31b23",
                   color: "white",
                   border: "none",
-                  padding: "10px 18px",
+                  padding: "12px 20px",
                   borderRadius: "6px",
-                  fontWeight: "bold"
+                  fontWeight: "bold",
+                  cursor: "pointer"
                 }}
               >
                 Join Game
@@ -159,34 +83,26 @@ src="/GTAHOCKEYCLUBBANNER.png"
         </div>
       </section>
 
-      {/* ORGANIZERS */}
-      <section id="organizers" style={{ padding: "50px 30px", background: "#ffd42a", textAlign: "center" }}>
-        <h2 style={{ fontSize: "32px" }}>
-          Organizers Post Games. Players Join In.
-        </h2>
-
-        <p style={{ maxWidth: "700px", margin: "0 auto 20px" }}>
-          Run weekly pickup hockey? Post your games, manage your roster, and grow your group.
-        </p>
-
+      <section style={{ padding: "40px 24px", background: "#ffd42a", color: "#07152b", textAlign: "center" }}>
+        <h2>Organizers Post Games. Players Join In.</h2>
+        <p>Run weekly pickup hockey? Post games, manage your roster, and grow your group.</p>
         <button
           style={{
-            background: "#000",
+            background: "#07152b",
             color: "white",
+            border: "none",
             padding: "12px 20px",
             borderRadius: "6px",
-            border: "none"
+            fontWeight: "bold"
           }}
         >
           Organizer Access Coming Soon
         </button>
       </section>
 
-      {/* FOOTER */}
-      <footer style={{ padding: "20px", textAlign: "center", background: "#07152b", color: "white" }}>
+      <footer style={{ padding: "20px", textAlign: "center", color: "white" }}>
         GTA Hockey Club • Community Driven. Hockey Focused.
       </footer>
-
     </div>
   );
 }
