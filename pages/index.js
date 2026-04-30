@@ -29,7 +29,16 @@ export default function Home() {
           display: "block"
         }}
       />
-
+<img
+  src="/GTAHOCKEYCLUBBANNER.png"
+  alt="GTA Hockey Club Banner"
+  style={{
+    width: "100%",
+    height: "300px",
+    objectFit: "cover",
+    display: "block"
+  }}
+/>
       <section style={{ padding: "40px 24px", color: "white", textAlign: "center" }}>
         <h1 style={{ fontSize: "42px", margin: "0 0 10px" }}>
           GTA Hockey Club
