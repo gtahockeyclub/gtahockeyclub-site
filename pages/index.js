@@ -15,7 +15,7 @@ export default function Home() {
       date: "Tuesday",
       time: "9:30 PM",
       cost: "$20",
-      spots: "20 max",
+      maxPlayers: 20,
       level: "Recreational",
     },
     {
@@ -23,7 +23,7 @@ export default function Home() {
       date: "Thursday",
       time: "10:00 PM",
       cost: "$25",
-      spots: "22 max",
+      maxPlayers: 22,
       level: "Intermediate",
     },
   ]
@@ -47,13 +47,15 @@ export default function Home() {
       return
     }
 
-    const teamRoster = signups.filter(
-      (p) => p.game_id === game.arena && p.team === team
-    )
+    const roster = signups.filter((p) => p.game_id === game.arena)
 
-    const goalieExists = teamRoster.some(
-      (p) => p.player_type === "Goalie"
-    )
+    if (roster.length >= game.maxPlayers) {
+      alert("This game is full.")
+      return
+    }
+
+    const teamRoster = roster.filter((p) => p.team === team)
+    const goalieExists = teamRoster.some((p) => p.player_type === "Goalie")
 
     if (playerType === "Goalie" && goalieExists) {
       alert("Goalie spot already taken for this team.")
@@ -65,15 +67,15 @@ export default function Home() {
         game_id: game.arena,
         game_name: game.arena + " - " + game.date + " " + game.time,
         player_name: name,
-        phone: phone,
-        email: email,
+        phone,
+        email,
         player_type: playerType,
-        team: team,
+        team,
       },
     ])
 
     if (error) {
-      alert("Error joining game")
+      alert("Error joining game.")
       console.log(error)
     } else {
       alert("You are signed up!")
@@ -88,38 +90,22 @@ export default function Home() {
 
   const renderTeamRoster = (roster, teamName) => {
     const teamRoster = roster.filter((p) => p.team === teamName)
-
     const goalie = teamRoster.find((p) => p.player_type === "Goalie")
     const skaters = teamRoster.filter((p) => p.player_type !== "Goalie")
 
     return (
-      <div
-        style={{
-          border: "1px solid #ddd",
-          borderRadius: "10px",
-          padding: "15px",
-          background: "#f7f7f7",
-        }}
-      >
-        <h4 style={{ textAlign: "center", marginBottom: "5px" }}>
-          {teamName}
-        </h4>
+      <div style={styles.teamBox}>
+        <h4 style={styles.teamTitle}>{teamName}</h4>
 
-        <p style={{ textAlign: "center", fontSize: "12px", color: "#777" }}>
-          Goalie first 🥅
-        </p>
-
-        <ol style={{ paddingLeft: "22px" }}>
-          {/* Goalie slot */}
-          <li style={{ fontWeight: "bold" }}>
-            {goalie
-              ? `🥅 ${goalie.player_name} (Goalie)`
-              : "🥅 Open Goalie Spot"}
+        <ol style={styles.rosterList}>
+          <li style={styles.goalieLine}>
+            {goalie ? `🥅 ${goalie.player_name} (Goalie)` : "🥅 Open Goalie Spot"}
           </li>
 
-          {/* Skaters */}
           {skaters.map((player) => (
-            <li key={player.id}>{player.player_name}</li>
+            <li key={player.id} style={styles.playerLine}>
+              {player.player_name}
+            </li>
           ))}
         </ol>
       </div>
@@ -127,77 +113,72 @@ export default function Home() {
   }
 
   return (
-    <div style={{ fontFamily: "Arial, sans-serif", margin: 0 }}>
-      <div
-        style={{
-          width: "100%",
-          backgroundColor: "#07152b",
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
+    <div style={styles.page}>
+      <div style={styles.bannerWrap}>
         <img
           src="/GTAHOCKEYCLUBBANNER.png"
-          alt="Banner"
-          style={{
-            width: "100%",
-            maxWidth: "1200px",
-            display: "block",
-          }}
+          alt="GTA Hockey Club Banner"
+          style={styles.banner}
         />
       </div>
 
-      <div style={{ padding: "40px 20px" }}>
-        <h2 style={{ textAlign: "center" }}>Upcoming Games</h2>
+      <section style={styles.intro}>
+        <h1 style={styles.mainTitle}>Find Pickup Hockey Games Across the GTA</h1>
+        <p style={styles.mainText}>
+          Join recreational games, view rosters, and reserve your spot in seconds.
+        </p>
+      </section>
+
+      <section style={styles.gamesSection}>
+        <h2 style={styles.sectionTitle}>Upcoming Games</h2>
 
         {games.map((game, index) => {
-          const roster = signups.filter(
-            (p) => p.game_id === game.arena
-          )
+          const roster = signups.filter((p) => p.game_id === game.arena)
+          const spotsLeft = game.maxPlayers - roster.length
+          const isFull = spotsLeft <= 0
 
           return (
-            <div
-              key={index}
-              style={{
-                border: "1px solid #ddd",
-                borderRadius: "12px",
-                padding: "20px",
-                margin: "20px auto",
-                maxWidth: "800px",
-              }}
-            >
-              <h3>{game.arena}</h3>
-              <p>{game.date} • {game.time}</p>
-              <p>{game.cost}</p>
-              <p>{roster.length} signed up • {game.spots}</p>
+            <div key={index} style={styles.gameCard}>
+              <div style={styles.gameHeader}>
+                <div>
+                  <h3 style={styles.arena}>{game.arena}</h3>
+                  <p style={styles.gameInfo}>{game.date} • {game.time}</p>
+                  <p style={styles.gameInfo}>{game.cost} • {game.level}</p>
+                </div>
 
-              {/* FORM */}
-              <div style={{ marginTop: "15px" }}>
+                <div style={isFull ? styles.fullBadge : styles.openBadge}>
+                  {isFull ? "FULL" : `${spotsLeft} spots left`}
+                </div>
+              </div>
+
+              <div style={styles.signupBox}>
+                <h4 style={styles.signupTitle}>Join this game</h4>
+
                 <input
                   placeholder="Name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  style={{ width: "100%", padding: "8px", marginBottom: "8px" }}
+                  style={styles.input}
                 />
 
                 <input
                   placeholder="Phone"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  style={{ width: "100%", padding: "8px", marginBottom: "8px" }}
+                  style={styles.input}
                 />
 
                 <input
                   placeholder="Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  style={{ width: "100%", padding: "8px", marginBottom: "8px" }}
+                  style={styles.input}
                 />
 
                 <select
                   value={playerType}
                   onChange={(e) => setPlayerType(e.target.value)}
-                  style={{ width: "100%", padding: "8px", marginBottom: "8px" }}
+                  style={styles.input}
                 >
                   <option>Skater</option>
                   <option>Goalie</option>
@@ -206,7 +187,7 @@ export default function Home() {
                 <select
                   value={team}
                   onChange={(e) => setTeam(e.target.value)}
-                  style={{ width: "100%", padding: "8px", marginBottom: "8px" }}
+                  style={styles.input}
                 >
                   <option>Team 1</option>
                   <option>Team 2</option>
@@ -214,35 +195,195 @@ export default function Home() {
 
                 <button
                   onClick={() => handleJoin(game)}
-                  style={{
-                    background: "#e53935",
-                    color: "white",
-                    padding: "10px",
-                    border: "none",
-                    borderRadius: "5px",
-                    width: "100%",
-                  }}
+                  disabled={isFull}
+                  style={isFull ? styles.disabledButton : styles.joinButton}
                 >
-                  Join Game
+                  {isFull ? "Game Full" : "Join Game"}
                 </button>
               </div>
 
-              {/* ROSTER */}
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: "15px",
-                  marginTop: "20px",
-                }}
-              >
+              <div style={styles.rosterHeader}>
+                <h4 style={styles.rosterTitle}>Roster</h4>
+                <p style={styles.rosterCount}>{roster.length} / {game.maxPlayers} signed up</p>
+              </div>
+
+              <div style={styles.rosterGrid}>
                 {renderTeamRoster(roster, "Team 1")}
                 {renderTeamRoster(roster, "Team 2")}
               </div>
             </div>
           )
         })}
-      </div>
+      </section>
     </div>
   )
+}
+
+const styles = {
+  page: {
+    fontFamily: "Arial, sans-serif",
+    margin: 0,
+    background: "#f3f5f8",
+    color: "#07152b",
+  },
+  bannerWrap: {
+    width: "100%",
+    backgroundColor: "#07152b",
+    display: "flex",
+    justifyContent: "center",
+  },
+  banner: {
+    width: "100%",
+    maxWidth: "1200px",
+    display: "block",
+  },
+  intro: {
+    background: "#07152b",
+    color: "white",
+    textAlign: "center",
+    padding: "34px 20px",
+  },
+  mainTitle: {
+    fontSize: "34px",
+    margin: "0 0 10px",
+  },
+  mainText: {
+    fontSize: "18px",
+    margin: 0,
+    color: "#d7e3f5",
+  },
+  gamesSection: {
+    padding: "40px 18px",
+  },
+  sectionTitle: {
+    textAlign: "center",
+    fontSize: "32px",
+    marginBottom: "28px",
+  },
+  gameCard: {
+    background: "white",
+    borderRadius: "16px",
+    padding: "24px",
+    margin: "24px auto",
+    maxWidth: "900px",
+    boxShadow: "0 8px 22px rgba(0,0,0,0.08)",
+    border: "1px solid #e1e5eb",
+  },
+  gameHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    gap: "15px",
+    alignItems: "flex-start",
+    borderBottom: "1px solid #e5e5e5",
+    paddingBottom: "16px",
+  },
+  arena: {
+    fontSize: "26px",
+    margin: "0 0 8px",
+  },
+  gameInfo: {
+    margin: "4px 0",
+    color: "#42526b",
+  },
+  openBadge: {
+    background: "#e9f7ef",
+    color: "#187a3b",
+    padding: "8px 12px",
+    borderRadius: "999px",
+    fontWeight: "bold",
+    whiteSpace: "nowrap",
+  },
+  fullBadge: {
+    background: "#fdecea",
+    color: "#b42318",
+    padding: "8px 12px",
+    borderRadius: "999px",
+    fontWeight: "bold",
+    whiteSpace: "nowrap",
+  },
+  signupBox: {
+    background: "#f7f9fc",
+    padding: "18px",
+    borderRadius: "12px",
+    marginTop: "20px",
+  },
+  signupTitle: {
+    marginTop: 0,
+    marginBottom: "12px",
+  },
+  input: {
+    width: "100%",
+    padding: "11px",
+    marginBottom: "10px",
+    border: "1px solid #ccd3dd",
+    borderRadius: "8px",
+    boxSizing: "border-box",
+    fontSize: "15px",
+  },
+  joinButton: {
+    width: "100%",
+    background: "#e53935",
+    color: "white",
+    padding: "12px",
+    border: "none",
+    borderRadius: "8px",
+    fontWeight: "bold",
+    cursor: "pointer",
+    fontSize: "16px",
+  },
+  disabledButton: {
+    width: "100%",
+    background: "#999",
+    color: "white",
+    padding: "12px",
+    border: "none",
+    borderRadius: "8px",
+    fontWeight: "bold",
+    cursor: "not-allowed",
+    fontSize: "16px",
+  },
+  rosterHeader: {
+    marginTop: "24px",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  rosterTitle: {
+    fontSize: "22px",
+    margin: 0,
+  },
+  rosterCount: {
+    margin: 0,
+    color: "#667085",
+  },
+  rosterGrid: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "16px",
+    marginTop: "14px",
+  },
+  teamBox: {
+    border: "1px solid #d8dee8",
+    borderRadius: "12px",
+    padding: "16px",
+    background: "#fbfcfe",
+  },
+  teamTitle: {
+    textAlign: "center",
+    margin: "0 0 12px",
+    fontSize: "18px",
+    color: "#07152b",
+  },
+  rosterList: {
+    paddingLeft: "24px",
+    marginBottom: 0,
+  },
+  goalieLine: {
+    fontWeight: "bold",
+    marginBottom: "8px",
+    color: "#07152b",
+  },
+  playerLine: {
+    marginBottom: "7px",
+  },
 }
