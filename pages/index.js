@@ -14,6 +14,13 @@ export default function Home() {
   const [playerType, setPlayerType] = useState('Skater')
   const [team, setTeam] = useState('Team 1')
 
+  const [manualName, setManualName] = useState('')
+  const [manualPhone, setManualPhone] = useState('')
+  const [manualEmail, setManualEmail] = useState('')
+  const [manualPlayerType, setManualPlayerType] = useState('Skater')
+  const [manualTeam, setManualTeam] = useState('Team 1')
+  const [manualCode, setManualCode] = useState('')
+
   const [selectedArena, setSelectedArena] = useState('')
   const [date, setDate] = useState('')
   const [time, setTime] = useState('')
@@ -206,7 +213,6 @@ export default function Home() {
     }
 
     const cleanEmail = email.trim().toLowerCase()
-
     const roster = signups.filter((p) => p.game_id === game.id)
 
     const alreadySignedUp = roster.some(
@@ -253,6 +259,72 @@ export default function Home() {
       setEmail('')
       setPlayerType('Skater')
       setTeam('Team 1')
+      loadSignups()
+    }
+  }
+
+  const handleManualAddPlayer = async (game) => {
+    if (manualCode !== ORGANIZER_CODE) {
+      alert('Invalid organizer code.')
+      return
+    }
+
+    if (!manualName) {
+      alert('Please enter player name.')
+      return
+    }
+
+    const roster = signups.filter((p) => p.game_id === game.id)
+
+    if (roster.length >= game.max_players) {
+      alert('This game is full.')
+      return
+    }
+
+    const cleanManualEmail = manualEmail.trim().toLowerCase()
+
+    if (cleanManualEmail) {
+      const alreadySignedUp = roster.some(
+        (p) => p.email && p.email.trim().toLowerCase() === cleanManualEmail
+      )
+
+      if (alreadySignedUp) {
+        alert('This email is already signed up for this game.')
+        return
+      }
+    }
+
+    const teamRoster = roster.filter((p) => p.team === manualTeam)
+    const goalieExists = teamRoster.some((p) => p.player_type === 'Goalie')
+
+    if (manualPlayerType === 'Goalie' && goalieExists) {
+      alert('Goalie spot already taken for this team.')
+      return
+    }
+
+    const { error } = await supabase.from('game_signups').insert([
+      {
+        game_id: game.id,
+        game_name: game.arena + ' - ' + game.game_date + ' ' + game.game_time,
+        player_name: manualName,
+        phone: manualPhone,
+        email: cleanManualEmail || 'manual-entry-' + Date.now() + '@noemail.local',
+        player_type: manualPlayerType,
+        team: manualTeam,
+      },
+    ])
+
+    if (error) {
+      alert('Error adding player.')
+      console.log(error)
+    } else {
+      alert('Player added!')
+      setManualName('')
+      setManualPhone('')
+      setManualEmail('')
+      setManualPlayerType('Skater')
+      setManualTeam('Team 1')
+      setManualCode('')
       loadSignups()
     }
   }
@@ -411,6 +483,36 @@ export default function Home() {
                   </button>
                 </div>
 
+                <div style={styles.manualBox}>
+                  <h4 style={styles.signupTitle}>Organizer Manual Add Player</h4>
+
+                  <input placeholder="Player name" value={manualName} onChange={(e) => setManualName(e.target.value)} style={styles.input} />
+                  <input placeholder="Phone optional" value={manualPhone} onChange={(e) => setManualPhone(e.target.value)} style={styles.input} />
+                  <input placeholder="Email optional" value={manualEmail} onChange={(e) => setManualEmail(e.target.value)} style={styles.input} />
+
+                  <select value={manualPlayerType} onChange={(e) => setManualPlayerType(e.target.value)} style={styles.input}>
+                    <option>Skater</option>
+                    <option>Goalie</option>
+                  </select>
+
+                  <select value={manualTeam} onChange={(e) => setManualTeam(e.target.value)} style={styles.input}>
+                    <option value="Team 1">{game.team1_name}</option>
+                    <option value="Team 2">{game.team2_name}</option>
+                  </select>
+
+                  <input
+                    placeholder="Organizer Code"
+                    type="password"
+                    value={manualCode}
+                    onChange={(e) => setManualCode(e.target.value)}
+                    style={styles.input}
+                  />
+
+                  <button onClick={() => handleManualAddPlayer(game)} style={styles.manualButton}>
+                    Add Player Manually
+                  </button>
+                </div>
+
                 <div style={styles.rosterHeader}>
                   <h4 style={styles.rosterTitle}>Roster</h4>
                   <p style={styles.rosterCount}>{roster.length} / {game.max_players} signed up</p>
@@ -454,10 +556,12 @@ const styles = {
   openBadge: { background: '#e9f7ef', color: '#187a3b', padding: '8px 12px', borderRadius: '999px', fontWeight: 'bold', whiteSpace: 'nowrap' },
   fullBadge: { background: '#fdecea', color: '#b42318', padding: '8px 12px', borderRadius: '999px', fontWeight: 'bold', whiteSpace: 'nowrap' },
   signupBox: { background: '#f7f9fc', padding: '18px', borderRadius: '12px', marginTop: '20px' },
+  manualBox: { background: '#fff8e6', padding: '18px', borderRadius: '12px', marginTop: '20px', border: '1px solid #ffe1a3' },
   signupTitle: { marginTop: 0, marginBottom: '12px' },
   input: { width: '100%', padding: '11px', marginBottom: '10px', border: '1px solid #ccd3dd', borderRadius: '8px', boxSizing: 'border-box', fontSize: '15px' },
   postButton: { width: '100%', background: '#07152b', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px', marginTop: '8px' },
   joinButton: { width: '100%', background: '#e53935', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
+  manualButton: { width: '100%', background: '#f59e0b', color: '#07152b', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
   disabledButton: { width: '100%', background: '#999', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'not-allowed', fontSize: '16px' },
   closeButton: { marginTop: '20px', width: '100%', background: '#444', color: 'white', padding: '10px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' },
   rosterHeader: { marginTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
