@@ -113,6 +113,28 @@ export default function Home() {
     }
   }
 
+  const handleCloseGame = async (gameId) => {
+    const code = prompt('Enter organizer code to close this game:')
+
+    if (code !== ORGANIZER_CODE) {
+      alert('Invalid organizer code.')
+      return
+    }
+
+    const { error } = await supabase
+      .from('games')
+      .update({ is_active: false })
+      .eq('id', gameId)
+
+    if (error) {
+      alert('Error closing game.')
+      console.log(error)
+    } else {
+      alert('Game closed.')
+      loadGames()
+    }
+  }
+
   const handleJoin = async (game) => {
     if (!name || !phone || !email) {
       alert('Please enter your name, phone, and email.')
@@ -206,11 +228,7 @@ export default function Home() {
           <h2 style={styles.sectionTitle}>Post a Game</h2>
 
           <div style={styles.formGrid}>
-            <select
-              value={selectedArena}
-              onChange={(e) => setSelectedArena(e.target.value)}
-              style={styles.input}
-            >
+            <select value={selectedArena} onChange={(e) => setSelectedArena(e.target.value)} style={styles.input}>
               <option value="">Select Arena</option>
               {arenas.map((arena) => (
                 <option key={arena.id} value={arena.id}>
@@ -270,12 +288,7 @@ export default function Home() {
                     )}
 
                     {arenaDetails?.google_maps_url && (
-                      <a
-                        href={arenaDetails.google_maps_url}
-                        target="_blank"
-                        rel="noreferrer"
-                        style={styles.mapLink}
-                      >
+                      <a href={arenaDetails.google_maps_url} target="_blank" rel="noreferrer" style={styles.mapLink}>
                         Open in Google Maps
                       </a>
                     )}
@@ -321,6 +334,10 @@ export default function Home() {
                   {renderTeamRoster(roster, 'Team 1', game.team1_name)}
                   {renderTeamRoster(roster, 'Team 2', game.team2_name)}
                 </div>
+
+                <button onClick={() => handleCloseGame(game.id)} style={styles.closeButton}>
+                  Close Game
+                </button>
               </div>
             )
           })
@@ -356,6 +373,7 @@ const styles = {
   postButton: { width: '100%', background: '#07152b', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px', marginTop: '8px' },
   joinButton: { width: '100%', background: '#e53935', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
   disabledButton: { width: '100%', background: '#999', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'not-allowed', fontSize: '16px' },
+  closeButton: { marginTop: '20px', width: '100%', background: '#444', color: 'white', padding: '10px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' },
   rosterHeader: { marginTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
   rosterTitle: { fontSize: '22px', margin: 0 },
   rosterCount: { margin: 0, color: '#667085' },
