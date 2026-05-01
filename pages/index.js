@@ -17,6 +17,8 @@ export default function Home() {
       cost: "$20",
       maxPlayers: 20,
       level: "Recreational",
+      team1Name: "Leafs",
+      team2Name: "Habs",
     },
     {
       arena: "Canlan York",
@@ -25,6 +27,8 @@ export default function Home() {
       cost: "$25",
       maxPlayers: 22,
       level: "Intermediate",
+      team1Name: "Red Team",
+      team2Name: "White Team",
     },
   ]
 
@@ -88,14 +92,18 @@ export default function Home() {
     }
   }
 
-  const renderTeamRoster = (roster, teamName) => {
+  const getDisplayTeamName = (game, teamName) => {
+    return teamName === "Team 1" ? game.team1Name : game.team2Name
+  }
+
+  const renderTeamRoster = (roster, teamName, displayName) => {
     const teamRoster = roster.filter((p) => p.team === teamName)
     const goalie = teamRoster.find((p) => p.player_type === "Goalie")
     const skaters = teamRoster.filter((p) => p.player_type !== "Goalie")
 
     return (
       <div style={styles.teamBox}>
-        <h4 style={styles.teamTitle}>{teamName}</h4>
+        <h4 style={styles.teamTitle}>{displayName}</h4>
 
         <ol style={styles.rosterList}>
           <li style={styles.goalieLine}>
@@ -144,6 +152,9 @@ export default function Home() {
                   <h3 style={styles.arena}>{game.arena}</h3>
                   <p style={styles.gameInfo}>{game.date} • {game.time}</p>
                   <p style={styles.gameInfo}>{game.cost} • {game.level}</p>
+                  <p style={styles.gameInfo}>
+                    {game.team1Name} vs {game.team2Name}
+                  </p>
                 </div>
 
                 <div style={isFull ? styles.fullBadge : styles.openBadge}>
@@ -189,8 +200,8 @@ export default function Home() {
                   onChange={(e) => setTeam(e.target.value)}
                   style={styles.input}
                 >
-                  <option>Team 1</option>
-                  <option>Team 2</option>
+                  <option value="Team 1">{game.team1Name}</option>
+                  <option value="Team 2">{game.team2Name}</option>
                 </select>
 
                 <button
@@ -208,8 +219,8 @@ export default function Home() {
               </div>
 
               <div style={styles.rosterGrid}>
-                {renderTeamRoster(roster, "Team 1")}
-                {renderTeamRoster(roster, "Team 2")}
+                {renderTeamRoster(roster, "Team 1", getDisplayTeamName(game, "Team 1"))}
+                {renderTeamRoster(roster, "Team 2", getDisplayTeamName(game, "Team 2"))}
               </div>
             </div>
           )
@@ -371,8 +382,9 @@ const styles = {
   teamTitle: {
     textAlign: "center",
     margin: "0 0 12px",
-    fontSize: "18px",
+    fontSize: "20px",
     color: "#07152b",
+    fontWeight: "bold",
   },
   rosterList: {
     paddingLeft: "24px",
