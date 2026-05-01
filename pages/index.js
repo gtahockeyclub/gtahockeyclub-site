@@ -2,35 +2,23 @@ import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 
 export default function Home() {
+  const [games, setGames] = useState([])
+  const [signups, setSignups] = useState([])
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
   const [playerType, setPlayerType] = useState('Skater')
   const [team, setTeam] = useState('Team 1')
-  const [signups, setSignups] = useState([])
 
-  const games = [
-    {
-      arena: "Richmond Hill Arena",
-      date: "Tuesday",
-      time: "9:30 PM",
-      cost: "$20",
-      maxPlayers: 20,
-      level: "Recreational",
-      team1Name: "Leafs",
-      team2Name: "Habs",
-    },
-    {
-      arena: "Canlan York",
-      date: "Thursday",
-      time: "10:00 PM",
-      cost: "$25",
-      maxPlayers: 22,
-      level: "Intermediate",
-      team1Name: "Red Team",
-      team2Name: "White Team",
-    },
-  ]
+  const loadGames = async () => {
+    const { data } = await supabase
+      .from("games")
+      .select("*")
+      .eq("is_active", true)
+      .order("created_at", { ascending: true })
+
+    setGames(data || [])
+  }
 
   const loadSignups = async () => {
     const { data } = await supabase
@@ -42,6 +30,7 @@ export default function Home() {
   }
 
   useEffect(() => {
+    loadGames()
     loadSignups()
   }, [])
 
@@ -51,9 +40,9 @@ export default function Home() {
       return
     }
 
-    const roster = signups.filter((p) => p.game_id === game.arena)
+    const roster = signups.filter((p) => p.game_id === game.id)
 
-    if (roster.length >= game.maxPlayers) {
+    if (roster.length >= game.max_players) {
       alert("This game is full.")
       return
     }
@@ -68,8 +57,8 @@ export default function Home() {
 
     const { error } = await supabase.from("game_signups").insert([
       {
-        game_id: game.arena,
-        game_name: game.arena + " - " + game.date + " " + game.time,
+        game_id: game.id,
+        game_name: game.arena + " - " + game.game_date + " " + game.game_time,
         player_name: name,
         phone,
         email,
@@ -92,8 +81,8 @@ export default function Home() {
     }
   }
 
-  const getDisplayTeamName = (game, teamName) => {
-    return teamName === "Team 1" ? game.team1Name : game.team2Name
+  const getTeamDisplayName = (game, teamName) => {
+    return teamName === "Team 1" ? game.team1_name : game.team2_name
   }
 
   const renderTeamRoster = (roster, teamName, displayName) => {
@@ -140,91 +129,95 @@ export default function Home() {
       <section style={styles.gamesSection}>
         <h2 style={styles.sectionTitle}>Upcoming Games</h2>
 
-        {games.map((game, index) => {
-          const roster = signups.filter((p) => p.game_id === game.arena)
-          const spotsLeft = game.maxPlayers - roster.length
-          const isFull = spotsLeft <= 0
+        {games.length === 0 ? (
+          <p style={{ textAlign: "center" }}>No games posted yet.</p>
+        ) : (
+          games.map((game) => {
+            const roster = signups.filter((p) => p.game_id === game.id)
+            const spotsLeft = game.max_players - roster.length
+            const isFull = spotsLeft <= 0
 
-          return (
-            <div key={index} style={styles.gameCard}>
-              <div style={styles.gameHeader}>
-                <div>
-                  <h3 style={styles.arena}>{game.arena}</h3>
-                  <p style={styles.gameInfo}>{game.date} • {game.time}</p>
-                  <p style={styles.gameInfo}>{game.cost} • {game.level}</p>
-                  <p style={styles.gameInfo}>
-                    {game.team1Name} vs {game.team2Name}
-                  </p>
+            return (
+              <div key={game.id} style={styles.gameCard}>
+                <div style={styles.gameHeader}>
+                  <div>
+                    <h3 style={styles.arena}>{game.arena}</h3>
+                    <p style={styles.gameInfo}>{game.game_date} • {game.game_time}</p>
+                    <p style={styles.gameInfo}>{game.cost} • {game.level}</p>
+                    <p style={styles.gameInfo}>
+                      {game.team1_name} vs {game.team2_name}
+                    </p>
+                  </div>
+
+                  <div style={isFull ? styles.fullBadge : styles.openBadge}>
+                    {isFull ? "FULL" : `${spotsLeft} spots left`}
+                  </div>
                 </div>
 
-                <div style={isFull ? styles.fullBadge : styles.openBadge}>
-                  {isFull ? "FULL" : `${spotsLeft} spots left`}
+                <div style={styles.signupBox}>
+                  <h4 style={styles.signupTitle}>Join this game</h4>
+
+                  <input
+                    placeholder="Name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    style={styles.input}
+                  />
+
+                  <input
+                    placeholder="Phone"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    style={styles.input}
+                  />
+
+                  <input
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    style={styles.input}
+                  />
+
+                  <select
+                    value={playerType}
+                    onChange={(e) => setPlayerType(e.target.value)}
+                    style={styles.input}
+                  >
+                    <option>Skater</option>
+                    <option>Goalie</option>
+                  </select>
+
+                  <select
+                    value={team}
+                    onChange={(e) => setTeam(e.target.value)}
+                    style={styles.input}
+                  >
+                    <option value="Team 1">{game.team1_name}</option>
+                    <option value="Team 2">{game.team2_name}</option>
+                  </select>
+
+                  <button
+                    onClick={() => handleJoin(game)}
+                    disabled={isFull}
+                    style={isFull ? styles.disabledButton : styles.joinButton}
+                  >
+                    {isFull ? "Game Full" : "Join Game"}
+                  </button>
+                </div>
+
+                <div style={styles.rosterHeader}>
+                  <h4 style={styles.rosterTitle}>Roster</h4>
+                  <p style={styles.rosterCount}>{roster.length} / {game.max_players} signed up</p>
+                </div>
+
+                <div style={styles.rosterGrid}>
+                  {renderTeamRoster(roster, "Team 1", getTeamDisplayName(game, "Team 1"))}
+                  {renderTeamRoster(roster, "Team 2", getTeamDisplayName(game, "Team 2"))}
                 </div>
               </div>
-
-              <div style={styles.signupBox}>
-                <h4 style={styles.signupTitle}>Join this game</h4>
-
-                <input
-                  placeholder="Name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  style={styles.input}
-                />
-
-                <input
-                  placeholder="Phone"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  style={styles.input}
-                />
-
-                <input
-                  placeholder="Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  style={styles.input}
-                />
-
-                <select
-                  value={playerType}
-                  onChange={(e) => setPlayerType(e.target.value)}
-                  style={styles.input}
-                >
-                  <option>Skater</option>
-                  <option>Goalie</option>
-                </select>
-
-                <select
-                  value={team}
-                  onChange={(e) => setTeam(e.target.value)}
-                  style={styles.input}
-                >
-                  <option value="Team 1">{game.team1Name}</option>
-                  <option value="Team 2">{game.team2Name}</option>
-                </select>
-
-                <button
-                  onClick={() => handleJoin(game)}
-                  disabled={isFull}
-                  style={isFull ? styles.disabledButton : styles.joinButton}
-                >
-                  {isFull ? "Game Full" : "Join Game"}
-                </button>
-              </div>
-
-              <div style={styles.rosterHeader}>
-                <h4 style={styles.rosterTitle}>Roster</h4>
-                <p style={styles.rosterCount}>{roster.length} / {game.maxPlayers} signed up</p>
-              </div>
-
-              <div style={styles.rosterGrid}>
-                {renderTeamRoster(roster, "Team 1", getDisplayTeamName(game, "Team 1"))}
-                {renderTeamRoster(roster, "Team 2", getDisplayTeamName(game, "Team 2"))}
-              </div>
-            </div>
-          )
-        })}
+            )
+          })
+        )}
       </section>
     </div>
   )
