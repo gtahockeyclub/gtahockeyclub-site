@@ -135,6 +135,32 @@ export default function Home() {
     }
   }
 
+  const handleRemovePlayer = async (playerId, playerName) => {
+    const code = prompt(`Enter organizer code to remove ${playerName}:`)
+
+    if (code !== ORGANIZER_CODE) {
+      alert('Invalid organizer code.')
+      return
+    }
+
+    const confirmRemove = confirm(`Remove ${playerName} from the roster?`)
+
+    if (!confirmRemove) return
+
+    const { error } = await supabase
+      .from('game_signups')
+      .delete()
+      .eq('id', playerId)
+
+    if (error) {
+      alert('Error removing player.')
+      console.log(error)
+    } else {
+      alert('Player removed.')
+      loadSignups()
+    }
+  }
+
   const handleJoin = async (game) => {
     if (!name || !phone || !email) {
       alert('Please enter your name, phone, and email.')
@@ -193,12 +219,32 @@ export default function Home() {
 
         <ol style={styles.rosterList}>
           <li style={styles.goalieLine}>
-            {goalie ? `🥅 ${goalie.player_name} (Goalie)` : '🥅 Open Goalie Spot'}
+            {goalie ? (
+              <span style={styles.playerRow}>
+                <span>🥅 {goalie.player_name} (Goalie)</span>
+                <button
+                  onClick={() => handleRemovePlayer(goalie.id, goalie.player_name)}
+                  style={styles.removeButton}
+                >
+                  Remove
+                </button>
+              </span>
+            ) : (
+              '🥅 Open Goalie Spot'
+            )}
           </li>
 
           {skaters.map((player) => (
             <li key={player.id} style={styles.playerLine}>
-              {player.player_name}
+              <span style={styles.playerRow}>
+                <span>{player.player_name}</span>
+                <button
+                  onClick={() => handleRemovePlayer(player.id, player.player_name)}
+                  style={styles.removeButton}
+                >
+                  Remove
+                </button>
+              </span>
             </li>
           ))}
         </ol>
@@ -383,4 +429,6 @@ const styles = {
   rosterList: { paddingLeft: '24px', marginBottom: 0 },
   goalieLine: { fontWeight: 'bold', marginBottom: '8px', color: '#07152b' },
   playerLine: { marginBottom: '7px' },
+  playerRow: { display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: 'center' },
+  removeButton: { background: '#b42318', color: 'white', border: 'none', borderRadius: '5px', padding: '4px 8px', fontSize: '12px', cursor: 'pointer' },
 }
