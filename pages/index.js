@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 
 export default function Home() {
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
+  const [signups, setSignups] = useState([])
 
   const games = [
     {
@@ -12,7 +13,7 @@ export default function Home() {
       date: "Tuesday",
       time: "9:30 PM",
       cost: "$20",
-      spots: "10 / 20 spots filled",
+      spots: "20 max",
       level: "Recreational",
     },
     {
@@ -20,15 +21,30 @@ export default function Home() {
       date: "Thursday",
       time: "10:00 PM",
       cost: "$25",
-      spots: "14 / 22 spots filled",
+      spots: "22 max",
       level: "Intermediate",
     },
-  ];
+  ]
+
+  const loadSignups = async () => {
+    const { data, error } = await supabase
+      .from("game_signups")
+      .select("*")
+      .order("created_at", { ascending: true })
+
+    if (!error) {
+      setSignups(data || [])
+    }
+  }
+
+  useEffect(() => {
+    loadSignups()
+  }, [])
 
   const handleJoin = async (game) => {
     if (!name || !phone || !email) {
-      alert("Please enter your name, phone, and email.");
-      return;
+      alert("Please enter your name, phone, and email.")
+      return
     }
 
     const { error } = await supabase.from("game_signups").insert([
@@ -39,18 +55,19 @@ export default function Home() {
         phone: phone,
         email: email,
       },
-    ]);
+    ])
 
     if (error) {
-      alert("There was an error joining the game.");
-      console.log(error);
+      alert("There was an error joining the game.")
+      console.log(error)
     } else {
-      alert("You are signed up!");
-      setName("");
-      setPhone("");
-      setEmail("");
+      alert("You are signed up!")
+      setName("")
+      setPhone("")
+      setEmail("")
+      loadSignups()
     }
-  };
+  }
 
   return (
     <div style={{ fontFamily: "Arial, sans-serif", margin: 0 }}>
@@ -79,75 +96,95 @@ export default function Home() {
           Upcoming Games
         </h2>
 
-        {games.map((game, index) => (
-          <div
-            key={index}
-            style={{
-              border: "1px solid #ddd",
-              borderRadius: "10px",
-              padding: "20px",
-              margin: "20px auto",
-              maxWidth: "600px",
-            }}
-          >
-            <h3>{game.arena}</h3>
-            <p>{game.date} • {game.time}</p>
-            <p>{game.cost}</p>
-            <p>{game.spots}</p>
-            <p>Level: {game.level}</p>
+        {games.map((game, index) => {
+          const roster = signups.filter((signup) => signup.game_id === game.arena)
 
-            <input
-              placeholder="Your name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+          return (
+            <div
+              key={index}
               style={{
-                display: "block",
-                width: "100%",
-                padding: "10px",
-                marginBottom: "10px",
-              }}
-            />
-
-            <input
-              placeholder="Phone number"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              style={{
-                display: "block",
-                width: "100%",
-                padding: "10px",
-                marginBottom: "10px",
-              }}
-            />
-
-            <input
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              style={{
-                display: "block",
-                width: "100%",
-                padding: "10px",
-                marginBottom: "10px",
-              }}
-            />
-
-            <button
-              onClick={() => handleJoin(game)}
-              style={{
-                background: "#e53935",
-                color: "white",
-                border: "none",
-                padding: "10px 15px",
-                borderRadius: "5px",
-                cursor: "pointer",
+                border: "1px solid #ddd",
+                borderRadius: "10px",
+                padding: "20px",
+                margin: "20px auto",
+                maxWidth: "600px",
               }}
             >
-              Join Game
-            </button>
-          </div>
-        ))}
+              <h3>{game.arena}</h3>
+              <p>{game.date} • {game.time}</p>
+              <p>{game.cost}</p>
+              <p>{roster.length} signed up • {game.spots}</p>
+              <p>Level: {game.level}</p>
+
+              <input
+                placeholder="Your name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                style={{
+                  display: "block",
+                  width: "100%",
+                  padding: "10px",
+                  marginBottom: "10px",
+                }}
+              />
+
+              <input
+                placeholder="Phone number"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                style={{
+                  display: "block",
+                  width: "100%",
+                  padding: "10px",
+                  marginBottom: "10px",
+                }}
+              />
+
+              <input
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                style={{
+                  display: "block",
+                  width: "100%",
+                  padding: "10px",
+                  marginBottom: "10px",
+                }}
+              />
+
+              <button
+                onClick={() => handleJoin(game)}
+                style={{
+                  background: "#e53935",
+                  color: "white",
+                  border: "none",
+                  padding: "10px 15px",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                }}
+              >
+                Join Game
+              </button>
+
+              <div style={{ marginTop: "20px" }}>
+                <h4>Roster</h4>
+
+                {roster.length === 0 ? (
+                  <p>No players signed up yet.</p>
+                ) : (
+                  <ol>
+                    {roster.map((player) => (
+                      <li key={player.id}>
+                        {player.player_name}
+                      </li>
+                    ))}
+                  </ol>
+                )}
+              </div>
+            </div>
+          )
+        })}
       </div>
     </div>
-  );
+  )
 }
