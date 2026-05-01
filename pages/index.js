@@ -3,8 +3,9 @@ import { supabase } from '../lib/supabase'
 
 export default function Home() {
   const [name, setName] = useState('')
-const [phone, setPhone] = useState('')
-const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
+  const [email, setEmail] = useState('')
+
   const games = [
     {
       arena: "Richmond Hill Arena",
@@ -23,35 +24,36 @@ const [email, setEmail] = useState('')
       level: "Intermediate",
     },
   ];
-const handleJoin = async (game) => {
-  if (!name || !phone || !email) {
-    alert("Please enter your name, phone, and email.");
-    return;
-  }
 
-  const { error } = await supabase.from("game_signups").insert([
-    {
-      game_id: game.arena,
-      game_name: game.arena + " - " + game.date + " " + game.time,
-      player_name: name,
-      phone: phone,
-      email: email,
-    },
-  ]);
+  const handleJoin = async (game) => {
+    if (!name || !phone || !email) {
+      alert("Please enter your name, phone, and email.");
+      return;
+    }
 
-  if (error) {
-    alert("There was an error joining the game.");
-    console.log(error);
-  } else {
-    alert("You are signed up!");
-    setName("");
-    setPhone("");
-    setEmail("");
-  }
-};
+    const { error } = await supabase.from("game_signups").insert([
+      {
+        game_id: game.arena,
+        game_name: game.arena + " - " + game.date + " " + game.time,
+        player_name: name,
+        phone: phone,
+        email: email,
+      },
+    ]);
+
+    if (error) {
+      alert("There was an error joining the game.");
+      console.log(error);
+    } else {
+      alert("You are signed up!");
+      setName("");
+      setPhone("");
+      setEmail("");
+    }
+  };
+
   return (
     <div style={{ fontFamily: "Arial, sans-serif", margin: 0 }}>
-
       <div
         style={{
           width: "100%",
@@ -94,31 +96,58 @@ const handleJoin = async (game) => {
             <p>{game.spots}</p>
             <p>Level: {game.level}</p>
 
-            <button
-  onClick={() => {
-    const name = prompt("Enter your name");
-    const phone = prompt("Enter your phone number");
-    const email = prompt("Enter your email");
+            <input
+              placeholder="Your name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              style={{
+                display: "block",
+                width: "100%",
+                padding: "10px",
+                marginBottom: "10px",
+              }}
+            />
 
-    if (name && phone && email) {
-      alert("You are added to the game (for now demo)");
-    }
-  }}
-  style={{
-    background: "#e53935",
-    color: "white",
-    border: "none",
-    padding: "10px 15px",
-    borderRadius: "5px",
-    cursor: "pointer",
-  }}
->
-  Join Game
-</button>
+            <input
+              placeholder="Phone number"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              style={{
+                display: "block",
+                width: "100%",
+                padding: "10px",
+                marginBottom: "10px",
+              }}
+            />
+
+            <input
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              style={{
+                display: "block",
+                width: "100%",
+                padding: "10px",
+                marginBottom: "10px",
+              }}
+            />
+
+            <button
+              onClick={() => handleJoin(game)}
+              style={{
+                background: "#e53935",
+                color: "white",
+                border: "none",
+                padding: "10px 15px",
+                borderRadius: "5px",
+                cursor: "pointer",
+              }}
+            >
+              Join Game
+            </button>
           </div>
         ))}
       </div>
-
     </div>
   );
 }
