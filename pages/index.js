@@ -36,11 +36,14 @@ export default function Home() {
   }
 
   const loadGames = async () => {
+    const today = new Date().toISOString().split('T')[0]
+
     const { data } = await supabase
       .from('games')
       .select('*')
       .eq('is_active', true)
-      .order('created_at', { ascending: true })
+      .gte('game_date', today)
+      .order('game_date', { ascending: true })
 
     setGames(data || [])
   }
@@ -243,7 +246,7 @@ export default function Home() {
         <h2 style={styles.sectionTitle}>Upcoming Games</h2>
 
         {games.length === 0 ? (
-          <p style={{ textAlign: 'center' }}>No games posted yet.</p>
+          <p style={{ textAlign: 'center' }}>No upcoming games posted yet.</p>
         ) : (
           games.map((game) => {
             const roster = signups.filter((p) => p.game_id === game.id)
@@ -328,212 +331,38 @@ export default function Home() {
 }
 
 const styles = {
-  page: {
-    fontFamily: 'Arial, sans-serif',
-    margin: 0,
-    background: '#f3f5f8',
-    color: '#07152b',
-  },
-  bannerWrap: {
-    width: '100%',
-    backgroundColor: '#07152b',
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  banner: {
-    width: '100%',
-    maxWidth: '1200px',
-    display: 'block',
-  },
-  intro: {
-    background: '#07152b',
-    color: 'white',
-    textAlign: 'center',
-    padding: '34px 20px',
-  },
-  mainTitle: {
-    fontSize: '34px',
-    margin: '0 0 10px',
-  },
-  mainText: {
-    fontSize: '18px',
-    margin: 0,
-    color: '#d7e3f5',
-  },
-  organizerSection: {
-    padding: '34px 18px 10px',
-  },
-  organizerCard: {
-    background: 'white',
-    borderRadius: '16px',
-    padding: '24px',
-    margin: '0 auto',
-    maxWidth: '900px',
-    boxShadow: '0 8px 22px rgba(0,0,0,0.08)',
-    border: '1px solid #e1e5eb',
-  },
-  formGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-    gap: '10px',
-  },
-  gamesSection: {
-    padding: '30px 18px 40px',
-  },
-  sectionTitle: {
-    textAlign: 'center',
-    fontSize: '32px',
-    marginBottom: '24px',
-  },
-  gameCard: {
-    background: 'white',
-    borderRadius: '16px',
-    padding: '24px',
-    margin: '24px auto',
-    maxWidth: '900px',
-    boxShadow: '0 8px 22px rgba(0,0,0,0.08)',
-    border: '1px solid #e1e5eb',
-  },
-  gameHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    gap: '15px',
-    alignItems: 'flex-start',
-    borderBottom: '1px solid #e5e5e5',
-    paddingBottom: '16px',
-  },
-  arena: {
-    fontSize: '26px',
-    margin: '0 0 8px',
-  },
-  gameInfo: {
-    margin: '4px 0',
-    color: '#42526b',
-  },
-  address: {
-    margin: '8px 0 4px',
-    color: '#667085',
-    fontSize: '14px',
-  },
-  mapLink: {
-    display: 'inline-block',
-    marginTop: '4px',
-    color: '#e53935',
-    fontWeight: 'bold',
-    textDecoration: 'none',
-  },
-  openBadge: {
-    background: '#e9f7ef',
-    color: '#187a3b',
-    padding: '8px 12px',
-    borderRadius: '999px',
-    fontWeight: 'bold',
-    whiteSpace: 'nowrap',
-  },
-  fullBadge: {
-    background: '#fdecea',
-    color: '#b42318',
-    padding: '8px 12px',
-    borderRadius: '999px',
-    fontWeight: 'bold',
-    whiteSpace: 'nowrap',
-  },
-  signupBox: {
-    background: '#f7f9fc',
-    padding: '18px',
-    borderRadius: '12px',
-    marginTop: '20px',
-  },
-  signupTitle: {
-    marginTop: 0,
-    marginBottom: '12px',
-  },
-  input: {
-    width: '100%',
-    padding: '11px',
-    marginBottom: '10px',
-    border: '1px solid #ccd3dd',
-    borderRadius: '8px',
-    boxSizing: 'border-box',
-    fontSize: '15px',
-  },
-  postButton: {
-    width: '100%',
-    background: '#07152b',
-    color: 'white',
-    padding: '12px',
-    border: 'none',
-    borderRadius: '8px',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    fontSize: '16px',
-    marginTop: '8px',
-  },
-  joinButton: {
-    width: '100%',
-    background: '#e53935',
-    color: 'white',
-    padding: '12px',
-    border: 'none',
-    borderRadius: '8px',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    fontSize: '16px',
-  },
-  disabledButton: {
-    width: '100%',
-    background: '#999',
-    color: 'white',
-    padding: '12px',
-    border: 'none',
-    borderRadius: '8px',
-    fontWeight: 'bold',
-    cursor: 'not-allowed',
-    fontSize: '16px',
-  },
-  rosterHeader: {
-    marginTop: '24px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  rosterTitle: {
-    fontSize: '22px',
-    margin: 0,
-  },
-  rosterCount: {
-    margin: 0,
-    color: '#667085',
-  },
-  rosterGrid: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: '16px',
-    marginTop: '14px',
-  },
-  teamBox: {
-    border: '1px solid #d8dee8',
-    borderRadius: '12px',
-    padding: '16px',
-    background: '#fbfcfe',
-  },
-  teamTitle: {
-    textAlign: 'center',
-    margin: '0 0 12px',
-    fontSize: '20px',
-    color: '#07152b',
-    fontWeight: 'bold',
-  },
-  rosterList: {
-    paddingLeft: '24px',
-    marginBottom: 0,
-  },
-  goalieLine: {
-    fontWeight: 'bold',
-    marginBottom: '8px',
-    color: '#07152b',
-  },
-  playerLine: {
-    marginBottom: '7px',
-  },
+  page: { fontFamily: 'Arial, sans-serif', margin: 0, background: '#f3f5f8', color: '#07152b' },
+  bannerWrap: { width: '100%', backgroundColor: '#07152b', display: 'flex', justifyContent: 'center' },
+  banner: { width: '100%', maxWidth: '1200px', display: 'block' },
+  intro: { background: '#07152b', color: 'white', textAlign: 'center', padding: '34px 20px' },
+  mainTitle: { fontSize: '34px', margin: '0 0 10px' },
+  mainText: { fontSize: '18px', margin: 0, color: '#d7e3f5' },
+  organizerSection: { padding: '34px 18px 10px' },
+  organizerCard: { background: 'white', borderRadius: '16px', padding: '24px', margin: '0 auto', maxWidth: '900px', boxShadow: '0 8px 22px rgba(0,0,0,0.08)', border: '1px solid #e1e5eb' },
+  formGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px' },
+  gamesSection: { padding: '30px 18px 40px' },
+  sectionTitle: { textAlign: 'center', fontSize: '32px', marginBottom: '24px' },
+  gameCard: { background: 'white', borderRadius: '16px', padding: '24px', margin: '24px auto', maxWidth: '900px', boxShadow: '0 8px 22px rgba(0,0,0,0.08)', border: '1px solid #e1e5eb' },
+  gameHeader: { display: 'flex', justifyContent: 'space-between', gap: '15px', alignItems: 'flex-start', borderBottom: '1px solid #e5e5e5', paddingBottom: '16px' },
+  arena: { fontSize: '26px', margin: '0 0 8px' },
+  gameInfo: { margin: '4px 0', color: '#42526b' },
+  address: { margin: '8px 0 4px', color: '#667085', fontSize: '14px' },
+  mapLink: { display: 'inline-block', marginTop: '4px', color: '#e53935', fontWeight: 'bold', textDecoration: 'none' },
+  openBadge: { background: '#e9f7ef', color: '#187a3b', padding: '8px 12px', borderRadius: '999px', fontWeight: 'bold', whiteSpace: 'nowrap' },
+  fullBadge: { background: '#fdecea', color: '#b42318', padding: '8px 12px', borderRadius: '999px', fontWeight: 'bold', whiteSpace: 'nowrap' },
+  signupBox: { background: '#f7f9fc', padding: '18px', borderRadius: '12px', marginTop: '20px' },
+  signupTitle: { marginTop: 0, marginBottom: '12px' },
+  input: { width: '100%', padding: '11px', marginBottom: '10px', border: '1px solid #ccd3dd', borderRadius: '8px', boxSizing: 'border-box', fontSize: '15px' },
+  postButton: { width: '100%', background: '#07152b', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px', marginTop: '8px' },
+  joinButton: { width: '100%', background: '#e53935', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
+  disabledButton: { width: '100%', background: '#999', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'not-allowed', fontSize: '16px' },
+  rosterHeader: { marginTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
+  rosterTitle: { fontSize: '22px', margin: 0 },
+  rosterCount: { margin: 0, color: '#667085' },
+  rosterGrid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '14px' },
+  teamBox: { border: '1px solid #d8dee8', borderRadius: '12px', padding: '16px', background: '#fbfcfe' },
+  teamTitle: { textAlign: 'center', margin: '0 0 12px', fontSize: '20px', color: '#07152b', fontWeight: 'bold' },
+  rosterList: { paddingLeft: '24px', marginBottom: 0 },
+  goalieLine: { fontWeight: 'bold', marginBottom: '8px', color: '#07152b' },
+  playerLine: { marginBottom: '7px' },
 }
