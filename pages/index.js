@@ -2,6 +2,9 @@ import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 
 export default function Home() {
+  const [name, setName] = useState('')
+const [phone, setPhone] = useState('')
+const [email, setEmail] = useState('')
   const games = [
     {
       arena: "Richmond Hill Arena",
