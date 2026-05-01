@@ -23,7 +23,32 @@ const [email, setEmail] = useState('')
       level: "Intermediate",
     },
   ];
+const handleJoin = async (game) => {
+  if (!name || !phone || !email) {
+    alert("Please enter your name, phone, and email.");
+    return;
+  }
 
+  const { error } = await supabase.from("game_signups").insert([
+    {
+      game_id: game.arena,
+      game_name: game.arena + " - " + game.date + " " + game.time,
+      player_name: name,
+      phone: phone,
+      email: email,
+    },
+  ]);
+
+  if (error) {
+    alert("There was an error joining the game.");
+    console.log(error);
+  } else {
+    alert("You are signed up!");
+    setName("");
+    setPhone("");
+    setEmail("");
+  }
+};
   return (
     <div style={{ fontFamily: "Arial, sans-serif", margin: 0 }}>
 
