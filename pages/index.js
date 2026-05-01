@@ -167,7 +167,18 @@ export default function Home() {
       return
     }
 
+    const cleanEmail = email.trim().toLowerCase()
+
     const roster = signups.filter((p) => p.game_id === game.id)
+
+    const alreadySignedUp = roster.some(
+      (p) => p.email && p.email.trim().toLowerCase() === cleanEmail
+    )
+
+    if (alreadySignedUp) {
+      alert('You are already signed up for this game.')
+      return
+    }
 
     if (roster.length >= game.max_players) {
       alert('This game is full.')
@@ -188,7 +199,7 @@ export default function Home() {
         game_name: game.arena + ' - ' + game.game_date + ' ' + game.game_time,
         player_name: name,
         phone,
-        email,
+        email: cleanEmail,
         player_type: playerType,
         team,
       },
@@ -222,10 +233,7 @@ export default function Home() {
             {goalie ? (
               <span style={styles.playerRow}>
                 <span>🥅 {goalie.player_name} (Goalie)</span>
-                <button
-                  onClick={() => handleRemovePlayer(goalie.id, goalie.player_name)}
-                  style={styles.removeButton}
-                >
+                <button onClick={() => handleRemovePlayer(goalie.id, goalie.player_name)} style={styles.removeButton}>
                   Remove
                 </button>
               </span>
@@ -238,10 +246,7 @@ export default function Home() {
             <li key={player.id} style={styles.playerLine}>
               <span style={styles.playerRow}>
                 <span>{player.player_name}</span>
-                <button
-                  onClick={() => handleRemovePlayer(player.id, player.player_name)}
-                  style={styles.removeButton}
-                >
+                <button onClick={() => handleRemovePlayer(player.id, player.player_name)} style={styles.removeButton}>
                   Remove
                 </button>
               </span>
@@ -255,18 +260,12 @@ export default function Home() {
   return (
     <div style={styles.page}>
       <div style={styles.bannerWrap}>
-        <img
-          src="/GTAHOCKEYCLUBBANNER.png"
-          alt="GTA Hockey Club Banner"
-          style={styles.banner}
-        />
+        <img src="/GTAHOCKEYCLUBBANNER.png" alt="GTA Hockey Club Banner" style={styles.banner} />
       </div>
 
       <section style={styles.intro}>
         <h1 style={styles.mainTitle}>Find Pickup Hockey Games Across the GTA</h1>
-        <p style={styles.mainText}>
-          Join recreational games, view rosters, and reserve your spot in seconds.
-        </p>
+        <p style={styles.mainText}>Join recreational games, view rosters, and reserve your spot in seconds.</p>
       </section>
 
       <section style={styles.organizerSection}>
@@ -291,13 +290,7 @@ export default function Home() {
             <input placeholder="Team 1 Name" value={team1Name} onChange={(e) => setTeam1Name(e.target.value)} style={styles.input} />
             <input placeholder="Team 2 Name" value={team2Name} onChange={(e) => setTeam2Name(e.target.value)} style={styles.input} />
             <input placeholder="Organizer Name" value={organizer} onChange={(e) => setOrganizer(e.target.value)} style={styles.input} />
-            <input
-              placeholder="Organizer Code"
-              type="password"
-              value={organizerCode}
-              onChange={(e) => setOrganizerCode(e.target.value)}
-              style={styles.input}
-            />
+            <input placeholder="Organizer Code" type="password" value={organizerCode} onChange={(e) => setOrganizerCode(e.target.value)} style={styles.input} />
           </div>
 
           <button onClick={handlePostGame} style={styles.postButton}>
@@ -362,11 +355,7 @@ export default function Home() {
                     <option value="Team 2">{game.team2_name}</option>
                   </select>
 
-                  <button
-                    onClick={() => handleJoin(game)}
-                    disabled={isFull}
-                    style={isFull ? styles.disabledButton : styles.joinButton}
-                  >
+                  <button onClick={() => handleJoin(game)} disabled={isFull} style={isFull ? styles.disabledButton : styles.joinButton}>
                     {isFull ? 'Game Full' : 'Join Game'}
                   </button>
                 </div>
