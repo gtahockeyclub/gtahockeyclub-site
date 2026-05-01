@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase'
 
 export default function Home() {
   const [games, setGames] = useState([])
+  const [arenas, setArenas] = useState([])
   const [signups, setSignups] = useState([])
 
   const [name, setName] = useState('')
@@ -11,7 +12,7 @@ export default function Home() {
   const [playerType, setPlayerType] = useState('Skater')
   const [team, setTeam] = useState('Team 1')
 
-  const [arena, setArena] = useState('')
+  const [selectedArena, setSelectedArena] = useState('')
   const [date, setDate] = useState('')
   const [time, setTime] = useState('')
   const [cost, setCost] = useState('')
@@ -20,6 +21,16 @@ export default function Home() {
   const [team1Name, setTeam1Name] = useState('Team 1')
   const [team2Name, setTeam2Name] = useState('Team 2')
   const [organizer, setOrganizer] = useState('')
+
+  const loadArenas = async () => {
+    const { data } = await supabase
+      .from('arenas')
+      .select('*')
+      .eq('is_active', true)
+      .order('name', { ascending: true })
+
+    setArenas(data || [])
+  }
 
   const loadGames = async () => {
     const { data } = await supabase
@@ -41,19 +52,26 @@ export default function Home() {
   }
 
   useEffect(() => {
+    loadArenas()
     loadGames()
     loadSignups()
   }, [])
 
+  const getArenaDetails = (arenaName) => {
+    return arenas.find((a) => a.name === arenaName)
+  }
+
   const handlePostGame = async () => {
-    if (!arena || !date || !time || !cost) {
-      alert('Please fill in arena, day, time, and cost.')
+    const arenaDetails = arenas.find((a) => a.id === selectedArena)
+
+    if (!arenaDetails || !date || !time || !cost) {
+      alert('Please select arena, date, time, and cost.')
       return
     }
 
     const { error } = await supabase.from('games').insert([
       {
-        arena,
+        arena: arenaDetails.name,
         game_date: date,
         game_time: time,
         cost,
@@ -70,7 +88,7 @@ export default function Home() {
       console.log(error)
     } else {
       alert('Game posted!')
-      setArena('')
+      setSelectedArena('')
       setDate('')
       setTime('')
       setCost('')
@@ -138,10 +156,12 @@ export default function Home() {
     return (
       <div style={styles.teamBox}>
         <h4 style={styles.teamTitle}>{displayName}</h4>
+
         <ol style={styles.rosterList}>
           <li style={styles.goalieLine}>
             {goalie ? `🥅 ${goalie.player_name} (Goalie)` : '🥅 Open Goalie Spot'}
           </li>
+
           {skaters.map((player) => (
             <li key={player.id} style={styles.playerLine}>
               {player.player_name}
@@ -174,9 +194,21 @@ export default function Home() {
           <h2 style={styles.sectionTitle}>Post a Game</h2>
 
           <div style={styles.formGrid}>
-            <input placeholder="Arena" value={arena} onChange={(e) => setArena(e.target.value)} style={styles.input} />
-            <input placeholder="Day" value={date} onChange={(e) => setDate(e.target.value)} style={styles.input} />
-            <input placeholder="Time" value={time} onChange={(e) => setTime(e.target.value)} style={styles.input} />
+            <select
+              value={selectedArena}
+              onChange={(e) => setSelectedArena(e.target.value)}
+              style={styles.input}
+            >
+              <option value="">Select Arena</option>
+              {arenas.map((arena) => (
+                <option key={arena.id} value={arena.id}>
+                  {arena.name} - {arena.city}
+                </option>
+              ))}
+            </select>
+
+            <input type="date" value={date} onChange={(e) => setDate(e.target.value)} style={styles.input} />
+            <input type="time" value={time} onChange={(e) => setTime(e.target.value)} style={styles.input} />
             <input placeholder="Cost" value={cost} onChange={(e) => setCost(e.target.value)} style={styles.input} />
             <input placeholder="Level" value={level} onChange={(e) => setLevel(e.target.value)} style={styles.input} />
             <input placeholder="Max Players" value={maxPlayers} onChange={(e) => setMaxPlayers(e.target.value)} style={styles.input} />
@@ -201,6 +233,7 @@ export default function Home() {
             const roster = signups.filter((p) => p.game_id === game.id)
             const spotsLeft = game.max_players - roster.length
             const isFull = spotsLeft <= 0
+            const arenaDetails = getArenaDetails(game.arena)
 
             return (
               <div key={game.id} style={styles.gameCard}>
@@ -210,6 +243,23 @@ export default function Home() {
                     <p style={styles.gameInfo}>{game.game_date} • {game.game_time}</p>
                     <p style={styles.gameInfo}>{game.cost} • {game.level}</p>
                     <p style={styles.gameInfo}>{game.team1_name} vs {game.team2_name}</p>
+
+                    {arenaDetails && (
+                      <p style={styles.address}>
+                        {arenaDetails.address}, {arenaDetails.city}, {arenaDetails.province}
+                      </p>
+                    )}
+
+                    {arenaDetails?.google_maps_url && (
+                      <a
+                        href={arenaDetails.google_maps_url}
+                        target="_blank"
+                        rel="noreferrer"
+                        style={styles.mapLink}
+                      >
+                        Open in Google Maps
+                      </a>
+                    )}
                   </div>
 
                   <div style={isFull ? styles.fullBadge : styles.openBadge}>
@@ -343,6 +393,18 @@ const styles = {
   gameInfo: {
     margin: '4px 0',
     color: '#42526b',
+  },
+  address: {
+    margin: '8px 0 4px',
+    color: '#667085',
+    fontSize: '14px',
+  },
+  mapLink: {
+    display: 'inline-block',
+    marginTop: '4px',
+    color: '#e53935',
+    fontWeight: 'bold',
+    textDecoration: 'none',
   },
   openBadge: {
     background: '#e9f7ef',
