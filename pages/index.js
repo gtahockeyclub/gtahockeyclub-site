@@ -161,6 +161,44 @@ export default function Home() {
     }
   }
 
+  const handleMovePlayer = async (player, gameRoster) => {
+    const code = prompt(`Enter organizer code to move ${player.player_name}:`)
+
+    if (code !== ORGANIZER_CODE) {
+      alert('Invalid organizer code.')
+      return
+    }
+
+    const newTeam = player.team === 'Team 1' ? 'Team 2' : 'Team 1'
+
+    if (player.player_type === 'Goalie') {
+      const goalieExistsOnNewTeam = gameRoster.some(
+        (p) =>
+          p.team === newTeam &&
+          p.player_type === 'Goalie' &&
+          p.id !== player.id
+      )
+
+      if (goalieExistsOnNewTeam) {
+        alert('Cannot move goalie. The other team already has a goalie.')
+        return
+      }
+    }
+
+    const { error } = await supabase
+      .from('game_signups')
+      .update({ team: newTeam })
+      .eq('id', player.id)
+
+    if (error) {
+      alert('Error moving player.')
+      console.log(error)
+    } else {
+      alert(`${player.player_name} moved to ${newTeam}.`)
+      loadSignups()
+    }
+  }
+
   const handleJoin = async (game) => {
     if (!name || !phone || !email) {
       alert('Please enter your name, phone, and email.')
@@ -224,6 +262,23 @@ export default function Home() {
     const goalie = teamRoster.find((p) => p.player_type === 'Goalie')
     const skaters = teamRoster.filter((p) => p.player_type !== 'Goalie')
 
+    const playerActions = (player) => (
+      <span style={styles.buttonGroup}>
+        <button
+          onClick={() => handleMovePlayer(player, roster)}
+          style={styles.moveButton}
+        >
+          Move
+        </button>
+        <button
+          onClick={() => handleRemovePlayer(player.id, player.player_name)}
+          style={styles.removeButton}
+        >
+          Remove
+        </button>
+      </span>
+    )
+
     return (
       <div style={styles.teamBox}>
         <h4 style={styles.teamTitle}>{displayName}</h4>
@@ -233,9 +288,7 @@ export default function Home() {
             {goalie ? (
               <span style={styles.playerRow}>
                 <span>🥅 {goalie.player_name} (Goalie)</span>
-                <button onClick={() => handleRemovePlayer(goalie.id, goalie.player_name)} style={styles.removeButton}>
-                  Remove
-                </button>
+                {playerActions(goalie)}
               </span>
             ) : (
               '🥅 Open Goalie Spot'
@@ -246,9 +299,7 @@ export default function Home() {
             <li key={player.id} style={styles.playerLine}>
               <span style={styles.playerRow}>
                 <span>{player.player_name}</span>
-                <button onClick={() => handleRemovePlayer(player.id, player.player_name)} style={styles.removeButton}>
-                  Remove
-                </button>
+                {playerActions(player)}
               </span>
             </li>
           ))}
@@ -419,5 +470,7 @@ const styles = {
   goalieLine: { fontWeight: 'bold', marginBottom: '8px', color: '#07152b' },
   playerLine: { marginBottom: '7px' },
   playerRow: { display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: 'center' },
+  buttonGroup: { display: 'flex', gap: '6px' },
+  moveButton: { background: '#175cd3', color: 'white', border: 'none', borderRadius: '5px', padding: '4px 8px', fontSize: '12px', cursor: 'pointer' },
   removeButton: { background: '#b42318', color: 'white', border: 'none', borderRadius: '5px', padding: '4px 8px', fontSize: '12px', cursor: 'pointer' },
 }
