@@ -29,14 +29,12 @@ export default function Home() {
   ]
 
   const loadSignups = async () => {
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("game_signups")
       .select("*")
       .order("created_at", { ascending: true })
 
-    if (!error) {
-      setSignups(data || [])
-    }
+    setSignups(data || [])
   }
 
   useEffect(() => {
@@ -46,6 +44,19 @@ export default function Home() {
   const handleJoin = async (game) => {
     if (!name || !phone || !email) {
       alert("Please enter your name, phone, and email.")
+      return
+    }
+
+    const teamRoster = signups.filter(
+      (p) => p.game_id === game.arena && p.team === team
+    )
+
+    const goalieExists = teamRoster.some(
+      (p) => p.player_type === "Goalie"
+    )
+
+    if (playerType === "Goalie" && goalieExists) {
+      alert("Goalie spot already taken for this team.")
       return
     }
 
@@ -62,7 +73,7 @@ export default function Home() {
     ])
 
     if (error) {
-      alert("There was an error joining the game.")
+      alert("Error joining game")
       console.log(error)
     } else {
       alert("You are signed up!")
@@ -76,10 +87,10 @@ export default function Home() {
   }
 
   const renderTeamRoster = (roster, teamName) => {
-    const teamRoster = roster.filter((player) => player.team === teamName)
-    const goalies = teamRoster.filter((player) => player.player_type === "Goalie")
-    const skaters = teamRoster.filter((player) => player.player_type !== "Goalie")
-    const orderedRoster = [...goalies, ...skaters]
+    const teamRoster = roster.filter((p) => p.team === teamName)
+
+    const goalie = teamRoster.find((p) => p.player_type === "Goalie")
+    const skaters = teamRoster.filter((p) => p.player_type !== "Goalie")
 
     return (
       <div
@@ -90,23 +101,27 @@ export default function Home() {
           background: "#f7f7f7",
         }}
       >
-        <h4 style={{ marginTop: 0, textAlign: "center" }}>{teamName}</h4>
+        <h4 style={{ textAlign: "center", marginBottom: "5px" }}>
+          {teamName}
+        </h4>
 
-        {orderedRoster.length === 0 ? (
-          <p style={{ textAlign: "center", color: "#777" }}>No players yet</p>
-        ) : (
-          <ol style={{ paddingLeft: "22px" }}>
-            {orderedRoster.map((player, index) => (
-              <li key={player.id} style={{ marginBottom: "6px" }}>
-                {index === 0 && player.player_type === "Goalie"
-                  ? "🥅 "
-                  : ""}
-                {player.player_name}
-                {player.player_type === "Goalie" ? " (Goalie)" : ""}
-              </li>
-            ))}
-          </ol>
-        )}
+        <p style={{ textAlign: "center", fontSize: "12px", color: "#777" }}>
+          Goalie first 🥅
+        </p>
+
+        <ol style={{ paddingLeft: "22px" }}>
+          {/* Goalie slot */}
+          <li style={{ fontWeight: "bold" }}>
+            {goalie
+              ? `🥅 ${goalie.player_name} (Goalie)`
+              : "🥅 Open Goalie Spot"}
+          </li>
+
+          {/* Skaters */}
+          {skaters.map((player) => (
+            <li key={player.id}>{player.player_name}</li>
+          ))}
+        </ol>
       </div>
     )
   }
@@ -123,23 +138,22 @@ export default function Home() {
       >
         <img
           src="/GTAHOCKEYCLUBBANNER.png"
-          alt="GTA Hockey Club Banner"
+          alt="Banner"
           style={{
             width: "100%",
             maxWidth: "1200px",
-            height: "auto",
             display: "block",
           }}
         />
       </div>
 
       <div style={{ padding: "40px 20px" }}>
-        <h2 style={{ textAlign: "center", fontSize: "32px" }}>
-          Upcoming Games
-        </h2>
+        <h2 style={{ textAlign: "center" }}>Upcoming Games</h2>
 
         {games.map((game, index) => {
-          const roster = signups.filter((signup) => signup.game_id === game.arena)
+          const roster = signups.filter(
+            (p) => p.game_id === game.arena
+          )
 
           return (
             <div
@@ -150,85 +164,52 @@ export default function Home() {
                 padding: "20px",
                 margin: "20px auto",
                 maxWidth: "800px",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
               }}
             >
               <h3>{game.arena}</h3>
               <p>{game.date} • {game.time}</p>
               <p>{game.cost}</p>
               <p>{roster.length} signed up • {game.spots}</p>
-              <p>Level: {game.level}</p>
 
-              <div style={{ marginTop: "20px", marginBottom: "20px" }}>
-                <h4>Join this game</h4>
-
+              {/* FORM */}
+              <div style={{ marginTop: "15px" }}>
                 <input
-                  placeholder="Your name"
+                  placeholder="Name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  style={{
-                    display: "block",
-                    width: "100%",
-                    padding: "10px",
-                    marginBottom: "10px",
-                    boxSizing: "border-box",
-                  }}
+                  style={{ width: "100%", padding: "8px", marginBottom: "8px" }}
                 />
 
                 <input
-                  placeholder="Phone number"
+                  placeholder="Phone"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  style={{
-                    display: "block",
-                    width: "100%",
-                    padding: "10px",
-                    marginBottom: "10px",
-                    boxSizing: "border-box",
-                  }}
+                  style={{ width: "100%", padding: "8px", marginBottom: "8px" }}
                 />
 
                 <input
                   placeholder="Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  style={{
-                    display: "block",
-                    width: "100%",
-                    padding: "10px",
-                    marginBottom: "10px",
-                    boxSizing: "border-box",
-                  }}
+                  style={{ width: "100%", padding: "8px", marginBottom: "8px" }}
                 />
 
                 <select
                   value={playerType}
                   onChange={(e) => setPlayerType(e.target.value)}
-                  style={{
-                    display: "block",
-                    width: "100%",
-                    padding: "10px",
-                    marginBottom: "10px",
-                    boxSizing: "border-box",
-                  }}
+                  style={{ width: "100%", padding: "8px", marginBottom: "8px" }}
                 >
-                  <option value="Skater">Skater</option>
-                  <option value="Goalie">Goalie</option>
+                  <option>Skater</option>
+                  <option>Goalie</option>
                 </select>
 
                 <select
                   value={team}
                   onChange={(e) => setTeam(e.target.value)}
-                  style={{
-                    display: "block",
-                    width: "100%",
-                    padding: "10px",
-                    marginBottom: "10px",
-                    boxSizing: "border-box",
-                  }}
+                  style={{ width: "100%", padding: "8px", marginBottom: "8px" }}
                 >
-                  <option value="Team 1">Team 1</option>
-                  <option value="Team 2">Team 2</option>
+                  <option>Team 1</option>
+                  <option>Team 2</option>
                 </select>
 
                 <button
@@ -236,30 +217,27 @@ export default function Home() {
                   style={{
                     background: "#e53935",
                     color: "white",
+                    padding: "10px",
                     border: "none",
-                    padding: "12px 18px",
-                    borderRadius: "6px",
-                    cursor: "pointer",
-                    fontWeight: "bold",
+                    borderRadius: "5px",
+                    width: "100%",
                   }}
                 >
                   Join Game
                 </button>
               </div>
 
-              <div style={{ marginTop: "25px" }}>
-                <h4 style={{ textAlign: "center" }}>Roster</h4>
-
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: "20px",
-                  }}
-                >
-                  {renderTeamRoster(roster, "Team 1")}
-                  {renderTeamRoster(roster, "Team 2")}
-                </div>
+              {/* ROSTER */}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "15px",
+                  marginTop: "20px",
+                }}
+              >
+                {renderTeamRoster(roster, "Team 1")}
+                {renderTeamRoster(roster, "Team 2")}
               </div>
             </div>
           )
