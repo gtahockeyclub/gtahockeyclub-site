@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 
+const ORGANIZER_CODE = 'GTA2026'
+
 export default function Home() {
   const [games, setGames] = useState([])
   const [arenas, setArenas] = useState([])
@@ -21,6 +23,7 @@ export default function Home() {
   const [team1Name, setTeam1Name] = useState('Team 1')
   const [team2Name, setTeam2Name] = useState('Team 2')
   const [organizer, setOrganizer] = useState('')
+  const [organizerCode, setOrganizerCode] = useState('')
 
   const loadArenas = async () => {
     const { data } = await supabase
@@ -62,6 +65,11 @@ export default function Home() {
   }
 
   const handlePostGame = async () => {
+    if (organizerCode !== ORGANIZER_CODE) {
+      alert('Invalid organizer code.')
+      return
+    }
+
     const arenaDetails = arenas.find((a) => a.id === selectedArena)
 
     if (!arenaDetails || !date || !time || !cost) {
@@ -97,6 +105,7 @@ export default function Home() {
       setTeam1Name('Team 1')
       setTeam2Name('Team 2')
       setOrganizer('')
+      setOrganizerCode('')
       loadGames()
     }
   }
@@ -215,6 +224,13 @@ export default function Home() {
             <input placeholder="Team 1 Name" value={team1Name} onChange={(e) => setTeam1Name(e.target.value)} style={styles.input} />
             <input placeholder="Team 2 Name" value={team2Name} onChange={(e) => setTeam2Name(e.target.value)} style={styles.input} />
             <input placeholder="Organizer Name" value={organizer} onChange={(e) => setOrganizer(e.target.value)} style={styles.input} />
+            <input
+              placeholder="Organizer Code"
+              type="password"
+              value={organizerCode}
+              onChange={(e) => setOrganizerCode(e.target.value)}
+              style={styles.input}
+            />
           </div>
 
           <button onClick={handlePostGame} style={styles.postButton}>
