@@ -201,7 +201,28 @@ export default function Home() {
       alert('Error moving player.')
       console.log(error)
     } else {
-      alert(`${player.player_name} moved to ${newTeam}.`)
+      alert(`${player.player_name} moved.`)
+      loadSignups()
+    }
+  }
+
+  const handleTogglePaid = async (player) => {
+    const code = prompt(`Enter organizer code to update payment for ${player.player_name}:`)
+
+    if (code !== ORGANIZER_CODE) {
+      alert('Invalid organizer code.')
+      return
+    }
+
+    const { error } = await supabase
+      .from('game_signups')
+      .update({ paid: !player.paid })
+      .eq('id', player.id)
+
+    if (error) {
+      alert('Error updating payment.')
+      console.log(error)
+    } else {
       loadSignups()
     }
   }
@@ -246,6 +267,7 @@ export default function Home() {
         email: cleanEmail,
         player_type: playerType,
         team,
+        paid: false,
       },
     ])
 
@@ -311,6 +333,7 @@ export default function Home() {
         email: cleanManualEmail || 'manual-entry-' + Date.now() + '@noemail.local',
         player_type: manualPlayerType,
         team: manualTeam,
+        paid: false,
       },
     ])
 
@@ -336,18 +359,25 @@ export default function Home() {
 
     const playerActions = (player) => (
       <span style={styles.buttonGroup}>
-        <button
-          onClick={() => handleMovePlayer(player, roster)}
-          style={styles.moveButton}
-        >
+        <button onClick={() => handleTogglePaid(player)} style={player.paid ? styles.unpaidButton : styles.paidButton}>
+          {player.paid ? 'Mark Unpaid' : 'Mark Paid'}
+        </button>
+        <button onClick={() => handleMovePlayer(player, roster)} style={styles.moveButton}>
           Move
         </button>
-        <button
-          onClick={() => handleRemovePlayer(player.id, player.player_name)}
-          style={styles.removeButton}
-        >
+        <button onClick={() => handleRemovePlayer(player.id, player.player_name)} style={styles.removeButton}>
           Remove
         </button>
+      </span>
+    )
+
+    const playerLabel = (player) => (
+      <span>
+        {player.player_name}
+        {player.player_type === 'Goalie' ? ' (Goalie)' : ''}
+        <span style={player.paid ? styles.paidBadge : styles.unpaidBadge}>
+          {player.paid ? 'Paid' : 'Unpaid'}
+        </span>
       </span>
     )
 
@@ -359,7 +389,7 @@ export default function Home() {
           <li style={styles.goalieLine}>
             {goalie ? (
               <span style={styles.playerRow}>
-                <span>🥅 {goalie.player_name} (Goalie)</span>
+                <span>🥅 {playerLabel(goalie)}</span>
                 {playerActions(goalie)}
               </span>
             ) : (
@@ -370,7 +400,7 @@ export default function Home() {
           {skaters.map((player) => (
             <li key={player.id} style={styles.playerLine}>
               <span style={styles.playerRow}>
-                <span>{player.player_name}</span>
+                {playerLabel(player)}
                 {playerActions(player)}
               </span>
             </li>
@@ -433,6 +463,8 @@ export default function Home() {
             const spotsLeft = game.max_players - roster.length
             const isFull = spotsLeft <= 0
             const arenaDetails = getArenaDetails(game.arena)
+            const paidCount = roster.filter((p) => p.paid).length
+            const unpaidCount = roster.length - paidCount
 
             return (
               <div key={game.id} style={styles.gameCard}>
@@ -459,6 +491,10 @@ export default function Home() {
                   <div style={isFull ? styles.fullBadge : styles.openBadge}>
                     {isFull ? 'FULL' : `${spotsLeft} spots left`}
                   </div>
+                </div>
+
+                <div style={styles.paymentSummary}>
+                  <strong>Payment:</strong> {paidCount} paid • {unpaidCount} unpaid
                 </div>
 
                 <div style={styles.signupBox}>
@@ -500,13 +536,7 @@ export default function Home() {
                     <option value="Team 2">{game.team2_name}</option>
                   </select>
 
-                  <input
-                    placeholder="Organizer Code"
-                    type="password"
-                    value={manualCode}
-                    onChange={(e) => setManualCode(e.target.value)}
-                    style={styles.input}
-                  />
+                  <input placeholder="Organizer Code" type="password" value={manualCode} onChange={(e) => setManualCode(e.target.value)} style={styles.input} />
 
                   <button onClick={() => handleManualAddPlayer(game)} style={styles.manualButton}>
                     Add Player Manually
@@ -555,6 +585,7 @@ const styles = {
   mapLink: { display: 'inline-block', marginTop: '4px', color: '#e53935', fontWeight: 'bold', textDecoration: 'none' },
   openBadge: { background: '#e9f7ef', color: '#187a3b', padding: '8px 12px', borderRadius: '999px', fontWeight: 'bold', whiteSpace: 'nowrap' },
   fullBadge: { background: '#fdecea', color: '#b42318', padding: '8px 12px', borderRadius: '999px', fontWeight: 'bold', whiteSpace: 'nowrap' },
+  paymentSummary: { background: '#eef4ff', color: '#175cd3', padding: '10px 12px', borderRadius: '10px', marginTop: '16px', fontSize: '14px' },
   signupBox: { background: '#f7f9fc', padding: '18px', borderRadius: '12px', marginTop: '20px' },
   manualBox: { background: '#fff8e6', padding: '18px', borderRadius: '12px', marginTop: '20px', border: '1px solid #ffe1a3' },
   signupTitle: { marginTop: 0, marginBottom: '12px' },
@@ -574,7 +605,11 @@ const styles = {
   goalieLine: { fontWeight: 'bold', marginBottom: '8px', color: '#07152b' },
   playerLine: { marginBottom: '7px' },
   playerRow: { display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: 'center' },
-  buttonGroup: { display: 'flex', gap: '6px' },
+  buttonGroup: { display: 'flex', gap: '6px', flexWrap: 'wrap' },
   moveButton: { background: '#175cd3', color: 'white', border: 'none', borderRadius: '5px', padding: '4px 8px', fontSize: '12px', cursor: 'pointer' },
   removeButton: { background: '#b42318', color: 'white', border: 'none', borderRadius: '5px', padding: '4px 8px', fontSize: '12px', cursor: 'pointer' },
+  paidButton: { background: '#187a3b', color: 'white', border: 'none', borderRadius: '5px', padding: '4px 8px', fontSize: '12px', cursor: 'pointer' },
+  unpaidButton: { background: '#667085', color: 'white', border: 'none', borderRadius: '5px', padding: '4px 8px', fontSize: '12px', cursor: 'pointer' },
+  paidBadge: { marginLeft: '8px', background: '#e9f7ef', color: '#187a3b', padding: '2px 6px', borderRadius: '999px', fontSize: '11px', fontWeight: 'bold' },
+  unpaidBadge: { marginLeft: '8px', background: '#fdecea', color: '#b42318', padding: '2px 6px', borderRadius: '999px', fontSize: '11px', fontWeight: 'bold' },
 }
