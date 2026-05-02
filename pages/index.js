@@ -207,6 +207,11 @@ export default function Home() {
   }
 
   const handleTogglePaid = async (player) => {
+    if (player.player_type === 'Goalie') {
+      alert('Goalies do not pay for pickup hockey.')
+      return
+    }
+
     const code = prompt(`Enter organizer code to update payment for ${player.player_name}:`)
 
     if (code !== ORGANIZER_CODE) {
@@ -267,7 +272,7 @@ export default function Home() {
         email: cleanEmail,
         player_type: playerType,
         team,
-        paid: false,
+        paid: playerType === 'Goalie' ? true : false,
       },
     ])
 
@@ -333,7 +338,7 @@ export default function Home() {
         email: cleanManualEmail || 'manual-entry-' + Date.now() + '@noemail.local',
         player_type: manualPlayerType,
         team: manualTeam,
-        paid: false,
+        paid: manualPlayerType === 'Goalie' ? true : false,
       },
     ])
 
@@ -357,29 +362,47 @@ export default function Home() {
     const goalie = teamRoster.find((p) => p.player_type === 'Goalie')
     const skaters = teamRoster.filter((p) => p.player_type !== 'Goalie')
 
-    const playerActions = (player) => (
-      <span style={styles.buttonGroup}>
-        <button onClick={() => handleTogglePaid(player)} style={player.paid ? styles.unpaidButton : styles.paidButton}>
-          {player.paid ? 'Mark Unpaid' : 'Mark Paid'}
-        </button>
-        <button onClick={() => handleMovePlayer(player, roster)} style={styles.moveButton}>
-          Move
-        </button>
-        <button onClick={() => handleRemovePlayer(player.id, player.player_name)} style={styles.removeButton}>
-          Remove
-        </button>
-      </span>
-    )
+    const playerActions = (player) => {
+      const isGoalie = player.player_type === 'Goalie'
 
-    const playerLabel = (player) => (
-      <span>
-        {player.player_name}
-        {player.player_type === 'Goalie' ? ' (Goalie)' : ''}
-        <span style={player.paid ? styles.paidBadge : styles.unpaidBadge}>
-          {player.paid ? 'Paid' : 'Unpaid'}
+      return (
+        <span style={styles.buttonGroup}>
+          {!isGoalie && (
+            <button
+              onClick={() => handleTogglePaid(player)}
+              style={player.paid ? styles.unpaidButton : styles.paidButton}
+            >
+              {player.paid ? 'Mark Unpaid' : 'Mark Paid'}
+            </button>
+          )}
+
+          <button onClick={() => handleMovePlayer(player, roster)} style={styles.moveButton}>
+            Move
+          </button>
+
+          <button onClick={() => handleRemovePlayer(player.id, player.player_name)} style={styles.removeButton}>
+            Remove
+          </button>
         </span>
-      </span>
-    )
+      )
+    }
+
+    const playerLabel = (player) => {
+      const isGoalie = player.player_type === 'Goalie'
+
+      return (
+        <span>
+          {player.player_name}
+          {isGoalie ? ' (Goalie)' : ''}
+
+          {!isGoalie && (
+            <span style={player.paid ? styles.paidBadge : styles.unpaidBadge}>
+              {player.paid ? 'Paid' : 'Unpaid'}
+            </span>
+          )}
+        </span>
+      )
+    }
 
     return (
       <div style={styles.teamBox}>
@@ -460,11 +483,12 @@ export default function Home() {
         ) : (
           games.map((game) => {
             const roster = signups.filter((p) => p.game_id === game.id)
+            const skaterRoster = roster.filter((p) => p.player_type !== 'Goalie')
             const spotsLeft = game.max_players - roster.length
             const isFull = spotsLeft <= 0
             const arenaDetails = getArenaDetails(game.arena)
-            const paidCount = roster.filter((p) => p.paid).length
-            const unpaidCount = roster.length - paidCount
+            const paidCount = skaterRoster.filter((p) => p.paid).length
+            const unpaidCount = skaterRoster.length - paidCount
 
             return (
               <div key={game.id} style={styles.gameCard}>
@@ -494,7 +518,7 @@ export default function Home() {
                 </div>
 
                 <div style={styles.paymentSummary}>
-                  <strong>Payment:</strong> {paidCount} paid • {unpaidCount} unpaid
+                  <strong>Payment:</strong> {paidCount} skaters paid • {unpaidCount} skaters unpaid • Goalies free
                 </div>
 
                 <div style={styles.signupBox}>
