@@ -74,6 +74,20 @@ export default function Home() {
     return arenas.find((a) => a.name === arenaName)
   }
 
+  const getAvailableGoalieTeam = (roster) => {
+    const team1Goalie = roster.some(
+      (p) => p.team === 'Team 1' && p.player_type === 'Goalie'
+    )
+
+    const team2Goalie = roster.some(
+      (p) => p.team === 'Team 2' && p.player_type === 'Goalie'
+    )
+
+    if (!team1Goalie) return 'Team 1'
+    if (!team2Goalie) return 'Team 2'
+    return null
+  }
+
   const handlePostGame = async () => {
     if (organizerCode !== ORGANIZER_CODE) {
       alert('Invalid organizer code.')
@@ -151,7 +165,6 @@ export default function Home() {
     }
 
     const confirmRemove = confirm(`Remove ${playerName} from the roster?`)
-
     if (!confirmRemove) return
 
     const { error } = await supabase
@@ -255,12 +268,15 @@ export default function Home() {
       return
     }
 
-    const teamRoster = roster.filter((p) => p.team === team)
-    const goalieExists = teamRoster.some((p) => p.player_type === 'Goalie')
+    let assignedTeam = team
 
-    if (playerType === 'Goalie' && goalieExists) {
-      alert('Goalie spot already taken for this team.')
-      return
+    if (playerType === 'Goalie') {
+      assignedTeam = getAvailableGoalieTeam(roster)
+
+      if (!assignedTeam) {
+        alert('Both goalie spots are already filled.')
+        return
+      }
     }
 
     const { error } = await supabase.from('game_signups').insert([
@@ -271,7 +287,7 @@ export default function Home() {
         phone,
         email: cleanEmail,
         player_type: playerType,
-        team,
+        team: assignedTeam,
         paid: playerType === 'Goalie' ? true : false,
       },
     ])
@@ -280,7 +296,14 @@ export default function Home() {
       alert('Error joining game.')
       console.log(error)
     } else {
-      alert('You are signed up!')
+      if (playerType === 'Goalie') {
+        const displayTeam =
+          assignedTeam === 'Team 1' ? game.team1_name : game.team2_name
+        alert(`You are signed up as goalie for ${displayTeam}.`)
+      } else {
+        alert('You are signed up!')
+      }
+
       setName('')
       setPhone('')
       setEmail('')
@@ -321,12 +344,15 @@ export default function Home() {
       }
     }
 
-    const teamRoster = roster.filter((p) => p.team === manualTeam)
-    const goalieExists = teamRoster.some((p) => p.player_type === 'Goalie')
+    let assignedTeam = manualTeam
 
-    if (manualPlayerType === 'Goalie' && goalieExists) {
-      alert('Goalie spot already taken for this team.')
-      return
+    if (manualPlayerType === 'Goalie') {
+      assignedTeam = getAvailableGoalieTeam(roster)
+
+      if (!assignedTeam) {
+        alert('Both goalie spots are already filled.')
+        return
+      }
     }
 
     const { error } = await supabase.from('game_signups').insert([
@@ -337,7 +363,7 @@ export default function Home() {
         phone: manualPhone,
         email: cleanManualEmail || 'manual-entry-' + Date.now() + '@noemail.local',
         player_type: manualPlayerType,
-        team: manualTeam,
+        team: assignedTeam,
         paid: manualPlayerType === 'Goalie' ? true : false,
       },
     ])
@@ -346,7 +372,14 @@ export default function Home() {
       alert('Error adding player.')
       console.log(error)
     } else {
-      alert('Player added!')
+      if (manualPlayerType === 'Goalie') {
+        const displayTeam =
+          assignedTeam === 'Team 1' ? game.team1_name : game.team2_name
+        alert(`Goalie added to ${displayTeam}.`)
+      } else {
+        alert('Player added!')
+      }
+
       setManualName('')
       setManualPhone('')
       setManualEmail('')
@@ -533,10 +566,18 @@ export default function Home() {
                     <option>Goalie</option>
                   </select>
 
-                  <select value={team} onChange={(e) => setTeam(e.target.value)} style={styles.input}>
-                    <option value="Team 1">{game.team1_name}</option>
-                    <option value="Team 2">{game.team2_name}</option>
-                  </select>
+                  {playerType === 'Skater' && (
+                    <select value={team} onChange={(e) => setTeam(e.target.value)} style={styles.input}>
+                      <option value="Team 1">{game.team1_name}</option>
+                      <option value="Team 2">{game.team2_name}</option>
+                    </select>
+                  )}
+
+                  {playerType === 'Goalie' && (
+                    <p style={styles.goalieNote}>
+                      Goalies are automatically assigned to the first open goalie spot.
+                    </p>
+                  )}
 
                   <button onClick={() => handleJoin(game)} disabled={isFull} style={isFull ? styles.disabledButton : styles.joinButton}>
                     {isFull ? 'Game Full' : 'Join Game'}
@@ -555,10 +596,18 @@ export default function Home() {
                     <option>Goalie</option>
                   </select>
 
-                  <select value={manualTeam} onChange={(e) => setManualTeam(e.target.value)} style={styles.input}>
-                    <option value="Team 1">{game.team1_name}</option>
-                    <option value="Team 2">{game.team2_name}</option>
-                  </select>
+                  {manualPlayerType === 'Skater' && (
+                    <select value={manualTeam} onChange={(e) => setManualTeam(e.target.value)} style={styles.input}>
+                      <option value="Team 1">{game.team1_name}</option>
+                      <option value="Team 2">{game.team2_name}</option>
+                    </select>
+                  )}
+
+                  {manualPlayerType === 'Goalie' && (
+                    <p style={styles.goalieNote}>
+                      Manual goalie add will use the first open goalie spot.
+                    </p>
+                  )}
 
                   <input placeholder="Organizer Code" type="password" value={manualCode} onChange={(e) => setManualCode(e.target.value)} style={styles.input} />
 
@@ -614,6 +663,7 @@ const styles = {
   manualBox: { background: '#fff8e6', padding: '18px', borderRadius: '12px', marginTop: '20px', border: '1px solid #ffe1a3' },
   signupTitle: { marginTop: 0, marginBottom: '12px' },
   input: { width: '100%', padding: '11px', marginBottom: '10px', border: '1px solid #ccd3dd', borderRadius: '8px', boxSizing: 'border-box', fontSize: '15px' },
+  goalieNote: { background: '#eef4ff', color: '#175cd3', padding: '10px', borderRadius: '8px', fontSize: '14px', marginTop: 0 },
   postButton: { width: '100%', background: '#07152b', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px', marginTop: '8px' },
   joinButton: { width: '100%', background: '#e53935', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
   manualButton: { width: '100%', background: '#f59e0b', color: '#07152b', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
