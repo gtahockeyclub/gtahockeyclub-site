@@ -9,6 +9,7 @@ export default function Home() {
   const [signups, setSignups] = useState([])
   const [showPostForm, setShowPostForm] = useState(false)
   const [unlockedGames, setUnlockedGames] = useState({})
+  const [confirmation, setConfirmation] = useState(null)
 
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
@@ -292,13 +293,17 @@ export default function Home() {
       alert('Error joining game.')
       console.log(error)
     } else {
-      if (playerType === 'Goalie') {
-        const displayTeam =
-          assignedTeam === 'Team 1' ? game.team1_name : game.team2_name
-        alert(`You are signed up as goalie for ${displayTeam}.`)
-      } else {
-        alert('You are signed up!')
-      }
+      const displayTeam =
+        assignedTeam === 'Team 1' ? game.team1_name : game.team2_name
+
+      setConfirmation({
+        arena: game.arena,
+        date: game.game_date,
+        time: game.game_time,
+        team: displayTeam,
+        cost: game.cost,
+        playerType,
+      })
 
       setName('')
       setPhone('')
@@ -369,14 +374,7 @@ export default function Home() {
       alert('Error adding player.')
       console.log(error)
     } else {
-      if (manualPlayerType === 'Goalie') {
-        const displayTeam =
-          assignedTeam === 'Team 1' ? game.team1_name : game.team2_name
-        alert(`Goalie added to ${displayTeam}.`)
-      } else {
-        alert('Player added!')
-      }
-
+      alert('Player added!')
       setManualName('')
       setManualPhone('')
       setManualEmail('')
@@ -475,6 +473,37 @@ export default function Home() {
         <h1 style={styles.mainTitle}>Find Pickup Hockey Games Across the GTA</h1>
         <p style={styles.mainText}>Join recreational games, view rosters, and reserve your spot in seconds.</p>
       </section>
+
+      {confirmation && (
+        <div style={styles.confirmationBox}>
+          <h3 style={styles.confirmationTitle}>You’re In! 🏒</h3>
+
+          <p><strong>Arena:</strong> {confirmation.arena}</p>
+          <p><strong>Date:</strong> {confirmation.date}</p>
+          <p><strong>Time:</strong> {confirmation.time}</p>
+          <p><strong>Team:</strong> {confirmation.team}</p>
+          <p><strong>Cost:</strong> {confirmation.playerType === 'Goalie' ? 'Goalies free' : confirmation.cost}</p>
+
+          {confirmation.playerType !== 'Goalie' && (
+            <p style={styles.paymentReminder}>
+              Please e-transfer the organizer to secure your spot.
+            </p>
+          )}
+
+          {confirmation.playerType === 'Goalie' && (
+            <p style={styles.paymentReminder}>
+              You are confirmed as goalie. No payment required.
+            </p>
+          )}
+
+          <button
+            onClick={() => setConfirmation(null)}
+            style={styles.closeConfirmButton}
+          >
+            Close
+          </button>
+        </div>
+      )}
 
       <section style={styles.organizerSection}>
         <div style={{ textAlign: 'center', marginBottom: '20px' }}>
@@ -687,6 +716,10 @@ const styles = {
   intro: { background: '#07152b', color: 'white', textAlign: 'center', padding: '34px 20px' },
   mainTitle: { fontSize: '34px', margin: '0 0 10px' },
   mainText: { fontSize: '18px', margin: 0, color: '#d7e3f5' },
+  confirmationBox: { background: 'white', padding: '20px', borderRadius: '12px', maxWidth: '500px', margin: '20px auto', textAlign: 'center', boxShadow: '0 8px 22px rgba(0,0,0,0.1)', border: '2px solid #e53935' },
+  confirmationTitle: { marginBottom: '10px', color: '#07152b' },
+  paymentReminder: { marginTop: '10px', fontWeight: 'bold', color: '#e53935' },
+  closeConfirmButton: { marginTop: '15px', padding: '10px 20px', background: '#07152b', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer' },
   organizerSection: { padding: '34px 18px 10px' },
   organizerCard: { background: 'white', borderRadius: '16px', padding: '24px', margin: '0 auto', maxWidth: '900px', boxShadow: '0 8px 22px rgba(0,0,0,0.08)', border: '1px solid #e1e5eb' },
   toggleButton: { background: '#07152b', color: 'white', padding: '12px 20px', borderRadius: '8px', border: 'none', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
