@@ -7,6 +7,7 @@ export default function Home() {
   const [games, setGames] = useState([])
   const [arenas, setArenas] = useState([])
   const [signups, setSignups] = useState([])
+  const [showPostForm, setShowPostForm] = useState(false)
 
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
@@ -130,6 +131,7 @@ export default function Home() {
       setTeam2Name('Team 2')
       setOrganizer('')
       setOrganizerCode('')
+      setShowPostForm(false)
       loadGames()
     }
   }
@@ -480,42 +482,53 @@ export default function Home() {
       </section>
 
       <section style={styles.organizerSection}>
-        <div style={styles.organizerCard}>
-          <h2 style={styles.sectionTitle}>Post a Game</h2>
-
-          <div style={styles.formGrid}>
-            <select value={selectedArena} onChange={(e) => setSelectedArena(e.target.value)} style={styles.input}>
-              <option value="">Select Arena</option>
-              {arenas.map((arena) => (
-                <option key={arena.id} value={arena.id}>
-                  {arena.name} - {arena.city}
-                </option>
-              ))}
-            </select>
-
-            <input type="date" value={date} onChange={(e) => setDate(e.target.value)} style={styles.input} />
-            <input type="time" value={time} onChange={(e) => setTime(e.target.value)} style={styles.input} />
-            <input placeholder="Cost, example $20" value={cost} onChange={(e) => setCost(e.target.value)} style={styles.input} />
-
-            <select value={level} onChange={(e) => setLevel(e.target.value)} style={styles.input}>
-              <option value="">Select Skill Level</option>
-              <option value="Beginner">Beginner</option>
-              <option value="Low-Mid">Low-Mid</option>
-              <option value="Intermediate">Intermediate</option>
-              <option value="Advance">Advance</option>
-            </select>
-
-            <input placeholder="# of Skaters" value={maxPlayers} onChange={(e) => setMaxPlayers(e.target.value)} style={styles.input} />
-            <input placeholder="Team 1 Name" value={team1Name} onChange={(e) => setTeam1Name(e.target.value)} style={styles.input} />
-            <input placeholder="Team 2 Name" value={team2Name} onChange={(e) => setTeam2Name(e.target.value)} style={styles.input} />
-            <input placeholder="Organizer Name" value={organizer} onChange={(e) => setOrganizer(e.target.value)} style={styles.input} />
-            <input placeholder="Organizer Code" type="password" value={organizerCode} onChange={(e) => setOrganizerCode(e.target.value)} style={styles.input} />
-          </div>
-
-          <button onClick={handlePostGame} style={styles.postButton}>
-            Post Game
+        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+          <button
+            onClick={() => setShowPostForm(!showPostForm)}
+            style={styles.toggleButton}
+          >
+            {showPostForm ? 'Close Organizer Panel' : 'Post a Game as Organizer'}
           </button>
         </div>
+
+        {showPostForm && (
+          <div style={styles.organizerCard}>
+            <h2 style={styles.sectionTitle}>Post a Game</h2>
+
+            <div style={styles.formGrid}>
+              <select value={selectedArena} onChange={(e) => setSelectedArena(e.target.value)} style={styles.input}>
+                <option value="">Select Arena</option>
+                {arenas.map((arena) => (
+                  <option key={arena.id} value={arena.id}>
+                    {arena.name} - {arena.city}
+                  </option>
+                ))}
+              </select>
+
+              <input type="date" value={date} onChange={(e) => setDate(e.target.value)} style={styles.input} />
+              <input type="time" value={time} onChange={(e) => setTime(e.target.value)} style={styles.input} />
+              <input placeholder="Cost, example $20" value={cost} onChange={(e) => setCost(e.target.value)} style={styles.input} />
+
+              <select value={level} onChange={(e) => setLevel(e.target.value)} style={styles.input}>
+                <option value="">Select Skill Level</option>
+                <option value="Beginner">Beginner</option>
+                <option value="Low-Mid">Low-Mid</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advance">Advance</option>
+              </select>
+
+              <input placeholder="# of Skaters" value={maxPlayers} onChange={(e) => setMaxPlayers(e.target.value)} style={styles.input} />
+              <input placeholder="Team 1 Name" value={team1Name} onChange={(e) => setTeam1Name(e.target.value)} style={styles.input} />
+              <input placeholder="Team 2 Name" value={team2Name} onChange={(e) => setTeam2Name(e.target.value)} style={styles.input} />
+              <input placeholder="Organizer Name" value={organizer} onChange={(e) => setOrganizer(e.target.value)} style={styles.input} />
+              <input placeholder="Organizer Code" type="password" value={organizerCode} onChange={(e) => setOrganizerCode(e.target.value)} style={styles.input} />
+            </div>
+
+            <button onClick={handlePostGame} style={styles.postButton}>
+              Post Game
+            </button>
+          </div>
+        )}
       </section>
 
       <section style={styles.gamesSection}>
@@ -669,6 +682,7 @@ const styles = {
   mainText: { fontSize: '18px', margin: 0, color: '#d7e3f5' },
   organizerSection: { padding: '34px 18px 10px' },
   organizerCard: { background: 'white', borderRadius: '16px', padding: '24px', margin: '0 auto', maxWidth: '900px', boxShadow: '0 8px 22px rgba(0,0,0,0.08)', border: '1px solid #e1e5eb' },
+  toggleButton: { background: '#07152b', color: 'white', padding: '12px 20px', borderRadius: '8px', border: 'none', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
   formGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px' },
   gamesSection: { padding: '30px 18px 40px' },
   sectionTitle: { textAlign: 'center', fontSize: '32px', marginBottom: '24px' },
