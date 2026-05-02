@@ -96,8 +96,8 @@ export default function Home() {
 
     const arenaDetails = arenas.find((a) => a.id === selectedArena)
 
-    if (!arenaDetails || !date || !time || !cost) {
-      alert('Please select arena, date, time, and cost.')
+    if (!arenaDetails || !date || !time || !cost || !level) {
+      alert('Please select arena, date, time, cost, and skill level.')
       return
     }
 
@@ -253,6 +253,7 @@ export default function Home() {
 
     const cleanEmail = email.trim().toLowerCase()
     const roster = signups.filter((p) => p.game_id === game.id)
+    const skaterRoster = roster.filter((p) => p.player_type !== 'Goalie')
 
     const alreadySignedUp = roster.some(
       (p) => p.email && p.email.trim().toLowerCase() === cleanEmail
@@ -263,8 +264,8 @@ export default function Home() {
       return
     }
 
-    if (roster.length >= game.max_players) {
-      alert('This game is full.')
+    if (playerType === 'Skater' && skaterRoster.length >= game.max_players) {
+      alert('This game is full for skaters.')
       return
     }
 
@@ -325,9 +326,10 @@ export default function Home() {
     }
 
     const roster = signups.filter((p) => p.game_id === game.id)
+    const skaterRoster = roster.filter((p) => p.player_type !== 'Goalie')
 
-    if (roster.length >= game.max_players) {
-      alert('This game is full.')
+    if (manualPlayerType === 'Skater' && skaterRoster.length >= game.max_players) {
+      alert('This game is full for skaters.')
       return
     }
 
@@ -493,9 +495,17 @@ export default function Home() {
 
             <input type="date" value={date} onChange={(e) => setDate(e.target.value)} style={styles.input} />
             <input type="time" value={time} onChange={(e) => setTime(e.target.value)} style={styles.input} />
-            <input placeholder="Cost" value={cost} onChange={(e) => setCost(e.target.value)} style={styles.input} />
-            <input placeholder="Level" value={level} onChange={(e) => setLevel(e.target.value)} style={styles.input} />
-            <input placeholder="Max Players" value={maxPlayers} onChange={(e) => setMaxPlayers(e.target.value)} style={styles.input} />
+            <input placeholder="Cost, example $20" value={cost} onChange={(e) => setCost(e.target.value)} style={styles.input} />
+
+            <select value={level} onChange={(e) => setLevel(e.target.value)} style={styles.input}>
+              <option value="">Select Skill Level</option>
+              <option value="Beginner">Beginner</option>
+              <option value="Low-Mid">Low-Mid</option>
+              <option value="Intermediate">Intermediate</option>
+              <option value="Advance">Advance</option>
+            </select>
+
+            <input placeholder="# of Skaters" value={maxPlayers} onChange={(e) => setMaxPlayers(e.target.value)} style={styles.input} />
             <input placeholder="Team 1 Name" value={team1Name} onChange={(e) => setTeam1Name(e.target.value)} style={styles.input} />
             <input placeholder="Team 2 Name" value={team2Name} onChange={(e) => setTeam2Name(e.target.value)} style={styles.input} />
             <input placeholder="Organizer Name" value={organizer} onChange={(e) => setOrganizer(e.target.value)} style={styles.input} />
@@ -517,8 +527,9 @@ export default function Home() {
           games.map((game) => {
             const roster = signups.filter((p) => p.game_id === game.id)
             const skaterRoster = roster.filter((p) => p.player_type !== 'Goalie')
-            const spotsLeft = game.max_players - roster.length
-            const isFull = spotsLeft <= 0
+            const goalieRoster = roster.filter((p) => p.player_type === 'Goalie')
+            const skaterSpotsLeft = game.max_players - skaterRoster.length
+            const isSkaterFull = skaterSpotsLeft <= 0
             const arenaDetails = getArenaDetails(game.arena)
             const paidCount = skaterRoster.filter((p) => p.paid).length
             const unpaidCount = skaterRoster.length - paidCount
@@ -529,7 +540,12 @@ export default function Home() {
                   <div>
                     <h3 style={styles.arena}>{game.arena}</h3>
                     <p style={styles.gameInfo}>{game.game_date} • {game.game_time}</p>
-                    <p style={styles.gameInfo}>{game.cost} • {game.level}</p>
+
+                    <div style={styles.gameMetaRow}>
+                      <span style={styles.costBadge}>{game.cost}</span>
+                      <span style={styles.levelBadge}>{game.level}</span>
+                    </div>
+
                     <p style={styles.gameInfo}>{game.team1_name} vs {game.team2_name}</p>
 
                     {arenaDetails && (
@@ -545,8 +561,8 @@ export default function Home() {
                     )}
                   </div>
 
-                  <div style={isFull ? styles.fullBadge : styles.openBadge}>
-                    {isFull ? 'FULL' : `${spotsLeft} spots left`}
+                  <div style={isSkaterFull ? styles.fullBadge : styles.openBadge}>
+                    {isSkaterFull ? 'SKATERS FULL' : `${skaterSpotsLeft} skater spots left`}
                   </div>
                 </div>
 
@@ -579,8 +595,12 @@ export default function Home() {
                     </p>
                   )}
 
-                  <button onClick={() => handleJoin(game)} disabled={isFull} style={isFull ? styles.disabledButton : styles.joinButton}>
-                    {isFull ? 'Game Full' : 'Join Game'}
+                  <button
+                    onClick={() => handleJoin(game)}
+                    disabled={playerType === 'Skater' && isSkaterFull}
+                    style={playerType === 'Skater' && isSkaterFull ? styles.disabledButton : styles.joinButton}
+                  >
+                    {playerType === 'Skater' && isSkaterFull ? 'Skaters Full' : 'Join Game'}
                   </button>
                 </div>
 
@@ -618,7 +638,9 @@ export default function Home() {
 
                 <div style={styles.rosterHeader}>
                   <h4 style={styles.rosterTitle}>Roster</h4>
-                  <p style={styles.rosterCount}>{roster.length} / {game.max_players} signed up</p>
+                  <p style={styles.rosterCount}>
+                    {skaterRoster.length} / {game.max_players} skaters • {goalieRoster.length} / 2 goalies
+                  </p>
                 </div>
 
                 <div style={styles.rosterGrid}>
@@ -654,6 +676,9 @@ const styles = {
   gameHeader: { display: 'flex', justifyContent: 'space-between', gap: '15px', alignItems: 'flex-start', borderBottom: '1px solid #e5e5e5', paddingBottom: '16px' },
   arena: { fontSize: '26px', margin: '0 0 8px' },
   gameInfo: { margin: '4px 0', color: '#42526b' },
+  gameMetaRow: { display: 'flex', gap: '8px', flexWrap: 'wrap', margin: '8px 0' },
+  costBadge: { background: '#e9f7ef', color: '#187a3b', padding: '5px 10px', borderRadius: '999px', fontWeight: 'bold', fontSize: '13px' },
+  levelBadge: { background: '#eef4ff', color: '#175cd3', padding: '5px 10px', borderRadius: '999px', fontWeight: 'bold', fontSize: '13px' },
   address: { margin: '8px 0 4px', color: '#667085', fontSize: '14px' },
   mapLink: { display: 'inline-block', marginTop: '4px', color: '#e53935', fontWeight: 'bold', textDecoration: 'none' },
   openBadge: { background: '#e9f7ef', color: '#187a3b', padding: '8px 12px', borderRadius: '999px', fontWeight: 'bold', whiteSpace: 'nowrap' },
