@@ -8,6 +8,7 @@ export default function Home() {
   const [arenas, setArenas] = useState([])
   const [signups, setSignups] = useState([])
   const [showPostForm, setShowPostForm] = useState(false)
+  const [unlockedGames, setUnlockedGames] = useState({})
 
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
@@ -31,6 +32,7 @@ export default function Home() {
   const [team1Name, setTeam1Name] = useState('Team 1')
   const [team2Name, setTeam2Name] = useState('Team 2')
   const [organizer, setOrganizer] = useState('')
+  const [organizerEmail, setOrganizerEmail] = useState('')
   const [organizerCode, setOrganizerCode] = useState('')
 
   const loadArenas = async () => {
@@ -70,6 +72,20 @@ export default function Home() {
     loadGames()
     loadSignups()
   }, [])
+
+  const unlockOrganizerTools = (gameId) => {
+    const code = prompt('Enter organizer code:')
+
+    if (code !== ORGANIZER_CODE) {
+      alert('Invalid organizer code.')
+      return
+    }
+
+    setUnlockedGames({
+      ...unlockedGames,
+      [gameId]: true,
+    })
+  }
 
   const getArenaDetails = (arenaName) => {
     return arenas.find((a) => a.name === arenaName)
@@ -113,6 +129,7 @@ export default function Home() {
         team1_name: team1Name || 'Team 1',
         team2_name: team2Name || 'Team 2',
         organizer_name: organizer,
+        organizer_email: organizerEmail,
       },
     ])
 
@@ -130,6 +147,7 @@ export default function Home() {
       setTeam1Name('Team 1')
       setTeam2Name('Team 2')
       setOrganizer('')
+      setOrganizerEmail('')
       setOrganizerCode('')
       setShowPostForm(false)
       loadGames()
@@ -137,12 +155,8 @@ export default function Home() {
   }
 
   const handleCloseGame = async (gameId) => {
-    const code = prompt('Enter organizer code to close this game:')
-
-    if (code !== ORGANIZER_CODE) {
-      alert('Invalid organizer code.')
-      return
-    }
+    const confirmClose = confirm('Close this game and remove it from the public list?')
+    if (!confirmClose) return
 
     const { error } = await supabase
       .from('games')
@@ -159,13 +173,6 @@ export default function Home() {
   }
 
   const handleRemovePlayer = async (playerId, playerName) => {
-    const code = prompt(`Enter organizer code to remove ${playerName}:`)
-
-    if (code !== ORGANIZER_CODE) {
-      alert('Invalid organizer code.')
-      return
-    }
-
     const confirmRemove = confirm(`Remove ${playerName} from the roster?`)
     if (!confirmRemove) return
 
@@ -184,13 +191,6 @@ export default function Home() {
   }
 
   const handleMovePlayer = async (player, gameRoster) => {
-    const code = prompt(`Enter organizer code to move ${player.player_name}:`)
-
-    if (code !== ORGANIZER_CODE) {
-      alert('Invalid organizer code.')
-      return
-    }
-
     const newTeam = player.team === 'Team 1' ? 'Team 2' : 'Team 1'
 
     if (player.player_type === 'Goalie') {
@@ -224,13 +224,6 @@ export default function Home() {
   const handleTogglePaid = async (player) => {
     if (player.player_type === 'Goalie') {
       alert('Goalies do not pay for pickup hockey.')
-      return
-    }
-
-    const code = prompt(`Enter organizer code to update payment for ${player.player_name}:`)
-
-    if (code !== ORGANIZER_CODE) {
-      alert('Invalid organizer code.')
       return
     }
 
@@ -394,12 +387,14 @@ export default function Home() {
     }
   }
 
-  const renderTeamRoster = (roster, teamName, displayName) => {
+  const renderTeamRoster = (roster, teamName, displayName, toolsUnlocked) => {
     const teamRoster = roster.filter((p) => p.team === teamName)
     const goalie = teamRoster.find((p) => p.player_type === 'Goalie')
     const skaters = teamRoster.filter((p) => p.player_type !== 'Goalie')
 
     const playerActions = (player) => {
+      if (!toolsUnlocked) return null
+
       const isGoalie = player.player_type === 'Goalie'
 
       return (
@@ -521,6 +516,7 @@ export default function Home() {
               <input placeholder="Team 1 Name" value={team1Name} onChange={(e) => setTeam1Name(e.target.value)} style={styles.input} />
               <input placeholder="Team 2 Name" value={team2Name} onChange={(e) => setTeam2Name(e.target.value)} style={styles.input} />
               <input placeholder="Organizer Name" value={organizer} onChange={(e) => setOrganizer(e.target.value)} style={styles.input} />
+              <input placeholder="Organizer Email" value={organizerEmail} onChange={(e) => setOrganizerEmail(e.target.value)} style={styles.input} />
               <input placeholder="Organizer Code" type="password" value={organizerCode} onChange={(e) => setOrganizerCode(e.target.value)} style={styles.input} />
             </div>
 
@@ -546,6 +542,7 @@ export default function Home() {
             const arenaDetails = getArenaDetails(game.arena)
             const paidCount = skaterRoster.filter((p) => p.paid).length
             const unpaidCount = skaterRoster.length - paidCount
+            const toolsUnlocked = unlockedGames[game.id]
 
             return (
               <div key={game.id} style={styles.gameCard}>
@@ -617,38 +614,6 @@ export default function Home() {
                   </button>
                 </div>
 
-                <div style={styles.manualBox}>
-                  <h4 style={styles.signupTitle}>Organizer Manual Add Player</h4>
-
-                  <input placeholder="Player name" value={manualName} onChange={(e) => setManualName(e.target.value)} style={styles.input} />
-                  <input placeholder="Phone optional" value={manualPhone} onChange={(e) => setManualPhone(e.target.value)} style={styles.input} />
-                  <input placeholder="Email optional" value={manualEmail} onChange={(e) => setManualEmail(e.target.value)} style={styles.input} />
-
-                  <select value={manualPlayerType} onChange={(e) => setManualPlayerType(e.target.value)} style={styles.input}>
-                    <option>Skater</option>
-                    <option>Goalie</option>
-                  </select>
-
-                  {manualPlayerType === 'Skater' && (
-                    <select value={manualTeam} onChange={(e) => setManualTeam(e.target.value)} style={styles.input}>
-                      <option value="Team 1">{game.team1_name}</option>
-                      <option value="Team 2">{game.team2_name}</option>
-                    </select>
-                  )}
-
-                  {manualPlayerType === 'Goalie' && (
-                    <p style={styles.goalieNote}>
-                      Manual goalie add will use the first open goalie spot.
-                    </p>
-                  )}
-
-                  <input placeholder="Organizer Code" type="password" value={manualCode} onChange={(e) => setManualCode(e.target.value)} style={styles.input} />
-
-                  <button onClick={() => handleManualAddPlayer(game)} style={styles.manualButton}>
-                    Add Player Manually
-                  </button>
-                </div>
-
                 <div style={styles.rosterHeader}>
                   <h4 style={styles.rosterTitle}>Roster</h4>
                   <p style={styles.rosterCount}>
@@ -657,13 +622,55 @@ export default function Home() {
                 </div>
 
                 <div style={styles.rosterGrid}>
-                  {renderTeamRoster(roster, 'Team 1', game.team1_name)}
-                  {renderTeamRoster(roster, 'Team 2', game.team2_name)}
+                  {renderTeamRoster(roster, 'Team 1', game.team1_name, toolsUnlocked)}
+                  {renderTeamRoster(roster, 'Team 2', game.team2_name, toolsUnlocked)}
                 </div>
 
-                <button onClick={() => handleCloseGame(game.id)} style={styles.closeButton}>
-                  Close Game
-                </button>
+                {!toolsUnlocked && (
+                  <button onClick={() => unlockOrganizerTools(game.id)} style={styles.organizerToolsButton}>
+                    Organizer Tools
+                  </button>
+                )}
+
+                {toolsUnlocked && (
+                  <>
+                    <div style={styles.manualBox}>
+                      <h4 style={styles.signupTitle}>Organizer Manual Add Player</h4>
+
+                      <input placeholder="Player name" value={manualName} onChange={(e) => setManualName(e.target.value)} style={styles.input} />
+                      <input placeholder="Phone optional" value={manualPhone} onChange={(e) => setManualPhone(e.target.value)} style={styles.input} />
+                      <input placeholder="Email optional" value={manualEmail} onChange={(e) => setManualEmail(e.target.value)} style={styles.input} />
+
+                      <select value={manualPlayerType} onChange={(e) => setManualPlayerType(e.target.value)} style={styles.input}>
+                        <option>Skater</option>
+                        <option>Goalie</option>
+                      </select>
+
+                      {manualPlayerType === 'Skater' && (
+                        <select value={manualTeam} onChange={(e) => setManualTeam(e.target.value)} style={styles.input}>
+                          <option value="Team 1">{game.team1_name}</option>
+                          <option value="Team 2">{game.team2_name}</option>
+                        </select>
+                      )}
+
+                      {manualPlayerType === 'Goalie' && (
+                        <p style={styles.goalieNote}>
+                          Manual goalie add will use the first open goalie spot.
+                        </p>
+                      )}
+
+                      <input placeholder="Organizer Code" type="password" value={manualCode} onChange={(e) => setManualCode(e.target.value)} style={styles.input} />
+
+                      <button onClick={() => handleManualAddPlayer(game)} style={styles.manualButton}>
+                        Add Player Manually
+                      </button>
+                    </div>
+
+                    <button onClick={() => handleCloseGame(game.id)} style={styles.closeButton}>
+                      Close Game
+                    </button>
+                  </>
+                )}
               </div>
             )
           })
@@ -707,6 +714,7 @@ const styles = {
   joinButton: { width: '100%', background: '#e53935', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
   manualButton: { width: '100%', background: '#f59e0b', color: '#07152b', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
   disabledButton: { width: '100%', background: '#999', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'not-allowed', fontSize: '16px' },
+  organizerToolsButton: { marginTop: '20px', width: '100%', background: '#07152b', color: 'white', padding: '10px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' },
   closeButton: { marginTop: '20px', width: '100%', background: '#444', color: 'white', padding: '10px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' },
   rosterHeader: { marginTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
   rosterTitle: { fontSize: '22px', margin: 0 },
