@@ -142,6 +142,30 @@ export default function Home() {
     return `https://calendar.google.com/calendar/render?${params.toString()}`
   }
 
+  const copyPaymentDetails = async () => {
+    if (!confirmation) return
+
+    const paymentText = [
+      'GTA Hockey Club Payment Details',
+      `Player: ${confirmation.playerName}`,
+      `Amount: ${confirmation.cost}`,
+      `E-transfer to: ${confirmation.organizerEmail || 'Organizer email not provided'}`,
+      `Arena: ${confirmation.arena}`,
+      `Date: ${confirmation.date}`,
+      `Time: ${confirmation.time}`,
+      `Team: ${confirmation.team}`,
+      'Message: GTA Hockey Club payment',
+    ].join('\n')
+
+    try {
+      await navigator.clipboard.writeText(paymentText)
+      alert('Payment details copied.')
+    } catch (error) {
+      alert('Could not copy payment details. Please copy them manually.')
+      console.log(error)
+    }
+  }
+
   const handlePostGame = async () => {
     if (organizerCode !== ORGANIZER_CODE) {
       alert('Invalid organizer code.')
@@ -339,6 +363,7 @@ export default function Home() {
         team: displayTeam,
         cost: game.cost,
         playerType,
+        playerName: name,
         organizerName: game.organizer_name,
         organizerEmail: game.organizer_email,
       })
@@ -537,6 +562,10 @@ export default function Home() {
                   Organizer e-transfer email was not provided. Please contact the organizer directly.
                 </p>
               )}
+
+              <button onClick={copyPaymentDetails} style={styles.copyButton}>
+                Copy Payment Details
+              </button>
             </>
           )}
 
@@ -779,6 +808,7 @@ const styles = {
   confirmationTitle: { marginBottom: '10px', color: '#07152b' },
   paymentReminder: { marginTop: '10px', fontWeight: 'bold', color: '#e53935' },
   etransferLine: { marginTop: '8px', fontWeight: 'bold', color: '#07152b', background: '#f7f9fc', padding: '10px', borderRadius: '8px' },
+  copyButton: { marginTop: '10px', padding: '10px 18px', background: '#e53935', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' },
   calendarButton: { display: 'inline-block', marginTop: '14px', marginRight: '8px', padding: '10px 18px', background: '#187a3b', color: 'white', borderRadius: '8px', textDecoration: 'none', fontWeight: 'bold' },
   closeConfirmButton: { marginTop: '15px', padding: '10px 20px', background: '#07152b', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer' },
   organizerSection: { padding: '34px 18px 10px' },
