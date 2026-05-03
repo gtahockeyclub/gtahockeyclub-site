@@ -303,6 +303,8 @@ export default function Home() {
         team: displayTeam,
         cost: game.cost,
         playerType,
+        organizerName: game.organizer_name,
+        organizerEmail: game.organizer_email,
       })
 
       setName('')
@@ -485,9 +487,21 @@ export default function Home() {
           <p><strong>Cost:</strong> {confirmation.playerType === 'Goalie' ? 'Goalies free' : confirmation.cost}</p>
 
           {confirmation.playerType !== 'Goalie' && (
-            <p style={styles.paymentReminder}>
-              Please e-transfer the organizer to secure your spot.
-            </p>
+            <>
+              <p style={styles.paymentReminder}>
+                Please e-transfer the organizer to secure your spot.
+              </p>
+
+              {confirmation.organizerEmail ? (
+                <p style={styles.etransferLine}>
+                  <strong>E-transfer to:</strong> {confirmation.organizerEmail}
+                </p>
+              ) : (
+                <p style={styles.etransferLine}>
+                  Organizer e-transfer email was not provided. Please contact the organizer directly.
+                </p>
+              )}
+            </>
           )}
 
           {confirmation.playerType === 'Goalie' && (
@@ -545,7 +559,7 @@ export default function Home() {
               <input placeholder="Team 1 Name" value={team1Name} onChange={(e) => setTeam1Name(e.target.value)} style={styles.input} />
               <input placeholder="Team 2 Name" value={team2Name} onChange={(e) => setTeam2Name(e.target.value)} style={styles.input} />
               <input placeholder="Organizer Name" value={organizer} onChange={(e) => setOrganizer(e.target.value)} style={styles.input} />
-              <input placeholder="Organizer Email" value={organizerEmail} onChange={(e) => setOrganizerEmail(e.target.value)} style={styles.input} />
+              <input placeholder="Organizer Email / E-transfer Email" value={organizerEmail} onChange={(e) => setOrganizerEmail(e.target.value)} style={styles.input} />
               <input placeholder="Organizer Code" type="password" value={organizerCode} onChange={(e) => setOrganizerCode(e.target.value)} style={styles.input} />
             </div>
 
@@ -719,6 +733,7 @@ const styles = {
   confirmationBox: { background: 'white', padding: '20px', borderRadius: '12px', maxWidth: '500px', margin: '20px auto', textAlign: 'center', boxShadow: '0 8px 22px rgba(0,0,0,0.1)', border: '2px solid #e53935' },
   confirmationTitle: { marginBottom: '10px', color: '#07152b' },
   paymentReminder: { marginTop: '10px', fontWeight: 'bold', color: '#e53935' },
+  etransferLine: { marginTop: '8px', fontWeight: 'bold', color: '#07152b', background: '#f7f9fc', padding: '10px', borderRadius: '8px' },
   closeConfirmButton: { marginTop: '15px', padding: '10px 20px', background: '#07152b', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer' },
   organizerSection: { padding: '34px 18px 10px' },
   organizerCard: { background: 'white', borderRadius: '16px', padding: '24px', margin: '0 auto', maxWidth: '900px', boxShadow: '0 8px 22px rgba(0,0,0,0.08)', border: '1px solid #e1e5eb' },
