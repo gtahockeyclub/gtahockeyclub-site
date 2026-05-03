@@ -10,6 +10,8 @@ export default function Home() {
   const [showPostForm, setShowPostForm] = useState(false)
   const [unlockedGames, setUnlockedGames] = useState({})
   const [confirmation, setConfirmation] = useState(null)
+  const [editingGameId, setEditingGameId] = useState(null)
+  const [editData, setEditData] = useState({})
 
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
@@ -163,6 +165,65 @@ export default function Home() {
     } catch (error) {
       alert('Could not copy payment details. Please copy them manually.')
       console.log(error)
+    }
+  }
+
+  const handleEditGame = (game) => {
+    setEditingGameId(game.id)
+    setEditData({
+      arena: game.arena,
+      game_date: game.game_date,
+      game_time: game.game_time,
+      cost: game.cost,
+      level: game.level,
+      max_players: game.max_players,
+      team1_name: game.team1_name,
+      team2_name: game.team2_name,
+    })
+  }
+
+  const handleCancelEdit = () => {
+    setEditingGameId(null)
+    setEditData({})
+  }
+
+  const handleUpdateGame = async () => {
+    if (!editingGameId) return
+
+    if (
+      !editData.arena ||
+      !editData.game_date ||
+      !editData.game_time ||
+      !editData.cost ||
+      !editData.level ||
+      !editData.max_players
+    ) {
+      alert('Please complete all edit fields.')
+      return
+    }
+
+    const { error } = await supabase
+      .from('games')
+      .update({
+        arena: editData.arena,
+        game_date: editData.game_date,
+        game_time: editData.game_time,
+        cost: editData.cost,
+        level: editData.level,
+        max_players: Number(editData.max_players),
+        team1_name: editData.team1_name || 'Team 1',
+        team2_name: editData.team2_name || 'Team 2',
+      })
+      .eq('id', editingGameId)
+
+    if (error) {
+      alert('Error updating game.')
+      console.log(error)
+    } else {
+      alert('Game updated.')
+      setEditingGameId(null)
+      setEditData({})
+      loadGames()
     }
   }
 
@@ -751,6 +812,49 @@ export default function Home() {
 
                 {toolsUnlocked && (
                   <>
+                    <button onClick={() => handleEditGame(game)} style={styles.editButton}>
+                      Edit Game
+                    </button>
+
+                    {editingGameId === game.id && (
+                      <div style={styles.editBox}>
+                        <h4 style={styles.signupTitle}>Edit Game Details</h4>
+
+                        <select value={editData.arena || ''} onChange={(e) => setEditData({ ...editData, arena: e.target.value })} style={styles.input}>
+                          <option value="">Select Arena</option>
+                          {arenas.map((arena) => (
+                            <option key={arena.id} value={arena.name}>
+                              {arena.name} - {arena.city}
+                            </option>
+                          ))}
+                        </select>
+
+                        <input type="date" value={editData.game_date || ''} onChange={(e) => setEditData({ ...editData, game_date: e.target.value })} style={styles.input} />
+                        <input type="time" value={editData.game_time || ''} onChange={(e) => setEditData({ ...editData, game_time: e.target.value })} style={styles.input} />
+                        <input placeholder="Cost" value={editData.cost || ''} onChange={(e) => setEditData({ ...editData, cost: e.target.value })} style={styles.input} />
+
+                        <select value={editData.level || ''} onChange={(e) => setEditData({ ...editData, level: e.target.value })} style={styles.input}>
+                          <option value="">Select Skill Level</option>
+                          <option value="Beginner">Beginner</option>
+                          <option value="Low-Mid">Low-Mid</option>
+                          <option value="Intermediate">Intermediate</option>
+                          <option value="Advance">Advance</option>
+                        </select>
+
+                        <input placeholder="# of Skaters" value={editData.max_players || ''} onChange={(e) => setEditData({ ...editData, max_players: e.target.value })} style={styles.input} />
+                        <input placeholder="Team 1 Name" value={editData.team1_name || ''} onChange={(e) => setEditData({ ...editData, team1_name: e.target.value })} style={styles.input} />
+                        <input placeholder="Team 2 Name" value={editData.team2_name || ''} onChange={(e) => setEditData({ ...editData, team2_name: e.target.value })} style={styles.input} />
+
+                        <button onClick={handleUpdateGame} style={styles.saveButton}>
+                          Save Changes
+                        </button>
+
+                        <button onClick={handleCancelEdit} style={styles.cancelButton}>
+                          Cancel Edit
+                        </button>
+                      </div>
+                    )}
+
                     <div style={styles.manualBox}>
                       <h4 style={styles.signupTitle}>Organizer Manual Add Player</h4>
 
@@ -831,12 +935,16 @@ const styles = {
   paymentSummary: { background: '#eef4ff', color: '#175cd3', padding: '10px 12px', borderRadius: '10px', marginTop: '16px', fontSize: '14px' },
   signupBox: { background: '#f7f9fc', padding: '18px', borderRadius: '12px', marginTop: '20px' },
   manualBox: { background: '#fff8e6', padding: '18px', borderRadius: '12px', marginTop: '20px', border: '1px solid #ffe1a3' },
+  editBox: { background: '#eef4ff', padding: '18px', borderRadius: '12px', marginTop: '20px', border: '1px solid #b7ccff' },
   signupTitle: { marginTop: 0, marginBottom: '12px' },
   input: { width: '100%', padding: '11px', marginBottom: '10px', border: '1px solid #ccd3dd', borderRadius: '8px', boxSizing: 'border-box', fontSize: '15px' },
   goalieNote: { background: '#eef4ff', color: '#175cd3', padding: '10px', borderRadius: '8px', fontSize: '14px', marginTop: 0 },
   postButton: { width: '100%', background: '#07152b', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px', marginTop: '8px' },
   joinButton: { width: '100%', background: '#e53935', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
   manualButton: { width: '100%', background: '#f59e0b', color: '#07152b', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
+  editButton: { marginTop: '20px', width: '100%', background: '#175cd3', color: 'white', padding: '10px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' },
+  saveButton: { width: '100%', background: '#187a3b', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px', marginTop: '8px' },
+  cancelButton: { width: '100%', background: '#667085', color: 'white', padding: '10px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '15px', marginTop: '10px' },
   disabledButton: { width: '100%', background: '#999', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'not-allowed', fontSize: '16px' },
   organizerToolsButton: { marginTop: '20px', width: '100%', background: '#07152b', color: 'white', padding: '10px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' },
   closeButton: { marginTop: '20px', width: '100%', background: '#444', color: 'white', padding: '10px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' },
