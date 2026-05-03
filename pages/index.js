@@ -106,6 +106,42 @@ export default function Home() {
     return null
   }
 
+  const createGoogleCalendarLink = (details) => {
+    if (!details) return '#'
+
+    const cleanDate = details.date || ''
+    const cleanTime = details.time || '19:00'
+    const start = new Date(`${cleanDate}T${cleanTime}`)
+    const end = new Date(start.getTime() + 90 * 60 * 1000)
+
+    const formatDate = (dateValue) => {
+      return dateValue
+        .toISOString()
+        .replace(/[-:]/g, '')
+        .split('.')[0] + 'Z'
+    }
+
+    const title = `GTA Hockey Club - ${details.arena}`
+    const calendarDetails = [
+      `Team: ${details.team}`,
+      `Cost: ${details.playerType === 'Goalie' ? 'Goalies free' : details.cost}`,
+      details.organizerEmail ? `E-transfer: ${details.organizerEmail}` : '',
+      `Posted through GTA Hockey Club`,
+    ]
+      .filter(Boolean)
+      .join('\n')
+
+    const params = new URLSearchParams({
+      action: 'TEMPLATE',
+      text: title,
+      dates: `${formatDate(start)}/${formatDate(end)}`,
+      details: calendarDetails,
+      location: details.arena,
+    })
+
+    return `https://calendar.google.com/calendar/render?${params.toString()}`
+  }
+
   const handlePostGame = async () => {
     if (organizerCode !== ORGANIZER_CODE) {
       alert('Invalid organizer code.')
@@ -510,6 +546,15 @@ export default function Home() {
             </p>
           )}
 
+          <a
+            href={createGoogleCalendarLink(confirmation)}
+            target="_blank"
+            rel="noreferrer"
+            style={styles.calendarButton}
+          >
+            Add to Calendar
+          </a>
+
           <button
             onClick={() => setConfirmation(null)}
             style={styles.closeConfirmButton}
@@ -734,6 +779,7 @@ const styles = {
   confirmationTitle: { marginBottom: '10px', color: '#07152b' },
   paymentReminder: { marginTop: '10px', fontWeight: 'bold', color: '#e53935' },
   etransferLine: { marginTop: '8px', fontWeight: 'bold', color: '#07152b', background: '#f7f9fc', padding: '10px', borderRadius: '8px' },
+  calendarButton: { display: 'inline-block', marginTop: '14px', marginRight: '8px', padding: '10px 18px', background: '#187a3b', color: 'white', borderRadius: '8px', textDecoration: 'none', fontWeight: 'bold' },
   closeConfirmButton: { marginTop: '15px', padding: '10px 20px', background: '#07152b', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer' },
   organizerSection: { padding: '34px 18px 10px' },
   organizerCard: { background: 'white', borderRadius: '16px', padding: '24px', margin: '0 auto', maxWidth: '900px', boxShadow: '0 8px 22px rgba(0,0,0,0.08)', border: '1px solid #e1e5eb' },
