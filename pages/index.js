@@ -924,15 +924,9 @@ export default function Home() {
                     <strong>Organizer:</strong> {game.organizer_name || 'Organizer not listed'}
                   </p>
 
-                  {game.organizer_email ? (
-                    <p style={styles.organizerInfoLine}>
-                      <strong>E-transfer / Contact:</strong> {game.organizer_email}
-                    </p>
-                  ) : (
-                    <p style={styles.organizerInfoLine}>
-                      <strong>Contact:</strong> Organizer email not provided
-                    </p>
-                  )}
+                  <p style={styles.organizerInfoLine}>
+                    <strong>Payment:</strong> E-transfer details are shown after signup.
+                  </p>
 
                   <p style={styles.organizerNote}>
                     Payment confirms your spot. Goalies are free.
