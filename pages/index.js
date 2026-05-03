@@ -919,6 +919,26 @@ export default function Home() {
                   </div>
                 </div>
 
+                <div style={styles.organizerInfoBox}>
+                  <p style={styles.organizerInfoLine}>
+                    <strong>Organizer:</strong> {game.organizer_name || 'Organizer not listed'}
+                  </p>
+
+                  {game.organizer_email ? (
+                    <p style={styles.organizerInfoLine}>
+                      <strong>E-transfer / Contact:</strong> {game.organizer_email}
+                    </p>
+                  ) : (
+                    <p style={styles.organizerInfoLine}>
+                      <strong>Contact:</strong> Organizer email not provided
+                    </p>
+                  )}
+
+                  <p style={styles.organizerNote}>
+                    Payment confirms your spot. Goalies are free.
+                  </p>
+                </div>
+
                 <div style={styles.paymentSummary}>
                   <strong>Payment:</strong> {paidCount} skaters paid • {unpaidCount} skaters unpaid • Goalies free
                 </div>
@@ -1121,6 +1141,9 @@ const styles = {
   mapLink: { display: 'inline-block', marginTop: '4px', color: '#e53935', fontWeight: 'bold', textDecoration: 'none' },
   openBadge: { background: '#e9f7ef', color: '#187a3b', padding: '8px 12px', borderRadius: '999px', fontWeight: 'bold', whiteSpace: 'nowrap' },
   fullBadge: { background: '#fdecea', color: '#b42318', padding: '8px 12px', borderRadius: '999px', fontWeight: 'bold', whiteSpace: 'nowrap' },
+  organizerInfoBox: { background: '#f7f9fc', padding: '12px', borderRadius: '10px', marginTop: '16px', border: '1px solid #e1e5eb' },
+  organizerInfoLine: { margin: '4px 0', color: '#07152b', fontSize: '14px' },
+  organizerNote: { margin: '8px 0 0', color: '#e53935', fontWeight: 'bold', fontSize: '14px' },
   paymentSummary: { background: '#eef4ff', color: '#175cd3', padding: '10px 12px', borderRadius: '10px', marginTop: '16px', fontSize: '14px' },
   signupBox: { background: '#f7f9fc', padding: '18px', borderRadius: '12px', marginTop: '20px' },
   manualBox: { background: '#fff8e6', padding: '18px', borderRadius: '12px', marginTop: '20px', border: '1px solid #ffe1a3' },
