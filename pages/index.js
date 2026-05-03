@@ -782,37 +782,75 @@ export default function Home() {
                 )}
 
                 {toolsUnlocked && (
-                  <>
-                    <button onClick={() => handleEditGame(game)} style={styles.editButton}>
-                      Edit Game
-                    </button>
+  <>
+    <button onClick={() => handleEditGame(game)} style={styles.editButton}>
+      Edit Game
+    </button>
 
-                    {editingGameId === game.id && (
-                      <div style={styles.editBox}>
-                        <input type="date" value={editData.game_date || ''} onChange={(e) => setEditData({ ...editData, game_date: e.target.value })} style={styles.input} />
-                        <input type="time" value={editData.game_time || ''} onChange={(e) => setEditData({ ...editData, game_time: e.target.value })} style={styles.input} />
-                        <input placeholder="Cost" value={editData.cost || ''} onChange={(e) => setEditData({ ...editData, cost: e.target.value })} style={styles.input} />
+    {editingGameId === game.id && (
+      <div style={styles.editBox}>
+        <input type="date" value={editData.game_date || ''} onChange={(e) => setEditData({ ...editData, game_date: e.target.value })} style={styles.input} />
+        <input type="time" value={editData.game_time || ''} onChange={(e) => setEditData({ ...editData, game_time: e.target.value })} style={styles.input} />
+        <input placeholder="Cost" value={editData.cost || ''} onChange={(e) => setEditData({ ...editData, cost: e.target.value })} style={styles.input} />
 
-                        <select value={editData.level || ''} onChange={(e) => setEditData({ ...editData, level: e.target.value })} style={styles.input}>
-                          <option value="Beginner">Beginner</option>
-                          <option value="Low-Mid">Low-Mid</option>
-                          <option value="Intermediate">Intermediate</option>
-                          <option value="Advance">Advance</option>
-                        </select>
+        <select value={editData.level || ''} onChange={(e) => setEditData({ ...editData, level: e.target.value })} style={styles.input}>
+          <option value="Beginner">Beginner</option>
+          <option value="Low-Mid">Low-Mid</option>
+          <option value="Intermediate">Intermediate</option>
+          <option value="Advance">Advance</option>
+        </select>
 
-                        <input placeholder="# of Skaters" value={editData.max_players || ''} onChange={(e) => setEditData({ ...editData, max_players: Number(e.target.value) })} style={styles.input} />
-                        <input placeholder="Team 1 Name" value={editData.team1_name || ''} onChange={(e) => setEditData({ ...editData, team1_name: e.target.value })} style={styles.input} />
-                        <input placeholder="Team 2 Name" value={editData.team2_name || ''} onChange={(e) => setEditData({ ...editData, team2_name: e.target.value })} style={styles.input} />
+        <input placeholder="# of Skaters" value={editData.max_players || ''} onChange={(e) => setEditData({ ...editData, max_players: Number(e.target.value) })} style={styles.input} />
+        <input placeholder="Team 1 Name" value={editData.team1_name || ''} onChange={(e) => setEditData({ ...editData, team1_name: e.target.value })} style={styles.input} />
+        <input placeholder="Team 2 Name" value={editData.team2_name || ''} onChange={(e) => setEditData({ ...editData, team2_name: e.target.value })} style={styles.input} />
 
-                        <button onClick={handleUpdateGame} style={styles.saveButton}>
-                          Save Changes
-                        </button>
+        <button onClick={handleUpdateGame} style={styles.saveButton}>
+          Save Changes
+        </button>
 
-                        <button onClick={() => setEditingGameId(null)} style={styles.cancelButton}>
-                          Cancel Edit
-                        </button>
-                      </div>
-                    )}
+        <button onClick={() => setEditingGameId(null)} style={styles.cancelButton}>
+          Cancel Edit
+        </button>
+      </div>
+    )}
+
+    <div style={styles.manualBox}>
+      <h4 style={styles.signupTitle}>Organizer Manual Add Player</h4>
+
+      <input placeholder="Player name" value={manualName} onChange={(e) => setManualName(e.target.value)} style={styles.input} />
+      <input placeholder="Phone optional" value={manualPhone} onChange={(e) => setManualPhone(e.target.value)} style={styles.input} />
+      <input placeholder="Email optional" value={manualEmail} onChange={(e) => setManualEmail(e.target.value)} style={styles.input} />
+
+      <select value={manualPlayerType} onChange={(e) => setManualPlayerType(e.target.value)} style={styles.input}>
+        <option>Skater</option>
+        <option>Goalie</option>
+      </select>
+
+      {manualPlayerType === 'Skater' && (
+        <select value={manualTeam} onChange={(e) => setManualTeam(e.target.value)} style={styles.input}>
+          <option value="Team 1">{game.team1_name}</option>
+          <option value="Team 2">{game.team2_name}</option>
+        </select>
+      )}
+
+      {manualPlayerType === 'Goalie' && (
+        <p style={styles.goalieNote}>
+          Manual goalie add will use the first open goalie spot.
+        </p>
+      )}
+
+      <input placeholder="Organizer Code" type="password" value={manualCode} onChange={(e) => setManualCode(e.target.value)} style={styles.input} />
+
+      <button onClick={() => handleManualAddPlayer(game)} style={styles.manualButton}>
+        Add Player Manually
+      </button>
+    </div>
+
+    <button onClick={() => handleCloseGame(game.id)} style={styles.closeButton}>
+      Close Game
+    </button>
+  </>
+)}
 
                     <div style={styles.manualBox}>
                       <h4 style={styles.signupTitle}>Organizer Manual Add Player</h4>
