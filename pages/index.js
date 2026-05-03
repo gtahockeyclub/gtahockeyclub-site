@@ -7,6 +7,7 @@ export default function Home() {
   const [games, setGames] = useState([])
   const [arenas, setArenas] = useState([])
   const [signups, setSignups] = useState([])
+  const [waitlist, setWaitlist] = useState([])
   const [showPostForm, setShowPostForm] = useState(false)
   const [unlockedGames, setUnlockedGames] = useState({})
   const [confirmation, setConfirmation] = useState(null)
@@ -70,10 +71,20 @@ export default function Home() {
     setSignups(data || [])
   }
 
+  const loadWaitlist = async () => {
+    const { data } = await supabase
+      .from('game_waitlist')
+      .select('*')
+      .order('created_at', { ascending: true })
+
+    setWaitlist(data || [])
+  }
+
   useEffect(() => {
     loadArenas()
     loadGames()
     loadSignups()
+    loadWaitlist()
   }, [])
 
   const unlockOrganizerTools = (gameId) => {
@@ -362,6 +373,76 @@ export default function Home() {
     }
   }
 
+  const handleJoinWaitlist = async (game) => {
+    if (!name || !phone || !email) {
+      alert('Please enter your name, phone, and email.')
+      return
+    }
+
+    if (playerType === 'Goalie') {
+      alert('Waitlist is currently for skaters only.')
+      return
+    }
+
+    const cleanEmail = email.trim().toLowerCase()
+    const roster = signups.filter((p) => p.game_id === game.id)
+    const gameWaitlist = waitlist.filter((p) => p.game_id === game.id)
+
+    const alreadySignedUp = roster.some(
+      (p) => p.email && p.email.trim().toLowerCase() === cleanEmail
+    )
+
+    const alreadyWaitlisted = gameWaitlist.some(
+      (p) => p.email && p.email.trim().toLowerCase() === cleanEmail
+    )
+
+    if (alreadySignedUp) {
+      alert('You are already on the roster for this game.')
+      return
+    }
+
+    if (alreadyWaitlisted) {
+      alert('You are already on the waitlist for this game.')
+      return
+    }
+
+    const { error } = await supabase.from('game_waitlist').insert([
+      {
+        game_id: game.id,
+        game_name: game.arena + ' - ' + game.game_date + ' ' + game.game_time,
+        player_name: name,
+        phone,
+        email: cleanEmail,
+        player_type: 'Skater',
+      },
+    ])
+
+    if (error) {
+      alert('Error joining waitlist.')
+      console.log(error)
+    } else {
+      setConfirmation({
+        arena: game.arena,
+        date: game.game_date,
+        time: game.game_time,
+        team: 'Waitlist',
+        cost: game.cost,
+        playerType: 'Waitlist',
+        playerName: name,
+        organizerName: game.organizer_name,
+        organizerEmail: game.organizer_email,
+      })
+
+      alert('You have been added to the waitlist.')
+      setName('')
+      setPhone('')
+      setEmail('')
+      setPlayerType('Skater')
+      setTeam('Team 1')
+      loadWaitlist()
+    }
+  }
+
   const handleJoin = async (game) => {
     if (!name || !phone || !email) {
       alert('Please enter your name, phone, and email.')
@@ -382,7 +463,7 @@ export default function Home() {
     }
 
     if (playerType === 'Skater' && skaterRoster.length >= game.max_players) {
-      alert('This game is full for skaters.')
+      alert('This game is full for skaters. Please join the waitlist.')
       return
     }
 
@@ -605,10 +686,10 @@ export default function Home() {
           <p><strong>Arena:</strong> {confirmation.arena}</p>
           <p><strong>Date:</strong> {confirmation.date}</p>
           <p><strong>Time:</strong> {confirmation.time}</p>
-          <p><strong>Team:</strong> {confirmation.team}</p>
+          <p><strong>Status:</strong> {confirmation.team}</p>
           <p><strong>Cost:</strong> {confirmation.playerType === 'Goalie' ? 'Goalies free' : confirmation.cost}</p>
 
-          {confirmation.playerType !== 'Goalie' && (
+          {confirmation.playerType !== 'Goalie' && confirmation.playerType !== 'Waitlist' && (
             <>
               <p style={styles.paymentReminder}>
                 Please e-transfer the organizer to secure your spot.
@@ -628,6 +709,12 @@ export default function Home() {
                 Copy Payment Details
               </button>
             </>
+          )}
+
+          {confirmation.playerType === 'Waitlist' && (
+            <p style={styles.waitlistNotice}>
+              You are on the waitlist. The organizer will contact you if a spot opens.
+            </p>
           )}
 
           {confirmation.playerType === 'Goalie' && (
@@ -713,6 +800,7 @@ export default function Home() {
         ) : (
           games.map((game) => {
             const roster = signups.filter((p) => p.game_id === game.id)
+            const gameWaitlist = waitlist.filter((p) => p.game_id === game.id)
             const skaterRoster = roster.filter((p) => p.player_type !== 'Goalie')
             const goalieRoster = roster.filter((p) => p.player_type === 'Goalie')
             const skaterSpotsLeft = game.max_players - skaterRoster.length
@@ -732,6 +820,9 @@ export default function Home() {
                     <div style={styles.gameMetaRow}>
                       <span style={styles.costBadge}>{game.cost}</span>
                       <span style={styles.levelBadge}>{game.level}</span>
+                      {gameWaitlist.length > 0 && (
+                        <span style={styles.waitlistBadge}>{gameWaitlist.length} waitlisted</span>
+                      )}
                     </div>
 
                     <p style={styles.gameInfo}>{game.team1_name} vs {game.team2_name}</p>
@@ -770,7 +861,7 @@ export default function Home() {
                     <option>Goalie</option>
                   </select>
 
-                  {playerType === 'Skater' && (
+                  {playerType === 'Skater' && !isSkaterFull && (
                     <select value={team} onChange={(e) => setTeam(e.target.value)} style={styles.input}>
                       <option value="Team 1">{game.team1_name}</option>
                       <option value="Team 2">{game.team2_name}</option>
@@ -783,13 +874,15 @@ export default function Home() {
                     </p>
                   )}
 
-                  <button
-                    onClick={() => handleJoin(game)}
-                    disabled={playerType === 'Skater' && isSkaterFull}
-                    style={playerType === 'Skater' && isSkaterFull ? styles.disabledButton : styles.joinButton}
-                  >
-                    {playerType === 'Skater' && isSkaterFull ? 'Skaters Full' : 'Join Game'}
-                  </button>
+                  {playerType === 'Skater' && isSkaterFull ? (
+                    <button onClick={() => handleJoinWaitlist(game)} style={styles.waitlistButton}>
+                      Join Waitlist
+                    </button>
+                  ) : (
+                    <button onClick={() => handleJoin(game)} style={styles.joinButton}>
+                      Join Game
+                    </button>
+                  )}
                 </div>
 
                 <div style={styles.rosterHeader}>
@@ -812,6 +905,19 @@ export default function Home() {
 
                 {toolsUnlocked && (
                   <>
+                    {gameWaitlist.length > 0 && (
+                      <div style={styles.waitlistBox}>
+                        <h4 style={styles.signupTitle}>Waitlist</h4>
+                        <ol>
+                          {gameWaitlist.map((player) => (
+                            <li key={player.id}>
+                              {player.player_name} • {player.email} • {player.phone}
+                            </li>
+                          ))}
+                        </ol>
+                      </div>
+                    )}
+
                     <button onClick={() => handleEditGame(game)} style={styles.editButton}>
                       Edit Game
                     </button>
@@ -912,6 +1018,7 @@ const styles = {
   confirmationTitle: { marginBottom: '10px', color: '#07152b' },
   paymentReminder: { marginTop: '10px', fontWeight: 'bold', color: '#e53935' },
   etransferLine: { marginTop: '8px', fontWeight: 'bold', color: '#07152b', background: '#f7f9fc', padding: '10px', borderRadius: '8px' },
+  waitlistNotice: { marginTop: '10px', fontWeight: 'bold', color: '#175cd3', background: '#eef4ff', padding: '10px', borderRadius: '8px' },
   copyButton: { marginTop: '10px', padding: '10px 18px', background: '#e53935', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' },
   calendarButton: { display: 'inline-block', marginTop: '14px', marginRight: '8px', padding: '10px 18px', background: '#187a3b', color: 'white', borderRadius: '8px', textDecoration: 'none', fontWeight: 'bold' },
   closeConfirmButton: { marginTop: '15px', padding: '10px 20px', background: '#07152b', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer' },
@@ -928,6 +1035,7 @@ const styles = {
   gameMetaRow: { display: 'flex', gap: '8px', flexWrap: 'wrap', margin: '8px 0' },
   costBadge: { background: '#e9f7ef', color: '#187a3b', padding: '5px 10px', borderRadius: '999px', fontWeight: 'bold', fontSize: '13px' },
   levelBadge: { background: '#eef4ff', color: '#175cd3', padding: '5px 10px', borderRadius: '999px', fontWeight: 'bold', fontSize: '13px' },
+  waitlistBadge: { background: '#fff8e6', color: '#92400e', padding: '5px 10px', borderRadius: '999px', fontWeight: 'bold', fontSize: '13px' },
   address: { margin: '8px 0 4px', color: '#667085', fontSize: '14px' },
   mapLink: { display: 'inline-block', marginTop: '4px', color: '#e53935', fontWeight: 'bold', textDecoration: 'none' },
   openBadge: { background: '#e9f7ef', color: '#187a3b', padding: '8px 12px', borderRadius: '999px', fontWeight: 'bold', whiteSpace: 'nowrap' },
@@ -936,11 +1044,13 @@ const styles = {
   signupBox: { background: '#f7f9fc', padding: '18px', borderRadius: '12px', marginTop: '20px' },
   manualBox: { background: '#fff8e6', padding: '18px', borderRadius: '12px', marginTop: '20px', border: '1px solid #ffe1a3' },
   editBox: { background: '#eef4ff', padding: '18px', borderRadius: '12px', marginTop: '20px', border: '1px solid #b7ccff' },
+  waitlistBox: { background: '#fff8e6', padding: '18px', borderRadius: '12px', marginTop: '20px', border: '1px solid #ffe1a3' },
   signupTitle: { marginTop: 0, marginBottom: '12px' },
   input: { width: '100%', padding: '11px', marginBottom: '10px', border: '1px solid #ccd3dd', borderRadius: '8px', boxSizing: 'border-box', fontSize: '15px' },
   goalieNote: { background: '#eef4ff', color: '#175cd3', padding: '10px', borderRadius: '8px', fontSize: '14px', marginTop: 0 },
   postButton: { width: '100%', background: '#07152b', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px', marginTop: '8px' },
   joinButton: { width: '100%', background: '#e53935', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
+  waitlistButton: { width: '100%', background: '#f59e0b', color: '#07152b', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
   manualButton: { width: '100%', background: '#f59e0b', color: '#07152b', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
   editButton: { marginTop: '20px', width: '100%', background: '#175cd3', color: 'white', padding: '10px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' },
   saveButton: { width: '100%', background: '#187a3b', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px', marginTop: '8px' },
