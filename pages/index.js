@@ -87,6 +87,12 @@ export default function Home() {
     loadWaitlist()
   }, [])
 
+  const refreshGameData = () => {
+    loadGames()
+    loadSignups()
+    loadWaitlist()
+  }
+
   const unlockOrganizerTools = (gameId) => {
     const code = prompt('Enter organizer code:')
 
@@ -117,6 +123,18 @@ export default function Home() {
     if (!team1Goalie) return 'Team 1'
     if (!team2Goalie) return 'Team 2'
     return null
+  }
+
+  const getSmallerSkaterTeam = (roster) => {
+    const team1Skaters = roster.filter(
+      (p) => p.team === 'Team 1' && p.player_type !== 'Goalie'
+    ).length
+
+    const team2Skaters = roster.filter(
+      (p) => p.team === 'Team 2' && p.player_type !== 'Goalie'
+    ).length
+
+    return team1Skaters <= team2Skaters ? 'Team 1' : 'Team 2'
   }
 
   const createGoogleCalendarLink = (details) => {
@@ -301,7 +319,7 @@ export default function Home() {
       console.log(error)
     } else {
       alert('Game closed.')
-      loadGames()
+      refreshGameData()
     }
   }
 
@@ -441,6 +459,62 @@ export default function Home() {
       setTeam('Team 1')
       loadWaitlist()
     }
+  }
+
+  const handleMoveFirstWaitlistToRoster = async (game, gameRoster, gameWaitlist) => {
+    if (gameWaitlist.length === 0) {
+      alert('No players on the waitlist.')
+      return
+    }
+
+    const skaterRoster = gameRoster.filter((p) => p.player_type !== 'Goalie')
+
+    if (skaterRoster.length >= game.max_players) {
+      alert('This game is still full. Remove a skater first before moving someone from the waitlist.')
+      return
+    }
+
+    const firstWaitlistPlayer = gameWaitlist[0]
+    const assignedTeam = getSmallerSkaterTeam(gameRoster)
+
+    const confirmMove = confirm(
+      `Move ${firstWaitlistPlayer.player_name} from waitlist to ${assignedTeam === 'Team 1' ? game.team1_name : game.team2_name}?`
+    )
+
+    if (!confirmMove) return
+
+    const { error: insertError } = await supabase.from('game_signups').insert([
+      {
+        game_id: game.id,
+        game_name: game.arena + ' - ' + game.game_date + ' ' + game.game_time,
+        player_name: firstWaitlistPlayer.player_name,
+        phone: firstWaitlistPlayer.phone,
+        email: firstWaitlistPlayer.email,
+        player_type: 'Skater',
+        team: assignedTeam,
+        paid: false,
+      },
+    ])
+
+    if (insertError) {
+      alert('Error moving waitlist player to roster.')
+      console.log(insertError)
+      return
+    }
+
+    const { error: deleteError } = await supabase
+      .from('game_waitlist')
+      .delete()
+      .eq('id', firstWaitlistPlayer.id)
+
+    if (deleteError) {
+      alert('Player was added to roster, but could not be removed from waitlist. Please remove them manually.')
+      console.log(deleteError)
+    } else {
+      alert(`${firstWaitlistPlayer.player_name} was moved from waitlist to roster.`)
+    }
+
+    refreshGameData()
   }
 
   const handleJoin = async (game) => {
@@ -915,6 +989,13 @@ export default function Home() {
                             </li>
                           ))}
                         </ol>
+
+                        <button
+                          onClick={() => handleMoveFirstWaitlistToRoster(game, roster, gameWaitlist)}
+                          style={styles.promoteButton}
+                        >
+                          Move First Waitlist Player to Roster
+                        </button>
                       </div>
                     )}
 
@@ -1052,6 +1133,7 @@ const styles = {
   joinButton: { width: '100%', background: '#e53935', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
   waitlistButton: { width: '100%', background: '#f59e0b', color: '#07152b', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
   manualButton: { width: '100%', background: '#f59e0b', color: '#07152b', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
+  promoteButton: { width: '100%', background: '#187a3b', color: 'white', padding: '11px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '15px', marginTop: '12px' },
   editButton: { marginTop: '20px', width: '100%', background: '#175cd3', color: 'white', padding: '10px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' },
   saveButton: { width: '100%', background: '#187a3b', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px', marginTop: '8px' },
   cancelButton: { width: '100%', background: '#667085', color: 'white', padding: '10px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '15px', marginTop: '10px' },
