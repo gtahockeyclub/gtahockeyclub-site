@@ -10,8 +10,6 @@ export default function Home() {
   const [showPostForm, setShowPostForm] = useState(false)
   const [unlockedGames, setUnlockedGames] = useState({})
   const [confirmation, setConfirmation] = useState(null)
-  const [editingGameId, setEditingGameId] = useState(null)
-  const [editData, setEditData] = useState({})
 
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
@@ -165,36 +163,6 @@ export default function Home() {
     } catch (error) {
       alert('Could not copy payment details. Please copy them manually.')
       console.log(error)
-    }
-  }
-
-  const handleEditGame = (game) => {
-    setEditingGameId(game.id)
-    setEditData({
-      game_date: game.game_date,
-      game_time: game.game_time,
-      cost: game.cost,
-      level: game.level,
-      max_players: game.max_players,
-      team1_name: game.team1_name,
-      team2_name: game.team2_name,
-    })
-  }
-
-  const handleUpdateGame = async () => {
-    const { error } = await supabase
-      .from('games')
-      .update(editData)
-      .eq('id', editingGameId)
-
-    if (error) {
-      alert('Error updating game.')
-      console.log(error)
-    } else {
-      alert('Game updated.')
-      setEditingGameId(null)
-      setEditData({})
-      loadGames()
     }
   }
 
@@ -782,76 +750,7 @@ export default function Home() {
                 )}
 
                 {toolsUnlocked && (
-  <>
-    <button onClick={() => handleEditGame(game)} style={styles.editButton}>
-      Edit Game
-    </button>
-
-    {editingGameId === game.id && (
-      <div style={styles.editBox}>
-        <input type="date" value={editData.game_date || ''} onChange={(e) => setEditData({ ...editData, game_date: e.target.value })} style={styles.input} />
-        <input type="time" value={editData.game_time || ''} onChange={(e) => setEditData({ ...editData, game_time: e.target.value })} style={styles.input} />
-        <input placeholder="Cost" value={editData.cost || ''} onChange={(e) => setEditData({ ...editData, cost: e.target.value })} style={styles.input} />
-
-        <select value={editData.level || ''} onChange={(e) => setEditData({ ...editData, level: e.target.value })} style={styles.input}>
-          <option value="Beginner">Beginner</option>
-          <option value="Low-Mid">Low-Mid</option>
-          <option value="Intermediate">Intermediate</option>
-          <option value="Advance">Advance</option>
-        </select>
-
-        <input placeholder="# of Skaters" value={editData.max_players || ''} onChange={(e) => setEditData({ ...editData, max_players: Number(e.target.value) })} style={styles.input} />
-        <input placeholder="Team 1 Name" value={editData.team1_name || ''} onChange={(e) => setEditData({ ...editData, team1_name: e.target.value })} style={styles.input} />
-        <input placeholder="Team 2 Name" value={editData.team2_name || ''} onChange={(e) => setEditData({ ...editData, team2_name: e.target.value })} style={styles.input} />
-
-        <button onClick={handleUpdateGame} style={styles.saveButton}>
-          Save Changes
-        </button>
-
-        <button onClick={() => setEditingGameId(null)} style={styles.cancelButton}>
-          Cancel Edit
-        </button>
-      </div>
-    )}
-
-    <div style={styles.manualBox}>
-      <h4 style={styles.signupTitle}>Organizer Manual Add Player</h4>
-
-      <input placeholder="Player name" value={manualName} onChange={(e) => setManualName(e.target.value)} style={styles.input} />
-      <input placeholder="Phone optional" value={manualPhone} onChange={(e) => setManualPhone(e.target.value)} style={styles.input} />
-      <input placeholder="Email optional" value={manualEmail} onChange={(e) => setManualEmail(e.target.value)} style={styles.input} />
-
-      <select value={manualPlayerType} onChange={(e) => setManualPlayerType(e.target.value)} style={styles.input}>
-        <option>Skater</option>
-        <option>Goalie</option>
-      </select>
-
-      {manualPlayerType === 'Skater' && (
-        <select value={manualTeam} onChange={(e) => setManualTeam(e.target.value)} style={styles.input}>
-          <option value="Team 1">{game.team1_name}</option>
-          <option value="Team 2">{game.team2_name}</option>
-        </select>
-      )}
-
-      {manualPlayerType === 'Goalie' && (
-        <p style={styles.goalieNote}>
-          Manual goalie add will use the first open goalie spot.
-        </p>
-      )}
-
-      <input placeholder="Organizer Code" type="password" value={manualCode} onChange={(e) => setManualCode(e.target.value)} style={styles.input} />
-
-      <button onClick={() => handleManualAddPlayer(game)} style={styles.manualButton}>
-        Add Player Manually
-      </button>
-    </div>
-
-    <button onClick={() => handleCloseGame(game.id)} style={styles.closeButton}>
-      Close Game
-    </button>
-  </>
-)}
-
+                  <>
                     <div style={styles.manualBox}>
                       <h4 style={styles.signupTitle}>Organizer Manual Add Player</h4>
 
@@ -941,10 +840,6 @@ const styles = {
   disabledButton: { width: '100%', background: '#999', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'not-allowed', fontSize: '16px' },
   organizerToolsButton: { marginTop: '20px', width: '100%', background: '#07152b', color: 'white', padding: '10px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' },
   closeButton: { marginTop: '20px', width: '100%', background: '#444', color: 'white', padding: '10px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' },
-  editButton: { marginTop: '10px', width: '100%', background: '#175cd3', color: 'white', padding: '10px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' },
-  editBox: { background: '#eef4ff', padding: '15px', marginTop: '10px', borderRadius: '10px' },
-  saveButton: { width: '100%', marginTop: '10px', background: '#187a3b', color: 'white', padding: '10px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' },
-  cancelButton: { width: '100%', marginTop: '10px', background: '#667085', color: 'white', padding: '10px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' },
   rosterHeader: { marginTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
   rosterTitle: { fontSize: '22px', margin: 0 },
   rosterCount: { margin: 0, color: '#667085' },
