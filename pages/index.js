@@ -15,6 +15,10 @@ export default function Home() {
   const [editData, setEditData] = useState({})
   const [isMobile, setIsMobile] = useState(false)
 
+  const [user, setUser] = useState(null)
+  const [loginEmail, setLoginEmail] = useState('')
+  const [loginPassword, setLoginPassword] = useState('')
+
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
@@ -97,10 +101,51 @@ export default function Home() {
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
+  useEffect(() => {
+    const getUser = async () => {
+      const { data } = await supabase.auth.getUser()
+      setUser(data.user)
+    }
+
+    getUser()
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user || null)
+    })
+
+    return () => listener.subscription.unsubscribe()
+  }, [])
+
   const refreshGameData = () => {
     loadGames()
     loadSignups()
     loadWaitlist()
+  }
+
+  const handleLogin = async () => {
+    if (!loginEmail || !loginPassword) {
+      alert('Please enter email and password.')
+      return
+    }
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email: loginEmail,
+      password: loginPassword,
+    })
+
+    if (error) {
+      alert('Login failed. Please check your email and password.')
+      console.log(error)
+    } else {
+      setLoginEmail('')
+      setLoginPassword('')
+      alert('Logged in.')
+    }
+  }
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
+    alert('Logged out.')
   }
 
   const unlockOrganizerTools = (gameId) => {
@@ -267,8 +312,8 @@ export default function Home() {
   }
 
   const handlePostGame = async () => {
-    if (organizerCode !== ORGANIZER_CODE) {
-      alert('Invalid organizer code.')
+    if (organizerCode !== ORGANIZER_CODE && !user) {
+      alert('Please log in or enter a valid organizer code.')
       return
     }
 
@@ -290,7 +335,7 @@ export default function Home() {
         team1_name: team1Name || 'Team 1',
         team2_name: team2Name || 'Team 2',
         organizer_name: organizer,
-        organizer_email: organizerEmail,
+        organizer_email: user?.email || organizerEmail,
       },
     ])
 
@@ -604,8 +649,8 @@ export default function Home() {
   }
 
   const handleManualAddPlayer = async (game) => {
-    if (manualCode !== ORGANIZER_CODE) {
-      alert('Invalid organizer code.')
+    if (manualCode !== ORGANIZER_CODE && !user) {
+      alert('Please log in or enter a valid organizer code.')
       return
     }
 
@@ -680,7 +725,7 @@ export default function Home() {
     const skaters = teamRoster.filter((p) => p.player_type !== 'Goalie')
 
     const playerActions = (player) => {
-      if (!toolsUnlocked) return null
+      if (!toolsUnlocked && !user) return null
 
       const isGoalie = player.player_type === 'Goalie'
 
@@ -756,6 +801,47 @@ export default function Home() {
     <div style={styles.page}>
       <div style={styles.bannerWrap}>
         <img src="/GTAHOCKEYCLUBBANNER.png" alt="GTA Hockey Club Banner" style={styles.banner} />
+      </div>
+
+      <div style={isMobile ? styles.loginBoxMobile : styles.loginBox}>
+        {!user ? (
+          <>
+            <h3 style={styles.loginTitle}>Organizer Login</h3>
+
+            <input
+              placeholder="Organizer email"
+              value={loginEmail}
+              onChange={(e) => setLoginEmail(e.target.value)}
+              style={styles.input}
+            />
+
+            <input
+              type="password"
+              placeholder="Password"
+              value={loginPassword}
+              onChange={(e) => setLoginPassword(e.target.value)}
+              style={styles.input}
+            />
+
+            <button onClick={handleLogin} style={styles.loginButton}>
+              Login
+            </button>
+
+            <p style={styles.loginHelp}>
+              Player signup does not require login.
+            </p>
+          </>
+        ) : (
+          <>
+            <p style={styles.loggedInText}>
+              Logged in as: <strong>{user.email}</strong>
+            </p>
+
+            <button onClick={handleLogout} style={styles.logoutButton}>
+              Logout
+            </button>
+          </>
+        )}
       </div>
 
       <section style={isMobile ? styles.introMobile : styles.intro}>
@@ -839,6 +925,12 @@ export default function Home() {
           <div style={isMobile ? styles.organizerCardMobile : styles.organizerCard}>
             <h2 style={isMobile ? styles.sectionTitleMobile : styles.sectionTitle}>Post a Game</h2>
 
+            {!user && (
+              <p style={styles.loginHelp}>
+                Organizer login is recommended. Organizer code still works as backup.
+              </p>
+            )}
+
             <div style={styles.formGrid}>
               <select value={selectedArena} onChange={(e) => setSelectedArena(e.target.value)} style={styles.input}>
                 <option value="">Select Arena</option>
@@ -865,8 +957,19 @@ export default function Home() {
               <input placeholder="Team 1 Name" value={team1Name} onChange={(e) => setTeam1Name(e.target.value)} style={styles.input} />
               <input placeholder="Team 2 Name" value={team2Name} onChange={(e) => setTeam2Name(e.target.value)} style={styles.input} />
               <input placeholder="Organizer Name" value={organizer} onChange={(e) => setOrganizer(e.target.value)} style={styles.input} />
-              <input placeholder="Organizer Email / E-transfer Email" value={organizerEmail} onChange={(e) => setOrganizerEmail(e.target.value)} style={styles.input} />
-              <input placeholder="Organizer Code" type="password" value={organizerCode} onChange={(e) => setOrganizerCode(e.target.value)} style={styles.input} />
+
+              {!user && (
+                <>
+                  <input placeholder="Organizer Email / E-transfer Email" value={organizerEmail} onChange={(e) => setOrganizerEmail(e.target.value)} style={styles.input} />
+                  <input placeholder="Organizer Code" type="password" value={organizerCode} onChange={(e) => setOrganizerCode(e.target.value)} style={styles.input} />
+                </>
+              )}
+
+              {user && (
+                <p style={styles.loggedInText}>
+                  Game will be posted under: <strong>{user.email}</strong>
+                </p>
+              )}
             </div>
 
             <button onClick={handlePostGame} style={styles.postButton}>
@@ -893,6 +996,7 @@ export default function Home() {
             const paidCount = skaterRoster.filter((p) => p.paid).length
             const unpaidCount = skaterRoster.length - paidCount
             const toolsUnlocked = unlockedGames[game.id]
+            const canUseOrganizerTools = toolsUnlocked || user
 
             return (
               <div key={game.id} style={isMobile ? styles.gameCardMobile : styles.gameCard}>
@@ -990,18 +1094,24 @@ export default function Home() {
                 </div>
 
                 <div style={isMobile ? styles.rosterGridMobile : styles.rosterGrid}>
-                  {renderTeamRoster(roster, 'Team 1', game.team1_name, toolsUnlocked)}
-                  {renderTeamRoster(roster, 'Team 2', game.team2_name, toolsUnlocked)}
+                  {renderTeamRoster(roster, 'Team 1', game.team1_name, canUseOrganizerTools)}
+                  {renderTeamRoster(roster, 'Team 2', game.team2_name, canUseOrganizerTools)}
                 </div>
 
-                {!toolsUnlocked && (
+                {!canUseOrganizerTools && (
                   <button onClick={() => unlockOrganizerTools(game.id)} style={styles.organizerToolsButton}>
                     Organizer Tools
                   </button>
                 )}
 
-                {toolsUnlocked && (
+                {canUseOrganizerTools && (
                   <>
+                    {user && (
+                      <p style={styles.loggedInText}>
+                        Organizer tools unlocked by login.
+                      </p>
+                    )}
+
                     {gameWaitlist.length > 0 && (
                       <div style={styles.waitlistBox}>
                         <h4 style={styles.signupTitle}>Waitlist</h4>
@@ -1090,7 +1200,9 @@ export default function Home() {
                         </p>
                       )}
 
-                      <input placeholder="Organizer Code" type="password" value={manualCode} onChange={(e) => setManualCode(e.target.value)} style={styles.input} />
+                      {!user && (
+                        <input placeholder="Organizer Code" type="password" value={manualCode} onChange={(e) => setManualCode(e.target.value)} style={styles.input} />
+                      )}
 
                       <button onClick={() => handleManualAddPlayer(game)} style={styles.manualButton}>
                         Add Player Manually
@@ -1115,6 +1227,14 @@ const styles = {
   page: { fontFamily: 'Arial, sans-serif', margin: 0, background: '#f3f5f8', color: '#07152b' },
   bannerWrap: { width: '100%', backgroundColor: '#07152b', display: 'flex', justifyContent: 'center' },
   banner: { width: '100%', maxWidth: '1200px', display: 'block' },
+
+  loginBox: { background: 'white', padding: '18px', margin: '18px auto', maxWidth: '500px', borderRadius: '14px', boxShadow: '0 8px 22px rgba(0,0,0,0.08)', border: '1px solid #e1e5eb', textAlign: 'center' },
+  loginBoxMobile: { background: 'white', padding: '14px', margin: '12px 10px', borderRadius: '14px', boxShadow: '0 8px 22px rgba(0,0,0,0.08)', border: '1px solid #e1e5eb', textAlign: 'center' },
+  loginTitle: { margin: '0 0 12px', color: '#07152b' },
+  loginButton: { width: '100%', background: '#07152b', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
+  logoutButton: { width: '100%', background: '#444', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
+  loginHelp: { margin: '10px 0', color: '#667085', fontSize: '14px' },
+  loggedInText: { margin: '10px 0', color: '#175cd3', fontSize: '14px', fontWeight: 'bold' },
 
   intro: { background: '#07152b', color: 'white', textAlign: 'center', padding: '34px 20px' },
   introMobile: { background: '#07152b', color: 'white', textAlign: 'center', padding: '24px 14px' },
