@@ -551,7 +551,7 @@ export default function Home() {
       return
     }
 
-    let assignedTeam = team
+    let assignedTeam = getSmallerSkaterTeam(roster)
 
     if (playerType === 'Goalie') {
       assignedTeam = getAvailableGoalieTeam(roster)
@@ -960,10 +960,9 @@ export default function Home() {
                   </select>
 
                   {playerType === 'Skater' && !isSkaterFull && (
-                    <select value={team} onChange={(e) => setTeam(e.target.value)} style={styles.input}>
-                      <option value="Team 1">{game.team1_name}</option>
-                      <option value="Team 2">{game.team2_name}</option>
-                    </select>
+                    <p style={styles.goalieNote}>
+                      Teams are automatically balanced for fairness.
+                    </p>
                   )}
 
                   {playerType === 'Goalie' && (
