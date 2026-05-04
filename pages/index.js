@@ -13,6 +13,7 @@ export default function Home() {
   const [confirmation, setConfirmation] = useState(null)
   const [editingGameId, setEditingGameId] = useState(null)
   const [editData, setEditData] = useState({})
+  const [isMobile, setIsMobile] = useState(false)
 
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
@@ -85,6 +86,15 @@ export default function Home() {
     loadGames()
     loadSignups()
     loadWaitlist()
+
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768)
+    }
+
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+
+    return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
   const refreshGameData = () => {
@@ -675,7 +685,7 @@ export default function Home() {
       const isGoalie = player.player_type === 'Goalie'
 
       return (
-        <span style={styles.buttonGroup}>
+        <span style={isMobile ? styles.buttonGroupMobile : styles.buttonGroup}>
           {!isGoalie && (
             <button
               onClick={() => handleTogglePaid(player)}
@@ -720,7 +730,7 @@ export default function Home() {
         <ol style={styles.rosterList}>
           <li style={styles.goalieLine}>
             {goalie ? (
-              <span style={styles.playerRow}>
+              <span style={isMobile ? styles.playerRowMobile : styles.playerRow}>
                 <span>🥅 {playerLabel(goalie)}</span>
                 {playerActions(goalie)}
               </span>
@@ -731,7 +741,7 @@ export default function Home() {
 
           {skaters.map((player) => (
             <li key={player.id} style={styles.playerLine}>
-              <span style={styles.playerRow}>
+              <span style={isMobile ? styles.playerRowMobile : styles.playerRow}>
                 {playerLabel(player)}
                 {playerActions(player)}
               </span>
@@ -748,13 +758,13 @@ export default function Home() {
         <img src="/GTAHOCKEYCLUBBANNER.png" alt="GTA Hockey Club Banner" style={styles.banner} />
       </div>
 
-      <section style={styles.intro}>
-        <h1 style={styles.mainTitle}>Find Pickup Hockey Games Across the GTA</h1>
+      <section style={isMobile ? styles.introMobile : styles.intro}>
+        <h1 style={isMobile ? styles.mainTitleMobile : styles.mainTitle}>Find Pickup Hockey Games Across the GTA</h1>
         <p style={styles.mainText}>Join recreational games, view rosters, and reserve your spot in seconds.</p>
       </section>
 
       {confirmation && (
-        <div style={styles.confirmationBox}>
+        <div style={isMobile ? styles.confirmationBoxMobile : styles.confirmationBox}>
           <h3 style={styles.confirmationTitle}>You’re In! 🏒</h3>
 
           <p><strong>Arena:</strong> {confirmation.arena}</p>
@@ -815,7 +825,7 @@ export default function Home() {
         </div>
       )}
 
-      <section style={styles.organizerSection}>
+      <section style={isMobile ? styles.organizerSectionMobile : styles.organizerSection}>
         <div style={{ textAlign: 'center', marginBottom: '20px' }}>
           <button
             onClick={() => setShowPostForm(!showPostForm)}
@@ -826,8 +836,8 @@ export default function Home() {
         </div>
 
         {showPostForm && (
-          <div style={styles.organizerCard}>
-            <h2 style={styles.sectionTitle}>Post a Game</h2>
+          <div style={isMobile ? styles.organizerCardMobile : styles.organizerCard}>
+            <h2 style={isMobile ? styles.sectionTitleMobile : styles.sectionTitle}>Post a Game</h2>
 
             <div style={styles.formGrid}>
               <select value={selectedArena} onChange={(e) => setSelectedArena(e.target.value)} style={styles.input}>
@@ -866,8 +876,8 @@ export default function Home() {
         )}
       </section>
 
-      <section style={styles.gamesSection}>
-        <h2 style={styles.sectionTitle}>Upcoming Games</h2>
+      <section style={isMobile ? styles.gamesSectionMobile : styles.gamesSection}>
+        <h2 style={isMobile ? styles.sectionTitleMobile : styles.sectionTitle}>Upcoming Games</h2>
 
         {games.length === 0 ? (
           <p style={{ textAlign: 'center' }}>No upcoming games posted yet.</p>
@@ -885,10 +895,10 @@ export default function Home() {
             const toolsUnlocked = unlockedGames[game.id]
 
             return (
-              <div key={game.id} style={styles.gameCard}>
-                <div style={styles.gameHeader}>
+              <div key={game.id} style={isMobile ? styles.gameCardMobile : styles.gameCard}>
+                <div style={isMobile ? styles.gameHeaderMobile : styles.gameHeader}>
                   <div>
-                    <h3 style={styles.arena}>{game.arena}</h3>
+                    <h3 style={isMobile ? styles.arenaMobile : styles.arena}>{game.arena}</h3>
                     <p style={styles.gameInfo}>{game.game_date} • {game.game_time}</p>
 
                     <div style={styles.gameMetaRow}>
@@ -973,14 +983,14 @@ export default function Home() {
                   )}
                 </div>
 
-                <div style={styles.rosterHeader}>
+                <div style={isMobile ? styles.rosterHeaderMobile : styles.rosterHeader}>
                   <h4 style={styles.rosterTitle}>Roster</h4>
                   <p style={styles.rosterCount}>
                     {skaterRoster.length} / {game.max_players} skaters • {goalieRoster.length} / 2 goalies
                   </p>
                 </div>
 
-                <div style={styles.rosterGrid}>
+                <div style={isMobile ? styles.rosterGridMobile : styles.rosterGrid}>
                   {renderTeamRoster(roster, 'Team 1', game.team1_name, toolsUnlocked)}
                   {renderTeamRoster(roster, 'Team 2', game.team2_name, toolsUnlocked)}
                 </div>
@@ -996,7 +1006,7 @@ export default function Home() {
                     {gameWaitlist.length > 0 && (
                       <div style={styles.waitlistBox}>
                         <h4 style={styles.signupTitle}>Waitlist</h4>
-                        <ol>
+                        <ol style={styles.mobileFriendlyList}>
                           {gameWaitlist.map((player) => (
                             <li key={player.id}>
                               {player.player_name} • {player.email} • {player.phone}
@@ -1106,72 +1116,121 @@ const styles = {
   page: { fontFamily: 'Arial, sans-serif', margin: 0, background: '#f3f5f8', color: '#07152b' },
   bannerWrap: { width: '100%', backgroundColor: '#07152b', display: 'flex', justifyContent: 'center' },
   banner: { width: '100%', maxWidth: '1200px', display: 'block' },
+
   intro: { background: '#07152b', color: 'white', textAlign: 'center', padding: '34px 20px' },
+  introMobile: { background: '#07152b', color: 'white', textAlign: 'center', padding: '24px 14px' },
+
   mainTitle: { fontSize: '34px', margin: '0 0 10px' },
+  mainTitleMobile: { fontSize: '24px', lineHeight: '30px', margin: '0 0 10px' },
   mainText: { fontSize: '18px', margin: 0, color: '#d7e3f5' },
+
   confirmationBox: { background: 'white', padding: '20px', borderRadius: '12px', maxWidth: '500px', margin: '20px auto', textAlign: 'center', boxShadow: '0 8px 22px rgba(0,0,0,0.1)', border: '2px solid #e53935' },
+  confirmationBoxMobile: { background: 'white', padding: '16px', borderRadius: '12px', maxWidth: '92%', margin: '16px auto', textAlign: 'center', boxShadow: '0 8px 22px rgba(0,0,0,0.1)', border: '2px solid #e53935' },
   confirmationTitle: { marginBottom: '10px', color: '#07152b' },
+
   paymentReminder: { marginTop: '10px', fontWeight: 'bold', color: '#e53935' },
   etransferLine: { marginTop: '8px', fontWeight: 'bold', color: '#07152b', background: '#f7f9fc', padding: '10px', borderRadius: '8px' },
   waitlistNotice: { marginTop: '10px', fontWeight: 'bold', color: '#175cd3', background: '#eef4ff', padding: '10px', borderRadius: '8px' },
+
   copyButton: { marginTop: '10px', padding: '10px 18px', background: '#e53935', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' },
   calendarButton: { display: 'inline-block', marginTop: '14px', marginRight: '8px', padding: '10px 18px', background: '#187a3b', color: 'white', borderRadius: '8px', textDecoration: 'none', fontWeight: 'bold' },
   closeConfirmButton: { marginTop: '15px', padding: '10px 20px', background: '#07152b', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer' },
+
   organizerSection: { padding: '34px 18px 10px' },
+  organizerSectionMobile: { padding: '24px 10px 8px' },
   organizerCard: { background: 'white', borderRadius: '16px', padding: '24px', margin: '0 auto', maxWidth: '900px', boxShadow: '0 8px 22px rgba(0,0,0,0.08)', border: '1px solid #e1e5eb' },
-  toggleButton: { background: '#07152b', color: 'white', padding: '12px 20px', borderRadius: '8px', border: 'none', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
+  organizerCardMobile: { background: 'white', borderRadius: '14px', padding: '16px', margin: '0 auto', maxWidth: '100%', boxShadow: '0 8px 22px rgba(0,0,0,0.08)', border: '1px solid #e1e5eb' },
+
+  toggleButton: { background: '#07152b', color: 'white', padding: '12px 20px', borderRadius: '8px', border: 'none', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px', width: '100%', maxWidth: '360px' },
+
   formGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px' },
+
   gamesSection: { padding: '30px 18px 40px' },
+  gamesSectionMobile: { padding: '22px 10px 32px' },
+
   sectionTitle: { textAlign: 'center', fontSize: '32px', marginBottom: '24px' },
+  sectionTitleMobile: { textAlign: 'center', fontSize: '24px', marginBottom: '18px' },
+
   gameCard: { background: 'white', borderRadius: '16px', padding: '24px', margin: '24px auto', maxWidth: '900px', boxShadow: '0 8px 22px rgba(0,0,0,0.08)', border: '1px solid #e1e5eb' },
+  gameCardMobile: { background: 'white', borderRadius: '14px', padding: '16px', margin: '18px auto', maxWidth: '100%', boxShadow: '0 8px 22px rgba(0,0,0,0.08)', border: '1px solid #e1e5eb' },
+
   gameHeader: { display: 'flex', justifyContent: 'space-between', gap: '15px', alignItems: 'flex-start', borderBottom: '1px solid #e5e5e5', paddingBottom: '16px' },
+  gameHeaderMobile: { display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'stretch', borderBottom: '1px solid #e5e5e5', paddingBottom: '14px' },
+
   arena: { fontSize: '26px', margin: '0 0 8px' },
+  arenaMobile: { fontSize: '21px', lineHeight: '26px', margin: '0 0 8px' },
+
   gameInfo: { margin: '4px 0', color: '#42526b' },
   gameMetaRow: { display: 'flex', gap: '8px', flexWrap: 'wrap', margin: '8px 0' },
+
   costBadge: { background: '#e9f7ef', color: '#187a3b', padding: '5px 10px', borderRadius: '999px', fontWeight: 'bold', fontSize: '13px' },
   levelBadge: { background: '#eef4ff', color: '#175cd3', padding: '5px 10px', borderRadius: '999px', fontWeight: 'bold', fontSize: '13px' },
   waitlistBadge: { background: '#fff8e6', color: '#92400e', padding: '5px 10px', borderRadius: '999px', fontWeight: 'bold', fontSize: '13px' },
+
   address: { margin: '8px 0 4px', color: '#667085', fontSize: '14px' },
   mapLink: { display: 'inline-block', marginTop: '4px', color: '#e53935', fontWeight: 'bold', textDecoration: 'none' },
-  openBadge: { background: '#e9f7ef', color: '#187a3b', padding: '8px 12px', borderRadius: '999px', fontWeight: 'bold', whiteSpace: 'nowrap' },
-  fullBadge: { background: '#fdecea', color: '#b42318', padding: '8px 12px', borderRadius: '999px', fontWeight: 'bold', whiteSpace: 'nowrap' },
+
+  openBadge: { background: '#e9f7ef', color: '#187a3b', padding: '8px 12px', borderRadius: '999px', fontWeight: 'bold', whiteSpace: 'nowrap', textAlign: 'center' },
+  fullBadge: { background: '#fdecea', color: '#b42318', padding: '8px 12px', borderRadius: '999px', fontWeight: 'bold', whiteSpace: 'nowrap', textAlign: 'center' },
+
   organizerInfoBox: { background: '#f7f9fc', padding: '12px', borderRadius: '10px', marginTop: '16px', border: '1px solid #e1e5eb' },
   organizerInfoLine: { margin: '4px 0', color: '#07152b', fontSize: '14px' },
   organizerNote: { margin: '8px 0 0', color: '#e53935', fontWeight: 'bold', fontSize: '14px' },
+
   paymentSummary: { background: '#eef4ff', color: '#175cd3', padding: '10px 12px', borderRadius: '10px', marginTop: '16px', fontSize: '14px' },
+
   signupBox: { background: '#f7f9fc', padding: '18px', borderRadius: '12px', marginTop: '20px' },
   manualBox: { background: '#fff8e6', padding: '18px', borderRadius: '12px', marginTop: '20px', border: '1px solid #ffe1a3' },
   editBox: { background: '#eef4ff', padding: '18px', borderRadius: '12px', marginTop: '20px', border: '1px solid #b7ccff' },
   waitlistBox: { background: '#fff8e6', padding: '18px', borderRadius: '12px', marginTop: '20px', border: '1px solid #ffe1a3' },
+
   signupTitle: { marginTop: 0, marginBottom: '12px' },
-  input: { width: '100%', padding: '11px', marginBottom: '10px', border: '1px solid #ccd3dd', borderRadius: '8px', boxSizing: 'border-box', fontSize: '15px' },
+
+  input: { width: '100%', padding: '12px', marginBottom: '10px', border: '1px solid #ccd3dd', borderRadius: '8px', boxSizing: 'border-box', fontSize: '16px' },
+
   goalieNote: { background: '#eef4ff', color: '#175cd3', padding: '10px', borderRadius: '8px', fontSize: '14px', marginTop: 0 },
-  postButton: { width: '100%', background: '#07152b', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px', marginTop: '8px' },
-  joinButton: { width: '100%', background: '#e53935', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
-  waitlistButton: { width: '100%', background: '#f59e0b', color: '#07152b', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
-  manualButton: { width: '100%', background: '#f59e0b', color: '#07152b', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
-  promoteButton: { width: '100%', background: '#187a3b', color: 'white', padding: '11px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '15px', marginTop: '12px' },
-  editButton: { marginTop: '20px', width: '100%', background: '#175cd3', color: 'white', padding: '10px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' },
-  saveButton: { width: '100%', background: '#187a3b', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px', marginTop: '8px' },
-  cancelButton: { width: '100%', background: '#667085', color: 'white', padding: '10px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '15px', marginTop: '10px' },
-  disabledButton: { width: '100%', background: '#999', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'not-allowed', fontSize: '16px' },
-  organizerToolsButton: { marginTop: '20px', width: '100%', background: '#07152b', color: 'white', padding: '10px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' },
-  closeButton: { marginTop: '20px', width: '100%', background: '#444', color: 'white', padding: '10px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' },
+
+  postButton: { width: '100%', background: '#07152b', color: 'white', padding: '13px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px', marginTop: '8px' },
+  joinButton: { width: '100%', background: '#e53935', color: 'white', padding: '13px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
+  waitlistButton: { width: '100%', background: '#f59e0b', color: '#07152b', padding: '13px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
+  manualButton: { width: '100%', background: '#f59e0b', color: '#07152b', padding: '13px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
+  promoteButton: { width: '100%', background: '#187a3b', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '15px', marginTop: '12px' },
+  editButton: { marginTop: '20px', width: '100%', background: '#175cd3', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' },
+  saveButton: { width: '100%', background: '#187a3b', color: 'white', padding: '13px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px', marginTop: '8px' },
+  cancelButton: { width: '100%', background: '#667085', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '15px', marginTop: '10px' },
+  disabledButton: { width: '100%', background: '#999', color: 'white', padding: '13px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'not-allowed', fontSize: '16px' },
+  organizerToolsButton: { marginTop: '20px', width: '100%', background: '#07152b', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' },
+  closeButton: { marginTop: '20px', width: '100%', background: '#444', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' },
+
   rosterHeader: { marginTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
+  rosterHeaderMobile: { marginTop: '24px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '4px' },
+
   rosterTitle: { fontSize: '22px', margin: 0 },
   rosterCount: { margin: 0, color: '#667085' },
+
   rosterGrid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '14px' },
+  rosterGridMobile: { display: 'grid', gridTemplateColumns: '1fr', gap: '14px', marginTop: '14px' },
+
   teamBox: { border: '1px solid #d8dee8', borderRadius: '12px', padding: '16px', background: '#fbfcfe' },
   teamTitle: { textAlign: 'center', margin: '0 0 12px', fontSize: '20px', color: '#07152b', fontWeight: 'bold' },
+
   rosterList: { paddingLeft: '24px', marginBottom: 0 },
   goalieLine: { fontWeight: 'bold', marginBottom: '8px', color: '#07152b' },
   playerLine: { marginBottom: '7px' },
+
   playerRow: { display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: 'center' },
+  playerRowMobile: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '8px' },
+
   buttonGroup: { display: 'flex', gap: '6px', flexWrap: 'wrap' },
-  moveButton: { background: '#175cd3', color: 'white', border: 'none', borderRadius: '5px', padding: '4px 8px', fontSize: '12px', cursor: 'pointer' },
-  removeButton: { background: '#b42318', color: 'white', border: 'none', borderRadius: '5px', padding: '4px 8px', fontSize: '12px', cursor: 'pointer' },
-  paidButton: { background: '#187a3b', color: 'white', border: 'none', borderRadius: '5px', padding: '4px 8px', fontSize: '12px', cursor: 'pointer' },
-  unpaidButton: { background: '#667085', color: 'white', border: 'none', borderRadius: '5px', padding: '4px 8px', fontSize: '12px', cursor: 'pointer' },
+  buttonGroupMobile: { display: 'flex', gap: '6px', flexWrap: 'wrap', width: '100%' },
+
+  moveButton: { background: '#175cd3', color: 'white', border: 'none', borderRadius: '5px', padding: '5px 9px', fontSize: '12px', cursor: 'pointer' },
+  removeButton: { background: '#b42318', color: 'white', border: 'none', borderRadius: '5px', padding: '5px 9px', fontSize: '12px', cursor: 'pointer' },
+  paidButton: { background: '#187a3b', color: 'white', border: 'none', borderRadius: '5px', padding: '5px 9px', fontSize: '12px', cursor: 'pointer' },
+  unpaidButton: { background: '#667085', color: 'white', border: 'none', borderRadius: '5px', padding: '5px 9px', fontSize: '12px', cursor: 'pointer' },
+
   paidBadge: { marginLeft: '8px', background: '#e9f7ef', color: '#187a3b', padding: '2px 6px', borderRadius: '999px', fontSize: '11px', fontWeight: 'bold' },
   unpaidBadge: { marginLeft: '8px', background: '#fdecea', color: '#b42318', padding: '2px 6px', borderRadius: '999px', fontSize: '11px', fontWeight: 'bold' },
+
+  mobileFriendlyList: { paddingLeft: '20px', wordBreak: 'break-word' },
 }
