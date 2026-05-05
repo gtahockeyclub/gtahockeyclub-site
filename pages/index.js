@@ -1025,12 +1025,32 @@ const loadGames = async () => {
         {games.length === 0 ? (
           <p style={{ textAlign: 'center' }}>No upcoming games posted yet.</p>
         ) : (
-        games
-  .filter((game) => {
-    const today = new Date()
-    const gameDate = new Date(game.game_date)
-    return gameDate >= new Date(today.toDateString())
-  })
+  {games.length === 0 ? (
+  <p style={{ textAlign: 'center' }}>No upcoming games posted yet.</p>
+) : (
+  games
+    .filter((game) => {
+      const today = new Date()
+      const gameDate = new Date(game.game_date)
+      return gameDate >= new Date(today.toDateString())
+    })
+    .map((game) => {
+      const roster = signups.filter((p) => p.game_id === game.id)
+      const gameWaitlist = waitlist.filter((p) => p.game_id === game.id)
+      const skaterRoster = roster.filter((p) => p.player_type !== 'Goalie')
+      const goalieRoster = roster.filter((p) => p.player_type === 'Goalie')
+      const skaterSpotsLeft = game.max_players - skaterRoster.length
+      const isSkaterFull = skaterSpotsLeft <= 0
+      const arenaDetails = getArenaDetails(game.arena)
+      const paidCount = skaterRoster.filter((p) => p.paid).length
+      const unpaidCount = skaterRoster.length - paidCount
+      const gameOwner = isGameOwner(game)
+      const codeUnlocked = unlockedGames[game.id]
+      const canUseOrganizerTools = gameOwner || codeUnlocked
+
+      return (
+        <div key={game.id} style={isMobile ? styles.gameCardMobile : styles.gameCard}>
+          {/* KEEP ALL YOUR EXISTING GAME CARD UI EXACTLY AS IS BELOW */}
   .map((game) => {
             const roster = signups.filter((p) => p.game_id === game.id)
             const gameWaitlist = waitlist.filter((p) => p.game_id === game.id)
