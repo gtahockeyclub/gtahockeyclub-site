@@ -1046,7 +1046,7 @@ const loadGames = async () => {
       return (
         <div key={game.id} style={isMobile ? styles.gameCardMobile : styles.gameCard}>
           {/* KEEP ALL YOUR EXISTING GAME CARD UI EXACTLY AS IS BELOW */}
-  .map((game) => {
+
             const roster = signups.filter((p) => p.game_id === game.id)
             const gameWaitlist = waitlist.filter((p) => p.game_id === game.id)
             const skaterRoster = roster.filter((p) => p.player_type !== 'Goalie')
