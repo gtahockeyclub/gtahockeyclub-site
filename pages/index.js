@@ -122,6 +122,14 @@ export default function Home() {
     loadWaitlist()
   }
 
+  const isGameOwner = (game) => {
+    return user && game.organizer_email && user.email === game.organizer_email
+  }
+
+  const hasOrganizerAccess = (game) => {
+    return isGameOwner(game) || unlockedGames[game.id]
+  }
+
   const handleLogin = async () => {
     if (!loginEmail || !loginPassword) {
       alert('Please enter email and password.')
@@ -253,6 +261,11 @@ export default function Home() {
   }
 
   const handleEditGame = (game) => {
+    if (!hasOrganizerAccess(game)) {
+      alert('You are not the organizer of this game.')
+      return
+    }
+
     setEditingGameId(game.id)
     setEditData({
       arena: game.arena,
@@ -271,7 +284,12 @@ export default function Home() {
     setEditData({})
   }
 
-  const handleUpdateGame = async () => {
+  const handleUpdateGame = async (game) => {
+    if (!hasOrganizerAccess(game)) {
+      alert('You are not the organizer of this game.')
+      return
+    }
+
     if (!editingGameId) return
 
     if (
@@ -334,7 +352,7 @@ export default function Home() {
         max_players: Number(maxPlayers),
         team1_name: team1Name || 'Team 1',
         team2_name: team2Name || 'Team 2',
-        organizer_name: organizer,
+        organizer_name: organizer || user?.email?.split('@')[0] || 'Organizer',
         organizer_email: user?.email || organizerEmail,
       },
     ])
@@ -360,14 +378,19 @@ export default function Home() {
     }
   }
 
-  const handleCloseGame = async (gameId) => {
+  const handleCloseGame = async (game) => {
+    if (!hasOrganizerAccess(game)) {
+      alert('You are not the organizer of this game.')
+      return
+    }
+
     const confirmClose = confirm('Close this game and remove it from the public list?')
     if (!confirmClose) return
 
     const { error } = await supabase
       .from('games')
       .update({ is_active: false })
-      .eq('id', gameId)
+      .eq('id', game.id)
 
     if (error) {
       alert('Error closing game.')
@@ -517,6 +540,11 @@ export default function Home() {
   }
 
   const handleMoveFirstWaitlistToRoster = async (game, gameRoster, gameWaitlist) => {
+    if (!hasOrganizerAccess(game)) {
+      alert('You are not the organizer of this game.')
+      return
+    }
+
     if (gameWaitlist.length === 0) {
       alert('No players on the waitlist.')
       return
@@ -649,8 +677,8 @@ export default function Home() {
   }
 
   const handleManualAddPlayer = async (game) => {
-    if (manualCode !== ORGANIZER_CODE && !user) {
-      alert('Please log in or enter a valid organizer code.')
+    if (!hasOrganizerAccess(game)) {
+      alert('You are not the organizer of this game.')
       return
     }
 
@@ -725,7 +753,7 @@ export default function Home() {
     const skaters = teamRoster.filter((p) => p.player_type !== 'Goalie')
 
     const playerActions = (player) => {
-      if (!toolsUnlocked && !user) return null
+      if (!toolsUnlocked) return null
 
       const isGoalie = player.player_type === 'Goalie'
 
@@ -995,8 +1023,9 @@ export default function Home() {
             const arenaDetails = getArenaDetails(game.arena)
             const paidCount = skaterRoster.filter((p) => p.paid).length
             const unpaidCount = skaterRoster.length - paidCount
-            const toolsUnlocked = unlockedGames[game.id]
-            const canUseOrganizerTools = toolsUnlocked || user
+            const gameOwner = isGameOwner(game)
+            const codeUnlocked = unlockedGames[game.id]
+            const canUseOrganizerTools = gameOwner || codeUnlocked
 
             return (
               <div key={game.id} style={isMobile ? styles.gameCardMobile : styles.gameCard}>
@@ -1098,17 +1127,29 @@ export default function Home() {
                   {renderTeamRoster(roster, 'Team 2', game.team2_name, canUseOrganizerTools)}
                 </div>
 
-                {!canUseOrganizerTools && (
+                {!canUseOrganizerTools && !user && (
                   <button onClick={() => unlockOrganizerTools(game.id)} style={styles.organizerToolsButton}>
                     Organizer Tools
                   </button>
                 )}
 
+                {user && !gameOwner && (
+                  <p style={styles.loginHelp}>
+                    Organizer tools are locked to the organizer who posted this game.
+                  </p>
+                )}
+
                 {canUseOrganizerTools && (
                   <>
-                    {user && (
+                    {gameOwner && (
                       <p style={styles.loggedInText}>
-                        Organizer tools unlocked by login.
+                        Organizer tools unlocked for your game.
+                      </p>
+                    )}
+
+                    {codeUnlocked && !gameOwner && (
+                      <p style={styles.loggedInText}>
+                        Organizer tools unlocked by backup code.
                       </p>
                     )}
 
@@ -1165,7 +1206,7 @@ export default function Home() {
                         <input placeholder="Team 1 Name" value={editData.team1_name || ''} onChange={(e) => setEditData({ ...editData, team1_name: e.target.value })} style={styles.input} />
                         <input placeholder="Team 2 Name" value={editData.team2_name || ''} onChange={(e) => setEditData({ ...editData, team2_name: e.target.value })} style={styles.input} />
 
-                        <button onClick={handleUpdateGame} style={styles.saveButton}>
+                        <button onClick={() => handleUpdateGame(game)} style={styles.saveButton}>
                           Save Changes
                         </button>
 
@@ -1200,16 +1241,12 @@ export default function Home() {
                         </p>
                       )}
 
-                      {!user && (
-                        <input placeholder="Organizer Code" type="password" value={manualCode} onChange={(e) => setManualCode(e.target.value)} style={styles.input} />
-                      )}
-
                       <button onClick={() => handleManualAddPlayer(game)} style={styles.manualButton}>
                         Add Player Manually
                       </button>
                     </div>
 
-                    <button onClick={() => handleCloseGame(game.id)} style={styles.closeButton}>
+                    <button onClick={() => handleCloseGame(game)} style={styles.closeButton}>
                       Close Game
                     </button>
                   </>
