@@ -77,8 +77,6 @@ const loadGames = async () => {
 
   setGames(data || [])
 }
-  setGames(data || [])
-}
 
   const loadSignups = async () => {
     const { data } = await supabase
