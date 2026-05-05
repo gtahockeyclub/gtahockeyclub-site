@@ -55,10 +55,13 @@ export default function Home() {
   }
 
 const loadGames = async () => {
+  const today = new Date().toISOString().split('T')[0]
+
   const { data, error } = await supabase
     .from('games')
     .select('*')
     .eq('is_active', true)
+    .gte('game_date', today)
     .order('game_date', { ascending: true })
     .order('game_time', { ascending: true })
 
@@ -68,7 +71,6 @@ const loadGames = async () => {
 
   setGames(data || [])
 }
-
   const loadSignups = async () => {
     const { data } = await supabase
       .from('game_signups')
