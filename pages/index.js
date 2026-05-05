@@ -122,6 +122,12 @@ export default function Home() {
     loadWaitlist()
   }
 
+  const formatCost = (value) => {
+    const cleanValue = String(value || '').trim()
+    if (!cleanValue) return ''
+    return cleanValue.startsWith('$') ? cleanValue : `$${cleanValue}`
+  }
+
   const isGameOwner = (game) => {
     return user && game.organizer_email && user.email === game.organizer_email
   }
@@ -336,8 +342,9 @@ export default function Home() {
     }
 
     const arenaDetails = arenas.find((a) => a.id === selectedArena)
+    const formattedCost = formatCost(cost)
 
-    if (!arenaDetails || !date || !time || !cost || !level) {
+    if (!arenaDetails || !date || !time || !formattedCost || !level) {
       alert('Please select arena, date, time, cost, and skill level.')
       return
     }
@@ -347,13 +354,14 @@ export default function Home() {
         arena: arenaDetails.name,
         game_date: date,
         game_time: time,
-        cost,
+        cost: formattedCost,
         level,
         max_players: Number(maxPlayers),
         team1_name: team1Name || 'Team 1',
         team2_name: team2Name || 'Team 2',
         organizer_name: organizer || user?.email?.split('@')[0] || 'Organizer',
         organizer_email: user?.email || organizerEmail,
+        is_active: true,
       },
     ])
 
@@ -971,7 +979,7 @@ export default function Home() {
 
               <input type="date" value={date} onChange={(e) => setDate(e.target.value)} style={styles.input} />
               <input type="time" value={time} onChange={(e) => setTime(e.target.value)} style={styles.input} />
-              <input placeholder="Cost, example $20" value={cost} onChange={(e) => setCost(e.target.value)} style={styles.input} />
+              <input placeholder="Cost, example 20" value={cost} onChange={(e) => setCost(e.target.value)} style={styles.input} />
 
               <select value={level} onChange={(e) => setLevel(e.target.value)} style={styles.input}>
                 <option value="">Select Skill Level</option>
