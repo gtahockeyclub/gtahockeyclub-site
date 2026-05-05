@@ -1023,8 +1023,7 @@ const loadGames = async () => {
         {games.length === 0 ? (
           <p style={{ textAlign: 'center' }}>No upcoming games posted yet.</p>
         ) : (
- 
-  games
+   games
     .filter((game) => {
       const today = new Date()
       const gameDate = new Date(game.game_date)
