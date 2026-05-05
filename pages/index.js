@@ -55,19 +55,19 @@ export default function Home() {
   }
 
 const loadGames = async () => {
-  const today = new Date().toISOString().split('T')[0]
-
   const { data, error } = await supabase
     .from('games')
     .select('*')
     .eq('is_active', true)
-    .gte('game_date', today)
     .order('game_date', { ascending: true })
     .order('game_time', { ascending: true })
 
   if (error) {
     console.log('Error loading games:', error)
   }
+
+  setGames(data || [])
+}
 
   setGames(data || [])
 }
@@ -1025,7 +1025,13 @@ const loadGames = async () => {
         {games.length === 0 ? (
           <p style={{ textAlign: 'center' }}>No upcoming games posted yet.</p>
         ) : (
-          games.map((game) => {
+        games
+  .filter((game) => {
+    const today = new Date()
+    const gameDate = new Date(game.game_date)
+    return gameDate >= new Date(today.toDateString())
+  })
+  .map((game) => {
             const roster = signups.filter((p) => p.game_id === game.id)
             const gameWaitlist = waitlist.filter((p) => p.game_id === game.id)
             const skaterRoster = roster.filter((p) => p.player_type !== 'Goalie')
