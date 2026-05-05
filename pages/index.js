@@ -54,18 +54,19 @@ export default function Home() {
     setArenas(data || [])
   }
 
-  const loadGames = async () => {
-    const today = new Date().toISOString().split('T')[0]
+const loadGames = async () => {
+  const { data, error } = await supabase
+    .from('games')
+    .select('*')
+    .eq('is_active', true)
+    .order('game_date', { ascending: true })
 
-    const { data } = await supabase
-      .from('games')
-      .select('*')
-      .eq('is_active', true)
-      .gte('game_date', today)
-      .order('game_date', { ascending: true })
-
-    setGames(data || [])
+  if (error) {
+    console.log('Error loading games:', error)
   }
+
+  setGames(data || [])
+}
 
   const loadSignups = async () => {
     const { data } = await supabase
