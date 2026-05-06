@@ -15,8 +15,12 @@ export default function Home() {
   const [editData, setEditData] = useState({})
   const [isMobile, setIsMobile] = useState(false)
 
-  const [name, setName] = useState('')
-  const [phone, setPhone] = useState('')
+const [user, setUser] = useState(null)
+const [authEmail, setAuthEmail] = useState('')
+const [authPassword, setAuthPassword] = useState('')
+
+const [name, setName] = useState('')
+   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
   const [playerType, setPlayerType] = useState('Skater')
   const [team, setTeam] = useState('Team 1')
