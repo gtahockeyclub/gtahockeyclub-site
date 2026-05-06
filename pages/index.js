@@ -15,10 +15,6 @@ export default function Home() {
   const [editData, setEditData] = useState({})
   const [isMobile, setIsMobile] = useState(false)
 
-  const [user, setUser] = useState(null)
-  const [loginEmail, setLoginEmail] = useState('')
-  const [loginPassword, setLoginPassword] = useState('')
-
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
@@ -54,20 +50,18 @@ export default function Home() {
     setArenas(data || [])
   }
 
-const loadGames = async () => {
-  const { data, error } = await supabase
-    .from('games')
-    .select('*')
-    .eq('is_active', true)
-    .order('game_date', { ascending: true })
-    .order('game_time', { ascending: true })
+  const loadGames = async () => {
+    const today = new Date().toISOString().split('T')[0]
 
-  if (error) {
-    console.log('Error loading games:', error)
+    const { data } = await supabase
+      .from('games')
+      .select('*')
+      .eq('is_active', true)
+      .gte('game_date', today)
+      .order('game_date', { ascending: true })
+
+    setGames(data || [])
   }
-
-  setGames(data || [])
-}
 
   const loadSignups = async () => {
     const { data } = await supabase
@@ -103,65 +97,10 @@ const loadGames = async () => {
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
-  useEffect(() => {
-    const getUser = async () => {
-      const { data } = await supabase.auth.getUser()
-      setUser(data.user)
-    }
-
-    getUser()
-
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user || null)
-    })
-
-    return () => listener.subscription.unsubscribe()
-  }, [])
-
   const refreshGameData = () => {
     loadGames()
     loadSignups()
     loadWaitlist()
-  }
-
-  const formatCost = (value) => {
-    const cleanValue = String(value || '').trim()
-    if (!cleanValue) return ''
-    return cleanValue.startsWith('$') ? cleanValue : `$${cleanValue}`
-  }
-
-  const isGameOwner = (game) => {
-    return user && game.organizer_email && user.email === game.organizer_email
-  }
-
-  const hasOrganizerAccess = (game) => {
-    return isGameOwner(game) || unlockedGames[game.id]
-  }
-
-  const handleLogin = async () => {
-    if (!loginEmail || !loginPassword) {
-      alert('Please enter email and password.')
-      return
-    }
-
-    const { error } = await supabase.auth.signInWithPassword({
-      email: loginEmail,
-      password: loginPassword,
-    })
-
-    if (error) {
-      alert('Login failed. Please check your email and password.')
-      console.log(error)
-    } else {
-      setLoginEmail('')
-      setLoginPassword('')
-      alert('Logged in.')
-    }
-  }
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut()
-    alert('Logged out.')
   }
 
   const unlockOrganizerTools = (gameId) => {
@@ -269,11 +208,6 @@ const loadGames = async () => {
   }
 
   const handleEditGame = (game) => {
-    if (!hasOrganizerAccess(game)) {
-      alert('You are not the organizer of this game.')
-      return
-    }
-
     setEditingGameId(game.id)
     setEditData({
       arena: game.arena,
@@ -292,12 +226,7 @@ const loadGames = async () => {
     setEditData({})
   }
 
-  const handleUpdateGame = async (game) => {
-    if (!hasOrganizerAccess(game)) {
-      alert('You are not the organizer of this game.')
-      return
-    }
-
+  const handleUpdateGame = async () => {
     if (!editingGameId) return
 
     if (
@@ -338,15 +267,14 @@ const loadGames = async () => {
   }
 
   const handlePostGame = async () => {
-    if (organizerCode !== ORGANIZER_CODE && !user) {
-      alert('Please log in or enter a valid organizer code.')
+    if (organizerCode !== ORGANIZER_CODE) {
+      alert('Invalid organizer code.')
       return
     }
 
     const arenaDetails = arenas.find((a) => a.id === selectedArena)
-    const formattedCost = formatCost(cost)
 
-    if (!arenaDetails || !date || !time || !formattedCost || !level) {
+    if (!arenaDetails || !date || !time || !cost || !level) {
       alert('Please select arena, date, time, cost, and skill level.')
       return
     }
@@ -356,14 +284,13 @@ const loadGames = async () => {
         arena: arenaDetails.name,
         game_date: date,
         game_time: time,
-        cost: formattedCost,
+        cost,
         level,
         max_players: Number(maxPlayers),
         team1_name: team1Name || 'Team 1',
         team2_name: team2Name || 'Team 2',
-        organizer_name: organizer || user?.email?.split('@')[0] || 'Organizer',
-        organizer_email: user?.email || organizerEmail,
-        is_active: true,
+        organizer_name: organizer,
+        organizer_email: organizerEmail,
       },
     ])
 
@@ -388,19 +315,14 @@ const loadGames = async () => {
     }
   }
 
-  const handleCloseGame = async (game) => {
-    if (!hasOrganizerAccess(game)) {
-      alert('You are not the organizer of this game.')
-      return
-    }
-
+  const handleCloseGame = async (gameId) => {
     const confirmClose = confirm('Close this game and remove it from the public list?')
     if (!confirmClose) return
 
     const { error } = await supabase
       .from('games')
       .update({ is_active: false })
-      .eq('id', game.id)
+      .eq('id', gameId)
 
     if (error) {
       alert('Error closing game.')
@@ -550,11 +472,6 @@ const loadGames = async () => {
   }
 
   const handleMoveFirstWaitlistToRoster = async (game, gameRoster, gameWaitlist) => {
-    if (!hasOrganizerAccess(game)) {
-      alert('You are not the organizer of this game.')
-      return
-    }
-
     if (gameWaitlist.length === 0) {
       alert('No players on the waitlist.')
       return
@@ -687,8 +604,8 @@ const loadGames = async () => {
   }
 
   const handleManualAddPlayer = async (game) => {
-    if (!hasOrganizerAccess(game)) {
-      alert('You are not the organizer of this game.')
+    if (manualCode !== ORGANIZER_CODE) {
+      alert('Invalid organizer code.')
       return
     }
 
@@ -841,47 +758,6 @@ const loadGames = async () => {
         <img src="/GTAHOCKEYCLUBBANNER.png" alt="GTA Hockey Club Banner" style={styles.banner} />
       </div>
 
-      <div style={isMobile ? styles.loginBoxMobile : styles.loginBox}>
-        {!user ? (
-          <>
-            <h3 style={styles.loginTitle}>Organizer Login</h3>
-
-            <input
-              placeholder="Organizer email"
-              value={loginEmail}
-              onChange={(e) => setLoginEmail(e.target.value)}
-              style={styles.input}
-            />
-
-            <input
-              type="password"
-              placeholder="Password"
-              value={loginPassword}
-              onChange={(e) => setLoginPassword(e.target.value)}
-              style={styles.input}
-            />
-
-            <button onClick={handleLogin} style={styles.loginButton}>
-              Login
-            </button>
-
-            <p style={styles.loginHelp}>
-              Player signup does not require login.
-            </p>
-          </>
-        ) : (
-          <>
-            <p style={styles.loggedInText}>
-              Logged in as: <strong>{user.email}</strong>
-            </p>
-
-            <button onClick={handleLogout} style={styles.logoutButton}>
-              Logout
-            </button>
-          </>
-        )}
-      </div>
-
       <section style={isMobile ? styles.introMobile : styles.intro}>
         <h1 style={isMobile ? styles.mainTitleMobile : styles.mainTitle}>Find Pickup Hockey Games Across the GTA</h1>
         <p style={styles.mainText}>Join recreational games, view rosters, and reserve your spot in seconds.</p>
@@ -963,12 +839,6 @@ const loadGames = async () => {
           <div style={isMobile ? styles.organizerCardMobile : styles.organizerCard}>
             <h2 style={isMobile ? styles.sectionTitleMobile : styles.sectionTitle}>Post a Game</h2>
 
-            {!user && (
-              <p style={styles.loginHelp}>
-                Organizer login is recommended. Organizer code still works as backup.
-              </p>
-            )}
-
             <div style={styles.formGrid}>
               <select value={selectedArena} onChange={(e) => setSelectedArena(e.target.value)} style={styles.input}>
                 <option value="">Select Arena</option>
@@ -981,7 +851,7 @@ const loadGames = async () => {
 
               <input type="date" value={date} onChange={(e) => setDate(e.target.value)} style={styles.input} />
               <input type="time" value={time} onChange={(e) => setTime(e.target.value)} style={styles.input} />
-              <input placeholder="Cost, example 20" value={cost} onChange={(e) => setCost(e.target.value)} style={styles.input} />
+              <input placeholder="Cost, example $20" value={cost} onChange={(e) => setCost(e.target.value)} style={styles.input} />
 
               <select value={level} onChange={(e) => setLevel(e.target.value)} style={styles.input}>
                 <option value="">Select Skill Level</option>
@@ -995,19 +865,8 @@ const loadGames = async () => {
               <input placeholder="Team 1 Name" value={team1Name} onChange={(e) => setTeam1Name(e.target.value)} style={styles.input} />
               <input placeholder="Team 2 Name" value={team2Name} onChange={(e) => setTeam2Name(e.target.value)} style={styles.input} />
               <input placeholder="Organizer Name" value={organizer} onChange={(e) => setOrganizer(e.target.value)} style={styles.input} />
-
-              {!user && (
-                <>
-                  <input placeholder="Organizer Email / E-transfer Email" value={organizerEmail} onChange={(e) => setOrganizerEmail(e.target.value)} style={styles.input} />
-                  <input placeholder="Organizer Code" type="password" value={organizerCode} onChange={(e) => setOrganizerCode(e.target.value)} style={styles.input} />
-                </>
-              )}
-
-              {user && (
-                <p style={styles.loggedInText}>
-                  Game will be posted under: <strong>{user.email}</strong>
-                </p>
-              )}
+              <input placeholder="Organizer Email / E-transfer Email" value={organizerEmail} onChange={(e) => setOrganizerEmail(e.target.value)} style={styles.input} />
+              <input placeholder="Organizer Code" type="password" value={organizerCode} onChange={(e) => setOrganizerCode(e.target.value)} style={styles.input} />
             </div>
 
             <button onClick={handlePostGame} style={styles.postButton}>
@@ -1023,30 +882,7 @@ const loadGames = async () => {
         {games.length === 0 ? (
           <p style={{ textAlign: 'center' }}>No upcoming games posted yet.</p>
         ) : (
-   games
-    .filter((game) => {
-      const today = new Date()
-      const gameDate = new Date(game.game_date)
-      return gameDate >= new Date(today.toDateString())
-    })
-    .map((game) => {
-      const roster = signups.filter((p) => p.game_id === game.id)
-      const gameWaitlist = waitlist.filter((p) => p.game_id === game.id)
-      const skaterRoster = roster.filter((p) => p.player_type !== 'Goalie')
-      const goalieRoster = roster.filter((p) => p.player_type === 'Goalie')
-      const skaterSpotsLeft = game.max_players - skaterRoster.length
-      const isSkaterFull = skaterSpotsLeft <= 0
-      const arenaDetails = getArenaDetails(game.arena)
-      const paidCount = skaterRoster.filter((p) => p.paid).length
-      const unpaidCount = skaterRoster.length - paidCount
-      const gameOwner = isGameOwner(game)
-      const codeUnlocked = unlockedGames[game.id]
-      const canUseOrganizerTools = gameOwner || codeUnlocked
-
-      return (
-        <div key={game.id} style={isMobile ? styles.gameCardMobile : styles.gameCard}>
-          {/* KEEP ALL YOUR EXISTING GAME CARD UI EXACTLY AS IS BELOW */}
-
+          games.map((game) => {
             const roster = signups.filter((p) => p.game_id === game.id)
             const gameWaitlist = waitlist.filter((p) => p.game_id === game.id)
             const skaterRoster = roster.filter((p) => p.player_type !== 'Goalie')
@@ -1056,9 +892,7 @@ const loadGames = async () => {
             const arenaDetails = getArenaDetails(game.arena)
             const paidCount = skaterRoster.filter((p) => p.paid).length
             const unpaidCount = skaterRoster.length - paidCount
-            const gameOwner = isGameOwner(game)
-            const codeUnlocked = unlockedGames[game.id]
-            const canUseOrganizerTools = gameOwner || codeUnlocked
+            const toolsUnlocked = unlockedGames[game.id]
 
             return (
               <div key={game.id} style={isMobile ? styles.gameCardMobile : styles.gameCard}>
@@ -1156,36 +990,18 @@ const loadGames = async () => {
                 </div>
 
                 <div style={isMobile ? styles.rosterGridMobile : styles.rosterGrid}>
-                  {renderTeamRoster(roster, 'Team 1', game.team1_name, canUseOrganizerTools)}
-                  {renderTeamRoster(roster, 'Team 2', game.team2_name, canUseOrganizerTools)}
+                  {renderTeamRoster(roster, 'Team 1', game.team1_name, toolsUnlocked)}
+                  {renderTeamRoster(roster, 'Team 2', game.team2_name, toolsUnlocked)}
                 </div>
 
-                {!canUseOrganizerTools && !user && (
+                {!toolsUnlocked && (
                   <button onClick={() => unlockOrganizerTools(game.id)} style={styles.organizerToolsButton}>
                     Organizer Tools
                   </button>
                 )}
 
-                {user && !gameOwner && (
-                  <p style={styles.loginHelp}>
-                    Organizer tools are locked to the organizer who posted this game.
-                  </p>
-                )}
-
-                {canUseOrganizerTools && (
+                {toolsUnlocked && (
                   <>
-                    {gameOwner && (
-                      <p style={styles.loggedInText}>
-                        Organizer tools unlocked for your game.
-                      </p>
-                    )}
-
-                    {codeUnlocked && !gameOwner && (
-                      <p style={styles.loggedInText}>
-                        Organizer tools unlocked by backup code.
-                      </p>
-                    )}
-
                     {gameWaitlist.length > 0 && (
                       <div style={styles.waitlistBox}>
                         <h4 style={styles.signupTitle}>Waitlist</h4>
@@ -1239,7 +1055,7 @@ const loadGames = async () => {
                         <input placeholder="Team 1 Name" value={editData.team1_name || ''} onChange={(e) => setEditData({ ...editData, team1_name: e.target.value })} style={styles.input} />
                         <input placeholder="Team 2 Name" value={editData.team2_name || ''} onChange={(e) => setEditData({ ...editData, team2_name: e.target.value })} style={styles.input} />
 
-                        <button onClick={() => handleUpdateGame(game)} style={styles.saveButton}>
+                        <button onClick={handleUpdateGame} style={styles.saveButton}>
                           Save Changes
                         </button>
 
@@ -1274,12 +1090,14 @@ const loadGames = async () => {
                         </p>
                       )}
 
+                      <input placeholder="Organizer Code" type="password" value={manualCode} onChange={(e) => setManualCode(e.target.value)} style={styles.input} />
+
                       <button onClick={() => handleManualAddPlayer(game)} style={styles.manualButton}>
                         Add Player Manually
                       </button>
                     </div>
 
-                    <button onClick={() => handleCloseGame(game)} style={styles.closeButton}>
+                    <button onClick={() => handleCloseGame(game.id)} style={styles.closeButton}>
                       Close Game
                     </button>
                   </>
@@ -1297,14 +1115,6 @@ const styles = {
   page: { fontFamily: 'Arial, sans-serif', margin: 0, background: '#f3f5f8', color: '#07152b' },
   bannerWrap: { width: '100%', backgroundColor: '#07152b', display: 'flex', justifyContent: 'center' },
   banner: { width: '100%', maxWidth: '1200px', display: 'block' },
-
-  loginBox: { background: 'white', padding: '18px', margin: '18px auto', maxWidth: '500px', borderRadius: '14px', boxShadow: '0 8px 22px rgba(0,0,0,0.08)', border: '1px solid #e1e5eb', textAlign: 'center' },
-  loginBoxMobile: { background: 'white', padding: '14px', margin: '12px 10px', borderRadius: '14px', boxShadow: '0 8px 22px rgba(0,0,0,0.08)', border: '1px solid #e1e5eb', textAlign: 'center' },
-  loginTitle: { margin: '0 0 12px', color: '#07152b' },
-  loginButton: { width: '100%', background: '#07152b', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
-  logoutButton: { width: '100%', background: '#444', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
-  loginHelp: { margin: '10px 0', color: '#667085', fontSize: '14px' },
-  loggedInText: { margin: '10px 0', color: '#175cd3', fontSize: '14px', fontWeight: 'bold' },
 
   intro: { background: '#07152b', color: 'white', textAlign: 'center', padding: '34px 20px' },
   introMobile: { background: '#07152b', color: 'white', textAlign: 'center', padding: '24px 14px' },
