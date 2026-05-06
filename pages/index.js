@@ -90,8 +90,11 @@ const [name, setName] = useState('')
     loadGames()
     loadSignups()
     loadWaitlist()
-
-    const checkMobile = () => {
+    
+supabase.auth.getUser().then(({ data }) => {
+  setUser(data.user)
+})
+const checkMobile = () => {
       setIsMobile(window.innerWidth <= 768)
     }
 
