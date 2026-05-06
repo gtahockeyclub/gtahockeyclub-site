@@ -851,6 +851,42 @@ const handleLogout = async () => {
       )}
 
       <section style={isMobile ? styles.organizerSectionMobile : styles.organizerSection}>
+        {!user ? (
+  <div style={isMobile ? styles.organizerCardMobile : styles.organizerCard}>
+    <h2 style={isMobile ? styles.sectionTitleMobile : styles.sectionTitle}>
+      Organizer Login
+    </h2>
+
+    <input
+      placeholder="Organizer Email"
+      value={authEmail}
+      onChange={(e) => setAuthEmail(e.target.value)}
+      style={styles.input}
+    />
+
+    <input
+      type="password"
+      placeholder="Password"
+      value={authPassword}
+      onChange={(e) => setAuthPassword(e.target.value)}
+      style={styles.input}
+    />
+
+    <button onClick={handleLogin} style={styles.postButton}>
+      Login
+    </button>
+  </div>
+) : (
+  <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+    <p>
+      Logged in as <strong>{user.email}</strong>
+    </p>
+
+    <button onClick={handleLogout} style={styles.closeButton}>
+      Logout
+    </button>
+  </div>
+)}
         <div style={{ textAlign: 'center', marginBottom: '20px' }}>
           <button
             onClick={() => setShowPostForm(!showPostForm)}
