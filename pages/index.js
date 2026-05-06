@@ -109,7 +109,25 @@ const checkMobile = () => {
     loadSignups()
     loadWaitlist()
   }
+const handleLogin = async () => {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: authEmail,
+    password: authPassword,
+  })
 
+  if (error) {
+    alert(error.message)
+  } else {
+    setUser(data.user)
+    alert('Logged in successfully.')
+  }
+}
+
+const handleLogout = async () => {
+  await supabase.auth.signOut()
+  setUser(null)
+  alert('Logged out.')
+}
   const unlockOrganizerTools = (gameId) => {
     const code = prompt('Enter organizer code:')
 
