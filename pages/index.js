@@ -55,12 +55,20 @@ const [name, setName] = useState('')
   }
 
   const loadGames = async () => {
-    const today = new Date().toISOString().split('T')[0]
+ const now = new Date()
+
+const today =
+  now.getFullYear() +
+  '-' +
+  String(now.getMonth() + 1).padStart(2, '0') +
+  '-' +
+  String(now.getDate()).padStart(2, '0')
 
   const { data } = await supabase
   .from('games')
   .select('*')
   .eq('is_active', true)
+  .gte('game_date', today)
   .order('game_date', { ascending: true })
 
     setGames(data || [])
