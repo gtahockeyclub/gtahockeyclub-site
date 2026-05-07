@@ -57,12 +57,11 @@ const [name, setName] = useState('')
   const loadGames = async () => {
     const today = new Date().toISOString().split('T')[0]
 
-    const { data } = await supabase
-      .from('games')
-      .select('*')
-      .eq('is_active', true)
-      .gte('game_date', today)
-      .order('game_date', { ascending: true })
+  const { data } = await supabase
+  .from('games')
+  .select('*')
+  .eq('is_active', true)
+  .order('game_date', { ascending: true })
 
     setGames(data || [])
   }
