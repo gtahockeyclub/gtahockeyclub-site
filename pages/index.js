@@ -962,6 +962,7 @@ const handleLogout = async () => {
             const paidCount = skaterRoster.filter((p) => p.paid).length
             const unpaidCount = skaterRoster.length - paidCount
             const toolsUnlocked = unlockedGames[game.id]
+            const isOwner = game.organizer_id === user?.id
 
             return (
               <div key={game.id} style={isMobile ? styles.gameCardMobile : styles.gameCard}>
