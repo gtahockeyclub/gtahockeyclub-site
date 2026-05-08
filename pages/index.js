@@ -692,7 +692,7 @@ const handleLogout = async () => {
     ])
 
     if (error) {
-      alert('Error adding player.')
+      alert(error.message)
       console.log(error)
     } else {
       alert('Player added!')
