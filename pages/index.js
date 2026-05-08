@@ -428,8 +428,6 @@ const handleLogout = async () => {
   .eq('id', player.id)
   .select()
 
-console.log(response)
-
 const error = response.error
     
     if (error) {
