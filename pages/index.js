@@ -637,11 +637,10 @@ const handleLogout = async () => {
   }
 
   const handleManualAddPlayer = async (game) => {
-    if (manualCode !== ORGANIZER_CODE) {
+    if (!isOwner && manualOrganizerCode !== ORGANIZER_CODE) {
       alert('Invalid organizer code.')
       return
-    }
-
+   }
     if (!manualName) {
       alert('Please enter player name.')
       return
