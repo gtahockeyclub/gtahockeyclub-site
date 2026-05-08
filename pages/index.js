@@ -423,11 +423,14 @@ const handleLogout = async () => {
       return
     }
 
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('game_signups')
       .update({ paid: !player.paid })
       .eq('id', player.id)
       .select()
+    
+    console.log(data)
+    
     if (error) {
       alert(error.message)
       console.log(error)
