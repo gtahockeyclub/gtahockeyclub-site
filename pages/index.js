@@ -1173,7 +1173,15 @@ const handleLogout = async () => {
                         </p>
                       )}
 
-                      <input placeholder="Organizer Code" type="password" value={manualCode} onChange={(e) => setManualCode(e.target.value)} style={styles.input} />
+                     {!isOwner && (
+                      <input
+                        placeholder="Organizer Code"
+                        type="password"
+                        value={manualCode}
+                        onChange={(e) => setManualCode(e.target.value)}
+                        style={styles.input}
+                      />
+                    )} 
 
                       <button onClick={() => handleManualAddPlayer(game)} style={styles.manualButton}>
                         Add Player Manually
