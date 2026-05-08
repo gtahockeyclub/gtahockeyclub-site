@@ -1067,7 +1067,19 @@ const handleLogout = async () => {
                 </div>
 
                 {isOwner && !toolsUnlocked && (
-                  <button onClick={() => unlockOrganizerTools(game.id)} style={styles.organizerToolsButton}>
+                  <button
+                    onClick={() => {
+                    if (isOwner) {
+                      setUnlockedGames((prev) => ({
+                        ...prev,
+                        [game.id]: true,
+                      }))
+                   } else {
+                     unlockOrganizerTools(game.id)
+                   }
+                }}
+                style={styles.organizerToolsButton}
+               >
                     Organizer Tools
                   </button>
                 )}
