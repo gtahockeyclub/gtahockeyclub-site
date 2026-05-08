@@ -51,8 +51,6 @@ const [name, setName] = useState('')
       .eq('is_active', true)
       .order('name', { ascending: true })
 
-    console.log(data)
-
     setArenas(data || [])
   }
 
