@@ -422,6 +422,8 @@ const handleLogout = async () => {
       return
     }
 
+   alert(player.id)
+    
    const response = await supabase
   .from('game_signups')
   .update({ paid: !player.paid })
