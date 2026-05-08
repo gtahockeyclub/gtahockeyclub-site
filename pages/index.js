@@ -1064,7 +1064,7 @@ const handleLogout = async () => {
                   {renderTeamRoster(roster, 'Team 2', game.team2_name, toolsUnlocked)}
                 </div>
 
-                {!toolsUnlocked && (
+                {isOwner && !toolsUnlocked && (
                   <button onClick={() => unlockOrganizerTools(game.id)} style={styles.organizerToolsButton}>
                     Organizer Tools
                   </button>
