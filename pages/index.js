@@ -416,6 +416,7 @@ const handleLogout = async () => {
   }
 
   const handleTogglePaid = async (player) => {
+    alert('toggle fired')
     if (player.player_type === 'Goalie') {
       alert('Goalies do not pay for pickup hockey.')
       return
