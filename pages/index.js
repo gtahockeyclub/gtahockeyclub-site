@@ -427,11 +427,11 @@ const handleLogout = async () => {
       .eq('id', player.id)
 
     if (error) {
-      alert('Error updating payment.')
+      alert(error.message)
       console.log(error)
     } else {
       loadSignups()
-    }
+   }
   }
 
   const handleJoinWaitlist = async (game) => {
