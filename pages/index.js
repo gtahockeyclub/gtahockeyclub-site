@@ -421,9 +421,7 @@ const handleLogout = async () => {
       alert('Goalies do not pay for pickup hockey.')
       return
     }
-
-   alert(player.id)
-    
+  
    const response = await supabase
   .from('game_signups')
   .update({ paid: !player.paid })
