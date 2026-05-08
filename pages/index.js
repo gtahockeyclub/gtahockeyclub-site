@@ -609,7 +609,7 @@ const handleLogout = async () => {
     ])
 
     if (error) {
-      alert('Error joining game.')
+      alert(error.message)
       console.log(error)
     } else {
       const displayTeam =
