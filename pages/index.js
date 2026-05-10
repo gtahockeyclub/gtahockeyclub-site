@@ -1317,7 +1317,7 @@ const error = response.error
       </section>
    
 
-    </div>
+   
   )
   }
 
