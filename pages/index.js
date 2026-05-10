@@ -939,7 +939,6 @@ const error = response.error
               <input placeholder="Team 2 Name" value={team2Name} onChange={(e) => setTeam2Name(e.target.value)} style={styles.input} />
               <input placeholder="Organizer Name" value={organizer} onChange={(e) => setOrganizer(e.target.value)} style={styles.input} />
               <input placeholder="Organizer Email / E-transfer Email" value={organizerEmail} onChange={(e) => setOrganizerEmail(e.target.value)} style={styles.input} />
-              <input placeholder="Organizer Code" type="password" value={organizerCode} onChange={(e) => setOrganizerCode(e.target.value)} style={styles.input} />
             </div>
 
             <button onClick={handlePostGame} style={styles.postButton}>
