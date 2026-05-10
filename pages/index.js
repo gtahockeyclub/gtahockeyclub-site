@@ -877,17 +877,7 @@ const error = response.error
 
     </div>
 
-    {!isMobile && (
-      <div style={styles.heroRight}>
-        <img
-          src="/hero-hockey-bg.png.png"
-          alt="Hockey Player"
-          style={styles.heroImage}
-        />
-      </div>
-    )}
-
-  </section>
+    </section>
 
       {confirmation && (
         <div style={isMobile ? styles.confirmationBoxMobile : styles.confirmationBox}>
