@@ -1323,7 +1323,7 @@ const error = response.error
                       Close Game
                     </button>
                   </>
-                )}
+                         )}
               </div>
             )
           })}
