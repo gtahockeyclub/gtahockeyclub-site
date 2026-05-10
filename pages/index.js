@@ -1300,23 +1300,27 @@ const error = response.error
                       )}
 
                      
-                                      <button onClick={() => handleManualAddPlayer(game)} style={styles.manualButton}>
-                    Add Player Manually
-                  </button>
-                </div>
+                      <button onClick={() => handleManualAddPlayer(game)} style={styles.manualButton}>
+                        Add Player Manually
+                      </button>
+                    </div>
 
-                <button onClick={() => handleCloseGame(game.id)} style={styles.closeButton}>
-                  Close Game
-                </button>
-              </>
-            )}
-        </div>
-         )
-       })}
-    </section>
+                    <button onClick={() => handleCloseGame(game.id)} style={styles.closeButton}>
+                      Close Game
+                    </button>
+                  </>
+                )}
+              </div>
+            )
+          })
+        )}
+      </section>
+    </div>
 
+    </div>
   )
-}
+  }
+
 const styles = {
   page: { fontFamily: 'Arial, sans-serif', margin: 0, background: '#f3f5f8', color: '#07152b' },
   bannerWrap: { width: '100%', backgroundColor: '#07152b', display: 'flex', justifyContent: 'center' },
@@ -1351,13 +1355,11 @@ const styles = {
   formGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px' },
 
   gamesSection: {
- padding: '40px 24px 48px',
-display: 'grid',
-gridTemplateColumns: 'repeat(auto-fit, minmax(420px, 1fr))',
-gap: '32px',
-alignItems: 'start',
-maxWidth: '1800px',
-margin: '0 auto'
+  padding: '30px 18px 40px',
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+  gap: '24px',
+  alignItems: 'stretch'
 },
   gamesSectionMobile: { padding: '22px 10px 32px' },
 
