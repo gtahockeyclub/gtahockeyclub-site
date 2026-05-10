@@ -1057,8 +1057,14 @@ const error = response.error
   ...styles.premiumGameCard
 }}
 >
-  <div style={isMobile ? styles.gameHeaderMobile : styles.gameHeader}>
-  <div style={styles.gameImageHeader}>
+  <div
+  style={{
+    ...(isMobile
+      ? styles.gameHeaderMobile
+      : styles.gameHeader),
+    ...styles.gameImageHeader
+  }}
+>
   <div style={styles.gameOverlay}>
   <div>
  <div style={styles.gameMetaTop}>
@@ -1078,7 +1084,6 @@ const error = response.error
       {game.game_date} • {game.game_time}
     </p>
 
-  </div>
 </div>
 </div>
   <div style={styles.gameMetaColumn}>
