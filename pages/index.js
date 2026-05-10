@@ -788,7 +788,7 @@ const error = response.error
   <nav style={styles.topNav}>
     <div style={styles.logoSection}>
       <img
-        src="/gtahockey-logo-clean.png"
+        src="/gtahockey-logo-clean.png.png"
         alt="GTA Hockey Club"
         style={styles.logo}
       />
