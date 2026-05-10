@@ -1033,7 +1033,7 @@ const error = response.error
         {games.length === 0 ? (
           <p style={{ textAlign: 'center' }}>No upcoming games posted yet.</p>
         ) : (
-           games.map((game) => {
+          games.map((game) => {
             const roster = signups.filter((p) => p.game_id === game.id)
             const gameWaitlist = waitlist.filter((p) => p.game_id === game.id)
             const skaterRoster = roster.filter((p) => p.player_type !== 'Goalie')
@@ -1069,6 +1069,7 @@ const error = response.error
   <div>
  <div style={styles.gameMetaTop}>
 
+  <div>
 
     <div style={styles.liveRow}>
       <span style={styles.liveDot}></span>
@@ -1084,7 +1085,7 @@ const error = response.error
     </p>
 
 </div>
-
+</div>
   <div style={styles.gameMetaColumn}>
 
     <div style={styles.priceBadge}>
@@ -1120,21 +1121,10 @@ const error = response.error
                         Open in Google Maps
                       </a>
                     )}
-                 <div style={styles.progressWrap}>
-  <div
-    style={{
-      ...styles.progressFill,
-      width: `${Math.min(
-        ((skaterRoster.length || 0) / game.max_players) * 100,
-        100
-      )}%`
-    }}
-  />
-</div>
-
-<p style={styles.spotsText}>
-  {skaterRoster.length} / {game.max_players} Spots Filled
-</p>
+                 
+                  <div style={isSkaterFull ? styles.fullBadge : styles.openBadge}>
+                    {isSkaterFull ? 'SKATERS FULL' : `${skaterSpotsLeft} skater spots left`}
+                  </div>
         
                 <div style={styles.organizerInfoBox}>
                   <p style={styles.organizerInfoLine}>
@@ -1155,10 +1145,6 @@ const error = response.error
                 </div>
 
                 <div style={styles.signupBox}>
-    
-    <button style={styles.premiumJoinButton}>
-  JOIN GAME
-</button>
                   <h4 style={styles.signupTitle}>Join this game</h4>
 
                   <input placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} style={styles.input} />
@@ -1322,21 +1308,18 @@ const error = response.error
                     <button onClick={() => handleCloseGame(game.id)} style={styles.closeButton}>
                       Close Game
                     </button>
-                   </>
+                  </>
                 )}
-
               </div>
-            </div>
-
             )
-          })}
-
+          })
+        )}
       </section>
     </div>
 
-  </div>
-)
-}
+    </div>
+  )
+  }
 
 const styles = {
   page: { fontFamily: 'Arial, sans-serif', margin: 0, background: '#f3f5f8', color: '#07152b' },
@@ -1581,55 +1564,6 @@ gameMetaColumn: {
   paymentSummary: { background: '#eef4ff', color: '#175cd3', padding: '10px 12px', borderRadius: '10px', marginTop: '16px', fontSize: '14px' },
 
   signupBox: { background: '#f7f9fc', padding: '18px', borderRadius: '12px', marginTop: '20px' },
-  signupBox: {
-  background: '#f7f9fc',
-  padding: '18px',
-  borderRadius: '12px',
-  marginTop: '20px'
-},
-
-progressWrap: {
-  width: '100%',
-  height: '10px',
-  background: 'rgba(255,255,255,0.14)',
-  borderRadius: '999px',
-  overflow: 'hidden',
-  marginTop: '14px'
-},
-
-progressFill: {
-  height: '100%',
-  borderRadius: '999px',
-  background:
-    'linear-gradient(90deg, #ffd600 0%, #ffb800 100%)',
-  transition: 'width 0.3s ease'
-},
-
-spotsText: {
-  color: '#ffffff',
-  fontSize: '0.95rem',
-  fontWeight: '700',
-  marginTop: '10px'
-},
-
-premiumJoinButton: {
-  width: '100%',
-  background:
-    'linear-gradient(90deg, #ffd600 0%, #ffb800 100%)',
-  color: '#111827',
-  border: 'none',
-  borderRadius: '14px',
-  padding: '16px',
-  fontSize: '1rem',
-  fontWeight: '800',
-  cursor: 'pointer',
-  marginTop: '18px',
-  marginBottom: '18px',
-  boxShadow:
-    '0 8px 20px rgba(255,214,0,0.22)'
-},
-
-manualBox: {
   manualBox: { background: '#fff8e6', padding: '18px', borderRadius: '12px', marginTop: '20px', border: '1px solid #ffe1a3' },
   editBox: { background: '#eef4ff', padding: '18px', borderRadius: '12px', marginTop: '20px', border: '1px solid #b7ccff' },
   waitlistBox: { background: '#fff8e6', padding: '18px', borderRadius: '12px', marginTop: '20px', border: '1px solid #ffe1a3' },
