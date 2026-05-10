@@ -1485,13 +1485,17 @@ loginButton: {
 },
 
 hero: {
-  display: 'grid',
-  gridTemplateColumns: '1fr 1fr',
+  position: 'relative',
+  display: 'flex',
   alignItems: 'center',
-  gap: '40px',
-  padding: '70px 60px 40px',
-  maxWidth: '1400px',
-  margin: '0 auto'
+  minHeight: '620px',
+  padding: '70px 100px 50px',
+  margin: '0 auto',
+  backgroundImage: 'url("/hero-hockey-bg.png.png")',
+  backgroundSize: 'cover',
+  backgroundPosition: 'center right',
+  backgroundRepeat: 'no-repeat',
+  borderBottom: '1px solid #e5e7eb'
 },
 
 heroMobile: {
