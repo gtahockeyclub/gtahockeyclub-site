@@ -788,7 +788,7 @@ const error = response.error
   <nav style={styles.topNav}>
     <div style={styles.logoSection}>
       <img
-        src="/GTAHOCKEYCLUBBANNER.png"
+        src="/gtahockey-logo.png.png"
         alt="GTA Hockey Club"
         style={styles.logo}
       />
@@ -880,7 +880,7 @@ const error = response.error
     {!isMobile && (
       <div style={styles.heroRight}>
         <img
-          src="/GTAHOCKEYCLUBBANNER.png"
+          src="/hero-player.png.png"
           alt="Hockey Player"
           style={styles.heroImage}
         />
