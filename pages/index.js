@@ -1310,8 +1310,9 @@ const error = response.error
                 </button>
               </>
             )}
-          </div>
-          })}
+        </div>
+         )
+       })}
     </section>
 
   )
