@@ -1033,7 +1033,7 @@ const error = response.error
         {games.length === 0 ? (
           <p style={{ textAlign: 'center' }}>No upcoming games posted yet.</p>
         ) : (
-          games.map((game) => {
+          {games.map((game) => {
             const roster = signups.filter((p) => p.game_id === game.id)
             const gameWaitlist = waitlist.filter((p) => p.game_id === game.id)
             const skaterRoster = roster.filter((p) => p.player_type !== 'Goalie')
