@@ -1389,7 +1389,7 @@ gameCard: {
   padding: '22px',
   minHeight: '180px',
   backgroundImage:
-    "linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.75)), url('/rink-bg.jpg')",
+    "linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.75)), url('/rink-bg.png')",
   backgroundSize: 'cover',
   backgroundPosition: 'center',
   marginBottom: '18px'
