@@ -889,10 +889,6 @@ const error = response.error
 
   </section>
 
-</div>
-
-</div>
-
       {confirmation && (
         <div style={isMobile ? styles.confirmationBoxMobile : styles.confirmationBox}>
           <h3 style={styles.confirmationTitle}>You’re In! 🏒</h3>
