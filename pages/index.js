@@ -1094,8 +1094,7 @@ const error = response.error
                   <div style={isSkaterFull ? styles.fullBadge : styles.openBadge}>
                     {isSkaterFull ? 'SKATERS FULL' : `${skaterSpotsLeft} skater spots left`}
                   </div>
-                </div>
-
+        
                 <div style={styles.organizerInfoBox}>
                   <p style={styles.organizerInfoLine}>
                     <strong>Organizer:</strong> {game.organizer_name || 'Organizer not listed'}
