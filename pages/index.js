@@ -1050,18 +1050,44 @@ const error = response.error
           
             return (
               <div key={game.id} style={isMobile ? styles.gameCardMobile : styles.gameCard}>
-                <div style={isMobile ? styles.gameHeaderMobile : styles.gameHeader}>
-                  <div>
-                    <h3 style={isMobile ? styles.arenaMobile : styles.arena}>{game.arena}</h3>
-                    <p style={styles.gameInfo}>{game.game_date} • {game.game_time}</p>
+               <div style={isMobile ? styles.gameHeaderMobile : styles.gameHeader}>
 
-                    <div style={styles.gameMetaRow}>
-                      <span style={styles.costBadge}>{game.cost}</span>
-                      <span style={styles.levelBadge}>{game.level}</span>
-                      {gameWaitlist.length > 0 && (
-                        <span style={styles.waitlistBadge}>{gameWaitlist.length} waitlisted</span>
-                      )}
-                    </div>
+  <div style={{ flex: 1 }}>
+    
+    <div style={styles.liveRow}>
+      <span style={styles.liveDot}></span>
+      <span style={styles.liveText}>LIVE GAME</span>
+    </div>
+
+    <h3 style={isMobile ? styles.arenaMobile : styles.arena}>
+      {game.arena}
+    </h3>
+
+    <p style={styles.gameInfo}>
+      {game.game_date} • {game.game_time}
+    </p>
+
+  </div>
+
+  <div style={styles.gameMetaColumn}>
+
+    <span style={styles.costBadge}>
+      ${game.cost}
+    </span>
+
+    <span style={styles.levelBadge}>
+      {game.level}
+    </span>
+
+    {gameWaitlist.length > 0 && (
+      <span style={styles.waitlistBadge}>
+        {gameWaitlist.length} waitlisted
+      </span>
+    )}
+
+  </div>
+
+</div>
 
                     <p style={styles.gameInfo}>{game.team1_name} vs {game.team2_name}</p>
 
