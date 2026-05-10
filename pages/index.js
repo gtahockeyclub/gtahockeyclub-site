@@ -1311,8 +1311,7 @@ const error = response.error
               </>
             )}
           </div>
-        )
-      })}
+          })}
     </section>
 
   )
