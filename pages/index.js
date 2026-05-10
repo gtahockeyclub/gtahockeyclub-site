@@ -299,11 +299,7 @@ const handleLogout = async () => {
   }
 
   const handlePostGame = async () => {
-    if (organizerCode !== ORGANIZER_CODE) {
-      alert('Invalid organizer code.')
-      return
-    }
-
+    
     const arenaDetails = arenas.find((a) => a.id === selectedArena)
 
     if (!arenaDetails || !date || !time || !cost || !level) {
@@ -642,10 +638,7 @@ const error = response.error
 
   const handleManualAddPlayer = async (game) => {
     const isOwner = game.organizer_id === user?.id
-    if (!isOwner && manualCode !== ORGANIZER_CODE) {
-      alert('Invalid organizer code.')
-      return
-   }
+  
     if (!manualName) {
       alert('Please enter player name.')
       return
