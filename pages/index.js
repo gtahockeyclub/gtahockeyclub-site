@@ -1102,8 +1102,7 @@ const error = response.error
                         Open in Google Maps
                       </a>
                     )}
-                  </div>
-
+                 
                   <div style={isSkaterFull ? styles.fullBadge : styles.openBadge}>
                     {isSkaterFull ? 'SKATERS FULL' : `${skaterSpotsLeft} skater spots left`}
                   </div>
