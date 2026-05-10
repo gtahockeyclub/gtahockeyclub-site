@@ -1090,6 +1090,8 @@ const error = response.error
   </div>
 
 </div>
+</div>
+</div>
 
                     <p style={styles.gameInfo}>{game.team1_name} vs {game.team2_name}</p>
 
