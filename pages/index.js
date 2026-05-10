@@ -783,15 +783,112 @@ const error = response.error
   }
 
   return (
-    <div style={styles.page}>
-      <div style={styles.bannerWrap}>
-        <img src="/GTAHOCKEYCLUBBANNER.png" alt="GTA Hockey Club Banner" style={styles.banner} />
+   <div style={styles.heroWrapper}>
+
+  <nav style={styles.topNav}>
+    <div style={styles.logoSection}>
+      <img
+        src="/GTAHOCKEYCLUBBANNER.png"
+        alt="GTA Hockey Club"
+        style={styles.logo}
+      />
+
+      <div>
+        <h2 style={styles.logoText}>
+          <span style={{ color: "#0B1F3A" }}>GTA </span>
+          <span style={{ color: "#D62828" }}>HOCKEY </span>
+          <span style={{ color: "#0B1F3A" }}>CLUB</span>
+        </h2>
+
+        <p style={styles.logoSubtext}>
+          POST. CONNECT. PLAY.
+        </p>
+      </div>
+    </div>
+
+    {!isMobile && (
+      <div style={styles.navLinks}>
+        <a style={styles.navLink}>Home</a>
+        <a style={styles.navLink}>Find Games</a>
+        <a style={styles.navLink}>Post Game</a>
+        <a style={styles.navLink}>Organizers</a>
+        <a style={styles.navLink}>About</a>
+      </div>
+    )}
+
+    <div style={styles.navButtons}>
+      <button style={styles.loginButton}>
+        Log In
+      </button>
+
+      <button style={styles.joinButton}>
+        Join Community
+      </button>
+    </div>
+  </nav>
+
+  <section style={isMobile ? styles.heroMobile : styles.hero}>
+
+    <div style={styles.heroLeft}>
+
+      <h1 style={isMobile ? styles.heroTitleMobile : styles.heroTitle}>
+        <span style={{ color: "#D62828" }}>POST.</span><br />
+        <span style={{ color: "#0B1F3A" }}>CONNECT.</span><br />
+        <span style={{ color: "#F4B400" }}>PLAY.</span>
+      </h1>
+
+      <h2 style={styles.heroSubtitle}>
+        ONE HOCKEY COMMUNITY ACROSS THE GTA
+      </h2>
+
+      <p style={styles.heroText}>
+        Built for players and organizers.
+      </p>
+
+      <div style={styles.heroButtons}>
+        <button style={styles.findGamesButton}>
+          FIND GAMES
+        </button>
+
+        <button style={styles.postGameButton}>
+          POST A GAME
+        </button>
       </div>
 
-      <section style={isMobile ? styles.introMobile : styles.intro}>
-        <h1 style={isMobile ? styles.mainTitleMobile : styles.mainTitle}>Find Pickup Hockey Games Across the GTA</h1>
-        <p style={styles.mainText}>Join recreational games, view rosters, and reserve your spot in seconds.</p>
-      </section>
+      <div style={styles.statsRow}>
+
+        <div style={styles.statBox}>
+          <h3 style={styles.statNumber}>48</h3>
+          <p style={styles.statLabel}>LIVE GAMES</p>
+        </div>
+
+        <div style={styles.statBox}>
+          <h3 style={styles.statNumber}>35+</h3>
+          <p style={styles.statLabel}>GTA ARENAS</p>
+        </div>
+
+        <div style={styles.statBox}>
+          <h3 style={styles.statNumber}>4200+</h3>
+          <p style={styles.statLabel}>ACTIVE PLAYERS</p>
+        </div>
+
+      </div>
+
+    </div>
+
+    {!isMobile && (
+      <div style={styles.heroRight}>
+        <img
+          src="/GTAHOCKEYCLUBBANNER.png"
+          alt="Hockey Player"
+          style={styles.heroImage}
+        />
+      </div>
+    )}
+
+  </section>
+
+</div>
 
       {confirmation && (
         <div style={isMobile ? styles.confirmationBoxMobile : styles.confirmationBox}>
@@ -1311,4 +1408,199 @@ const styles = {
   unpaidBadge: { marginLeft: '8px', background: '#fdecea', color: '#b42318', padding: '2px 6px', borderRadius: '999px', fontSize: '11px', fontWeight: 'bold' },
 
   mobileFriendlyList: { paddingLeft: '20px', wordBreak: 'break-word' },
+  heroWrapper: {
+  background: '#ffffff',
+  paddingBottom: '20px'
+},
+
+topNav: {
+  position: 'sticky',
+  top: 0,
+  zIndex: 1000,
+  background: 'white',
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  padding: '18px 40px',
+  borderBottom: '1px solid #e5e7eb',
+  boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
+},
+
+logoSection: {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '14px'
+},
+
+logo: {
+  width: '70px',
+  height: '70px',
+  objectFit: 'contain'
+},
+
+logoText: {
+  margin: 0,
+  fontSize: '28px',
+  fontWeight: '900',
+  letterSpacing: '1px'
+},
+
+logoSubtext: {
+  margin: 0,
+  color: '#667085',
+  fontSize: '12px',
+  fontWeight: 'bold',
+  letterSpacing: '2px'
+},
+
+navLinks: {
+  display: 'flex',
+  gap: '28px',
+  alignItems: 'center'
+},
+
+navLink: {
+  color: '#07152b',
+  textDecoration: 'none',
+  fontWeight: 'bold',
+  cursor: 'pointer',
+  fontSize: '15px'
+},
+
+navButtons: {
+  display: 'flex',
+  gap: '10px',
+  alignItems: 'center'
+},
+
+loginButton: {
+  background: 'white',
+  border: '2px solid #07152b',
+  color: '#07152b',
+  padding: '10px 18px',
+  borderRadius: '8px',
+  fontWeight: 'bold',
+  cursor: 'pointer'
+},
+
+hero: {
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr',
+  alignItems: 'center',
+  gap: '40px',
+  padding: '70px 60px 40px',
+  maxWidth: '1400px',
+  margin: '0 auto'
+},
+
+heroMobile: {
+  display: 'flex',
+  flexDirection: 'column',
+  padding: '30px 20px'
+},
+
+heroLeft: {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center'
+},
+
+heroTitle: {
+  fontSize: '88px',
+  lineHeight: '0.92',
+  margin: 0,
+  fontWeight: '900',
+  letterSpacing: '-2px'
+},
+
+heroTitleMobile: {
+  fontSize: '54px',
+  lineHeight: '0.95',
+  margin: 0,
+  fontWeight: '900'
+},
+
+heroSubtitle: {
+  fontSize: '30px',
+  color: '#07152b',
+  marginTop: '28px',
+  marginBottom: '10px',
+  fontWeight: '900'
+},
+
+heroText: {
+  fontSize: '18px',
+  color: '#475467',
+  marginBottom: '30px'
+},
+
+heroButtons: {
+  display: 'flex',
+  gap: '14px',
+  flexWrap: 'wrap',
+  marginBottom: '34px'
+},
+
+findGamesButton: {
+  background: '#D62828',
+  color: 'white',
+  border: 'none',
+  padding: '16px 28px',
+  borderRadius: '10px',
+  fontWeight: 'bold',
+  fontSize: '16px',
+  cursor: 'pointer'
+},
+
+postGameButton: {
+  background: 'white',
+  color: '#07152b',
+  border: '2px solid #07152b',
+  padding: '16px 28px',
+  borderRadius: '10px',
+  fontWeight: 'bold',
+  fontSize: '16px',
+  cursor: 'pointer'
+},
+
+statsRow: {
+  display: 'flex',
+  gap: '18px',
+  flexWrap: 'wrap'
+},
+
+statBox: {
+  background: '#f8fafc',
+  padding: '16px 20px',
+  borderRadius: '12px',
+  minWidth: '120px',
+  border: '1px solid #e5e7eb'
+},
+
+statNumber: {
+  margin: 0,
+  fontSize: '26px',
+  fontWeight: '900',
+  color: '#07152b'
+},
+
+statLabel: {
+  margin: '4px 0 0',
+  fontSize: '12px',
+  fontWeight: 'bold',
+  color: '#667085'
+},
+
+heroRight: {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center'
+},
+
+heroImage: {
+  width: '100%',
+  maxWidth: '700px',
+  borderRadius: '22px',
+  objectFit: 'cover'
+},
 }
