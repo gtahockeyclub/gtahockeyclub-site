@@ -1029,7 +1029,7 @@ const error = response.error
 
       <section style={isMobile ? styles.gamesSectionMobile : styles.gamesSection}>
         <h2 style={isMobile ? styles.sectionTitleMobile : styles.sectionTitle}>Upcoming Games</h2>
-
+<div style={styles.gamesGrid}>
         {games.length === 0 ? (
           <p style={{ textAlign: 'center' }}>No upcoming games posted yet.</p>
         ) : (
@@ -1355,11 +1355,13 @@ const styles = {
   formGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px' },
 
   gamesSection: {
-  padding: '30px 18px 40px',
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-  gap: '24px',
-  alignItems: 'stretch'
+ padding: '40px 24px 48px',
+display: 'grid',
+gridTemplateColumns: 'repeat(auto-fit, minmax(420px, 1fr))',
+gap: '32px',
+alignItems: 'start',
+maxWidth: '1800px',
+margin: '0 auto'
 },
   gamesSectionMobile: { padding: '22px 10px 32px' },
 
