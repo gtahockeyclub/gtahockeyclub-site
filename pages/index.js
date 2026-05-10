@@ -1069,7 +1069,6 @@ const error = response.error
   <div>
  <div style={styles.gameMetaTop}>
 
-  <div>
 
     <div style={styles.liveRow}>
       <span style={styles.liveDot}></span>
@@ -1085,7 +1084,7 @@ const error = response.error
     </p>
 
 </div>
-</div>
+
   <div style={styles.gameMetaColumn}>
 
     <div style={styles.priceBadge}>
