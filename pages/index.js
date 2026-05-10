@@ -1300,24 +1300,23 @@ const error = response.error
                       )}
 
                      
-                      <button onClick={() => handleManualAddPlayer(game)} style={styles.manualButton}>
-                        Add Player Manually
-                      </button>
-                    </div>
+                                      <button onClick={() => handleManualAddPlayer(game)} style={styles.manualButton}>
+                    Add Player Manually
+                  </button>
+                </div>
 
-                    <button onClick={() => handleCloseGame(game.id)} style={styles.closeButton}>
-                      Close Game
-                                     </button>
-                  </>
-                )}
-              </div>
-            )
-          })}
-         </section>
+                <button onClick={() => handleCloseGame(game.id)} style={styles.closeButton}>
+                  Close Game
+                </button>
+              </>
+            )}
+          </div>
+        )
+      })}
+    </section>
 
   )
-  }
-
+}
 const styles = {
   page: { fontFamily: 'Arial, sans-serif', margin: 0, background: '#f3f5f8', color: '#07152b' },
   bannerWrap: { width: '100%', backgroundColor: '#07152b', display: 'flex', justifyContent: 'center' },
