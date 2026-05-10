@@ -1076,7 +1076,7 @@ const error = response.error
       <span style={styles.liveText}>LIVE GAME</span>
     </div>
 
-    <h3 style={isMobile ? styles.arenaMobile : styles.arena}>
+    <h3 style={styles.premiumArenaTitle}>
       {game.arena}
     </h3>
 
@@ -1392,9 +1392,9 @@ gameCard: {
   borderRadius: '18px',
   overflow: 'hidden',
   padding: '22px',
-  minHeight: '180px',
+  minHeight: '240px',
   backgroundImage:
-    "linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.75)), url('/rink-bg.png')",
+    "linear-gradient(rgba(0,0,0,0.18), rgba(0,0,0,0.42)), url('/rink-bg.png')",
   backgroundSize: 'cover',
   backgroundPosition: 'center',
   marginBottom: '18px'
@@ -1409,6 +1409,13 @@ gameOverlay: {
 
   arena: { fontSize: '26px', margin: '0 0 8px' },
   arenaMobile: { fontSize: '21px', lineHeight: '26px', margin: '0 0 8px' },
+  premiumGameTime: {
+  color: '#ffffff',
+  fontSize: '1.25rem',
+  fontWeight: '700',
+  marginTop: '8px',
+  textShadow: '0 2px 10px rgba(0,0,0,0.45)'
+},
 
   gameInfo: { margin: '4px 0', color: '#42526b' },
   gameMetaRow: { display: 'flex', gap: '8px', flexWrap: 'wrap', margin: '8px 0' },
