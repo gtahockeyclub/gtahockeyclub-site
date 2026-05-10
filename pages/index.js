@@ -1346,7 +1346,13 @@ const styles = {
 
   formGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px' },
 
-  gamesSection: { padding: '30px 18px 40px' },
+  gamesSection: {
+  padding: '30px 18px 40px',
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+  gap: '24px',
+  alignItems: 'stretch'
+},
   gamesSectionMobile: { padding: '22px 10px 32px' },
 
   sectionTitle: { textAlign: 'center', fontSize: '32px', marginBottom: '24px' },
@@ -1357,7 +1363,8 @@ gameCard: {
   borderRadius: '20px',
   padding: '28px',
   margin: '24px auto',
-  maxWidth: '900px',
+  width: '100%',
+  maxWidth: '340px',
   boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
   border: '1px solid #e5e7eb'
 }, 
