@@ -1431,16 +1431,16 @@ gameOverlay: {
   marginBottom: '18px'
 },
 premiumGameCard: {
-  background:
-    "linear-gradient(180deg, rgba(22,28,36,0.98) 0%, rgba(14,18,24,0.98) 100%)",
-  border: "1px solid rgba(255,255,255,0.06)",
-  borderRadius: "24px",
-  padding: "24px",
-  marginBottom: "28px",
-  boxShadow:
-    "0 10px 30px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04)",
-  overflow: "hidden",
-  transition: "all 0.2s ease"
+background: 'linear-gradient(180deg, #0b1220 0%, #111827 100%)',
+borderRadius: '22px',
+padding: '18px',
+marginBottom: '28px',
+boxShadow: '0 10px 30px rgba(0,0,0,0.35)',
+border: '1px solid rgba(255,255,255,0.08)',
+overflow: 'hidden',
+position: 'relative',
+transition: 'all 0.25s ease',
+minHeight: '520px'
 },
 gameMetaColumn: {
   display: 'flex',
