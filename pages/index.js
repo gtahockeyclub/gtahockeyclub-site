@@ -1052,6 +1052,10 @@ const error = response.error
               <div key={game.id} style={isMobile ? styles.gameCardMobile : styles.gameCard}>
   <div style={isMobile ? styles.gameHeaderMobile : styles.gameHeader}>
   <div>
+          <div style={styles.liveRow}>
+  <span style={styles.liveDot}></span>
+  <span style={styles.liveText}>LIVE GAME</span>
+</div>
     <h3 style={isMobile ? styles.arenaMobile : styles.arena}>
       {game.arena}
     </h3>
@@ -1344,6 +1348,27 @@ const styles = {
   costBadge: { background: '#e9f7ef', color: '#187a3b', padding: '5px 10px', borderRadius: '999px', fontWeight: 'bold', fontSize: '13px' },
   levelBadge: { background: '#eef4ff', color: '#175cd3', padding: '5px 10px', borderRadius: '999px', fontWeight: 'bold', fontSize: '13px' },
   waitlistBadge: { background: '#fff8e6', color: '#92400e', padding: '5px 10px', borderRadius: '999px', fontWeight: 'bold', fontSize: '13px' },
+  liveRow: {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '6px',
+  marginBottom: '8px'
+},
+
+liveDot: {
+  width: '10px',
+  height: '10px',
+  borderRadius: '50%',
+  backgroundColor: '#22c55e',
+  boxShadow: '0 0 10px #22c55e'
+},
+
+liveText: {
+  fontSize: '11px',
+  fontWeight: '700',
+  color: '#22c55e',
+  letterSpacing: '1px'
+},
   liveRow: {
   display: 'flex',
   alignItems: 'center',
