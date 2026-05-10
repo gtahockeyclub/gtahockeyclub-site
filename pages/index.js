@@ -1029,7 +1029,7 @@ const error = response.error
 
       <section style={isMobile ? styles.gamesSectionMobile : styles.gamesSection}>
         <h2 style={isMobile ? styles.sectionTitleMobile : styles.sectionTitle}>Upcoming Games</h2>
-<div style={styles.gamesGrid}>
+
         {games.length === 0 ? (
           <p style={{ textAlign: 'center' }}>No upcoming games posted yet.</p>
         ) : (
@@ -1315,7 +1315,7 @@ const error = response.error
           })
         )}
       </section>
-    </div>
+   
 
     </div>
   )
