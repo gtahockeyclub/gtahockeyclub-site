@@ -1307,15 +1307,14 @@ const error = response.error
 
                     <button onClick={() => handleCloseGame(game.id)} style={styles.closeButton}>
                       Close Game
-                    </button>
+                                     </button>
                   </>
                 )}
               </div>
             )
           })
-              )}
          </section>
-      
+
   )
   }
 
