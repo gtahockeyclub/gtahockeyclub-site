@@ -880,7 +880,7 @@ const error = response.error
     {!isMobile && (
       <div style={styles.heroRight}>
         <img
-          src="/hero-player.png.png"
+          src="/hero-hockey-bg.png"
           alt="Hockey Player"
           style={styles.heroImage}
         />
