@@ -1049,7 +1049,14 @@ const error = response.error
               unlockedGames[game.id] || isOwner
           
             return (
-              <div key={game.id} style={isMobile ? styles.gameCardMobile : styles.gameCard}>
+              <div
+  key={game.id}
+  className="premiumGameCard"
+ style={{
+  ...(isMobile ? styles.gameCardMobile : styles.gameCard),
+  ...styles.premiumGameCard
+}}
+>
   <div style={isMobile ? styles.gameHeaderMobile : styles.gameHeader}>
   <div>
  <div style={styles.gameMetaTop}>
@@ -1383,7 +1390,18 @@ gameCard: {
   gap: '20px',
   marginBottom: '18px'
 },
-
+premiumGameCard: {
+  background:
+    "linear-gradient(180deg, rgba(22,28,36,0.98) 0%, rgba(14,18,24,0.98) 100%)",
+  border: "1px solid rgba(255,255,255,0.06)",
+  borderRadius: "24px",
+  padding: "24px",
+  marginBottom: "28px",
+  boxShadow:
+    "0 10px 30px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04)",
+  overflow: "hidden",
+  transition: "all 0.2s ease"
+},
 gameMetaColumn: {
   display: 'flex',
   flexDirection: 'column',
