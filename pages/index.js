@@ -1879,5 +1879,5 @@ heroImage: {
   maxWidth: '700px',
   borderRadius: '22px',
   objectFit: 'cover'
-}
+},
 }
