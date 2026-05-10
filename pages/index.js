@@ -1333,10 +1333,26 @@ const styles = {
   sectionTitle: { textAlign: 'center', fontSize: '32px', marginBottom: '24px' },
   sectionTitleMobile: { textAlign: 'center', fontSize: '24px', marginBottom: '18px' },
 
-  gameCard: { background: 'white', borderRadius: '16px', padding: '24px', margin: '24px auto', maxWidth: '900px', boxShadow: '0 8px 22px rgba(0,0,0,0.08)', border: '1px solid #e1e5eb' },
+gameCard: {
+  background: '#ffffff',
+  borderRadius: '20px',
+  padding: '28px',
+  margin: '24px auto',
+  maxWidth: '900px',
+  boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
+  border: '1px solid #e5e7eb'
+}, 
   gameCardMobile: { background: 'white', borderRadius: '14px', padding: '16px', margin: '18px auto', maxWidth: '100%', boxShadow: '0 8px 22px rgba(0,0,0,0.08)', border: '1px solid #e1e5eb' },
 
-  gameHeader: { display: 'flex', justifyContent: 'space-between', gap: '15px', alignItems: 'flex-start', borderBottom: '1px solid #e5e5e5', paddingBottom: '16px' },
+  gameHeader: {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'flex-start',
+  gap: '20px',
+  borderBottom: '1px solid #e5e7eb',
+  paddingBottom: '18px',
+  marginBottom: '14px'
+},
   gameHeaderMobile: { display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'stretch', borderBottom: '1px solid #e5e5e5', paddingBottom: '14px' },
 
   arena: { fontSize: '26px', margin: '0 0 8px' },
