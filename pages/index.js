@@ -1372,7 +1372,7 @@ gameCard: {
   padding: '28px',
   margin: '24px auto',
   width: '100%',
-  maxWidth: '340px',
+  maxWidth: '420px',
   boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
   border: '1px solid #e5e7eb'
 }, 
