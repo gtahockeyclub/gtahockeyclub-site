@@ -1058,6 +1058,8 @@ const error = response.error
 }}
 >
   <div style={isMobile ? styles.gameHeaderMobile : styles.gameHeader}>
+  <div style={styles.gameImageHeader}>
+  <div style={styles.gameOverlay}>
   <div>
  <div style={styles.gameMetaTop}>
 
@@ -1077,7 +1079,8 @@ const error = response.error
     </p>
 
   </div>
-
+</div>
+</div>
   <div style={styles.gameMetaColumn}>
 
     <div style={styles.priceBadge}>
@@ -1378,6 +1381,24 @@ gameCard: {
   borderBottom: '1px solid #e5e7eb',
   paddingBottom: '18px',
   marginBottom: '14px'
+},
+  gameImageHeader: {
+  position: 'relative',
+  borderRadius: '18px',
+  overflow: 'hidden',
+  padding: '22px',
+  minHeight: '180px',
+  backgroundImage:
+    "linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.75)), url('/rink-bg.jpg')",
+  backgroundSize: 'cover',
+  backgroundPosition: 'center',
+  marginBottom: '18px'
+},
+
+gameOverlay: {
+  display: 'flex',
+  justifyContent: 'space-between',
+  gap: '20px'
 },
   gameHeaderMobile: { display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'stretch', borderBottom: '1px solid #e5e5e5', paddingBottom: '14px' },
 
