@@ -1052,10 +1052,15 @@ const error = response.error
               <div key={game.id} style={isMobile ? styles.gameCardMobile : styles.gameCard}>
   <div style={isMobile ? styles.gameHeaderMobile : styles.gameHeader}>
   <div>
-          <div style={styles.liveRow}>
-  <span style={styles.liveDot}></span>
-  <span style={styles.liveText}>LIVE GAME</span>
-</div>
+ <div style={styles.gameMetaTop}>
+
+  <div>
+
+    <div style={styles.liveRow}>
+      <span style={styles.liveDot}></span>
+      <span style={styles.liveText}>LIVE GAME</span>
+    </div>
+
     <h3 style={isMobile ? styles.arenaMobile : styles.arena}>
       {game.arena}
     </h3>
@@ -1063,23 +1068,28 @@ const error = response.error
     <p style={styles.gameInfo}>
       {game.game_date} • {game.game_time}
     </p>
+
   </div>
 
-  <div style={styles.gameMetaRow}>
-    <span style={styles.costBadge}>
-      ${game.cost}
-    </span>
+  <div style={styles.gameMetaColumn}>
 
-    <span style={styles.levelBadge}>
+    <div style={styles.priceBadge}>
+      ${game.cost}
+    </div>
+
+    <div style={styles.skillBadge}>
       {game.level}
-    </span>
+    </div>
 
     {gameWaitlist.length > 0 && (
-      <span style={styles.waitlistBadge}>
-        {gameWaitlist.length} waitlisted
-      </span>
+      <div style={styles.waitlistBadgeModern}>
+        {gameWaitlist.length} WAITLIST
+      </div>
     )}
+
   </div>
+
+</div>
 </div>
                     <p style={styles.gameInfo}>{game.team1_name} vs {game.team2_name}</p>
 
@@ -1364,6 +1374,72 @@ gameCard: {
   costBadge: { background: '#e9f7ef', color: '#187a3b', padding: '5px 10px', borderRadius: '999px', fontWeight: 'bold', fontSize: '13px' },
   levelBadge: { background: '#eef4ff', color: '#175cd3', padding: '5px 10px', borderRadius: '999px', fontWeight: 'bold', fontSize: '13px' },
   waitlistBadge: { background: '#fff8e6', color: '#92400e', padding: '5px 10px', borderRadius: '999px', fontWeight: 'bold', fontSize: '13px' },
+  gameMetaTop: {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'flex-start',
+  gap: '20px',
+  marginBottom: '18px'
+},
+
+gameMetaColumn: {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-end',
+  gap: '10px'
+},
+priceBadge: {
+  background: '#dcfce7',
+  color: '#166534',
+  padding: '8px 14px',
+  borderRadius: '999px',
+  fontWeight: '700',
+  fontSize: '14px'
+},
+
+skillBadge: {
+  background: '#dbeafe',
+  color: '#1d4ed8',
+  padding: '8px 14px',
+  borderRadius: '999px',
+  fontWeight: '700',
+  fontSize: '14px'
+},
+
+waitlistBadgeModern: {
+  background: '#fef3c7',
+  color: '#92400e',
+  padding: '8px 14px',
+  borderRadius: '999px',
+  fontWeight: '700',
+  fontSize: '13px'
+},
+priceBadge: {
+  background: '#dcfce7',
+  color: '#166534',
+  padding: '8px 14px',
+  borderRadius: '999px',
+  fontWeight: '700',
+  fontSize: '14px'
+},
+
+skillBadge: {
+  background: '#dbeafe',
+  color: '#1d4ed8',
+  padding: '8px 14px',
+  borderRadius: '999px',
+  fontWeight: '700',
+  fontSize: '14px'
+},
+
+waitlistBadgeModern: {
+  background: '#fef3c7',
+  color: '#92400e',
+  padding: '8px 14px',
+  borderRadius: '999px',
+  fontWeight: '700',
+  fontSize: '13px'
+},
   liveRow: {
   display: 'flex',
   alignItems: 'center',
