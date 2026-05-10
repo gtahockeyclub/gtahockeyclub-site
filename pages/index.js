@@ -783,7 +783,7 @@ const error = response.error
   }
 
   return (
-   <div style={styles.heroWrapper}>
+   <div style={styles.page}>
 
   <nav style={styles.topNav}>
     <div style={styles.logoSection}>
@@ -827,6 +827,7 @@ const error = response.error
     </div>
   </nav>
 
+  <div style={styles.heroWrapper}>    
   <section style={isMobile ? styles.heroMobile : styles.hero}>
 
     <div style={styles.heroLeft}>
@@ -887,6 +888,8 @@ const error = response.error
     )}
 
   </section>
+
+</div>
 
 </div>
 
