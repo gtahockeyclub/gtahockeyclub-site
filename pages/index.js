@@ -1322,17 +1322,20 @@ const error = response.error
                     <button onClick={() => handleCloseGame(game.id)} style={styles.closeButton}>
                       Close Game
                     </button>
-                  </>
-                         )}
+                   </>
+                )}
+
               </div>
+
             )
           })}
+
       </section>
     </div>
 
-    </div>
-  )
-  }
+  </div>
+)
+}
 
 const styles = {
   page: { fontFamily: 'Arial, sans-serif', margin: 0, background: '#f3f5f8', color: '#07152b' },
