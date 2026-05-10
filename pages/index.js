@@ -1364,16 +1364,17 @@ liveDot: {
 },
 
 liveText: {
-  fontSize: '11px',
-  fontWeight: '700',
-  color: '#22c55e',
-  letterSpacing: '1px'
+  fontSize: '12px',
+  fontWeight: '800',
+  color: '#16a34a',
+  letterSpacing: '1px',
+  textTransform: 'uppercase'
 },
-  liveRow: {
+ liveRow: {
   display: 'flex',
   alignItems: 'center',
-  gap: '6px',
-  marginBottom: '8px'
+  gap: '8px',
+  marginBottom: '10px'
 },
 
 liveDot: {
