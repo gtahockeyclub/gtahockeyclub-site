@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
+import GameCard from "../components/GameCard"
 
 const ORGANIZER_CODE = 'GTA2026'
 
