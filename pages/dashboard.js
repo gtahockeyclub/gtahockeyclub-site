@@ -34,7 +34,7 @@ export default function Dashboard() {
     backgroundColor: "#111827",
     padding: "25px",
     borderRadius: "12px",
-    border: "1px solid #1f2937"
+    border: "1px solid #1f2937",
     boxShadow: "0 4px 20px rgba(0,0,0,0.35)",
   }}
 >
