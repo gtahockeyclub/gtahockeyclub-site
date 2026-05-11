@@ -9,10 +9,15 @@ export default function Dashboard() {
         fontFamily: "Arial"
       }}
     >
-      <h1 style={{ fontSize: "36px", marginBottom: "10px" }}>
-        Organizer Dashboard
-      </h1>
-
+      <h1
+  style={{
+    fontSize: "42px",
+    marginBottom: "10px",
+    color: "#facc15"
+  }}
+>
+  Organizer Dashboard
+</h1>
       <p style={{ color: "#94a3b8", marginBottom: "40px" }}>
         Manage your GTA Hockey Club games and players.
       </p>
