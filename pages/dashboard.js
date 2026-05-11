@@ -49,7 +49,7 @@ export default function Dashboard() {
       fontWeight: "bold"
     }}
   >
-    Open Dashboard
+    View Games
   </button>
 </div>
         <div
