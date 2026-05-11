@@ -24,17 +24,34 @@ export default function Dashboard() {
           gap: "20px"
         }}
       >
-        <div
-          style={{
-            backgroundColor: "#111827",
-            padding: "25px",
-            borderRadius: "12px"
-          }}
-        >
-          <h2>My Games</h2>
-          <p>View and manage your posted games.</p>
-        </div>
+     <div
+  style={{
+    backgroundColor: "#111827",
+    padding: "25px",
+    borderRadius: "12px",
+    border: "1px solid #1f2937"
+  }}
+>
+  <h2 style={{ marginBottom: "10px" }}>My Games</h2>
 
+  <p style={{ color: "#94a3b8", marginBottom: "20px" }}>
+    View and manage your posted games.
+  </p>
+
+  <button
+    style={{
+      backgroundColor: "#facc15",
+      color: "black",
+      border: "none",
+      padding: "10px 16px",
+      borderRadius: "8px",
+      cursor: "pointer",
+      fontWeight: "bold"
+    }}
+  >
+    Open Dashboard
+  </button>
+</div>
         <div
           style={{
             backgroundColor: "#111827",
