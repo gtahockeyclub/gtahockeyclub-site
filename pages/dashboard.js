@@ -13,6 +13,7 @@ export default function Dashboard() {
     const { data, error } = await supabase
       .from("games")
       .select("*")
+      .eq("is_active", true)
       .order("game_date", { ascending: true })
 
     if (!error) {
@@ -221,88 +222,64 @@ export default function Dashboard() {
                 }}
               >
                 <h3
-  style={{
-    minHeight: "50px",
-    marginBottom: "15px"
-  }}
->
-  {game.arena}
-</h3>
+                  style={{
+                    minHeight: "50px",
+                    marginBottom: "15px"
+                  }}
+                >
+                  {game.arena}
+                </h3>
 
                 <p>
                   {game.game_date} • {game.game_time}
                 </p>
 
                 <p>
-  <strong>Skill:</strong> {game.skill_level || "N/A"}
-</p>
+                  <strong>Skill:</strong> {game.skill_level || "N/A"}
+                </p>
 
-<p>
-  <strong>Price:</strong> ${game.price || 0}
-</p>
+                <p>
+                  <strong>Price:</strong> ${game.price || 0}
+                </p>
 
-<p>
-  <strong>Spots:</strong> {game.max_players || 0}
-</p>
+                <p>
+                  <strong>Spots:</strong> {game.max_players || 0}
+                </p>
 
+                <Link href={`/game/${game.id}`}>
+                  <button
+                    style={{
+                      marginTop: "15px",
+                      backgroundColor: "#facc15",
+                      color: "black",
+                      border: "none",
+                      padding: "10px 16px",
+                      borderRadius: "8px",
+                      cursor: "pointer",
+                      fontWeight: "bold",
+                      display: "block"
+                    }}
+                  >
+                    Manage Game
+                  </button>
+                </Link>
 
-
-<Link href={`/game/${game.id}`}>
-  <button
-    style={{
-      marginTop: "15px",
-      backgroundColor: "#facc15",
-      color: "black",
-      border: "none",
-      padding: "10px 16px",
-      borderRadius: "8px",
-      cursor: "pointer",
-      fontWeight: "bold",
-      display: "block"
-    }}
-  >
-    Manage Game
-  </button>
-</Link>
-      <div
-  style={{
-    marginTop: "40px",
-    borderTop: "1px solid #d1d5db",
-    paddingTop: "30px"
-  }}
->
-  <h2 style={{ marginBottom: "20px" }}>
-    Current Players
-  </h2>
-
-  <div
-    style={{
-      display: "grid",
-      gap: "12px"
-    }}
-  >
-    {signups.length === 0 ? (
-      <p>No players joined yet.</p>
-    ) : (
-      signups.map((player) => (
-        <div
-          key={player.id}
-          style={{
-            backgroundColor: "#f3f4f6",
-            padding: "14px",
-            borderRadius: "10px"
-          }}
-        >
-          <strong>{player.name}</strong>
-
-          <div style={{ marginTop: "5px" }}>
-            {player.is_goalie ? "Goalie" : "Player"}
-          </div>
-        </div>
-      ))
-    )}
-  </div>
-</div>
+                <button
+                  onClick={() => closeGame(game.id)}
+                  style={{
+                    marginTop: "10px",
+                    backgroundColor: "#dc2626",
+                    color: "white",
+                    border: "none",
+                    padding: "10px 16px",
+                    borderRadius: "8px",
+                    cursor: "pointer",
+                    fontWeight: "bold",
+                    display: "block"
+                  }}
+                >
+                  Close Game
+                </button>
               </div>
             ))}
           </div>
