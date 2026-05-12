@@ -177,6 +177,13 @@ async function loadGames() {
   {games.length === 0 ? (
     <p>No games found.</p>
   ) : (
+    <div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+    gap: "20px"
+  }}
+>
     games.map((game) => (
       <div
         key={game.id}
