@@ -17,35 +17,39 @@ export default function TeamRoster({
 
   return (
     <div
-    style={{
-  background:
-    "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
-  padding: "24px",
-  borderRadius: "18px",
-  border: "1px solid #334155",
-  boxShadow: "0 4px 20px rgba(0,0,0,0.35)"
-}}
+      style={{
+        background:
+          "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
+        padding: "24px",
+        borderRadius: "18px",
+        border: "1px solid #334155",
+        boxShadow: "0 4px 20px rgba(0,0,0,0.35)"
+      }}
     >
       <h3
-       style={{
-  marginBottom: "20px",
-  color: "#facc15",
-  fontSize: "22px",
-  fontWeight: "bold",
-  borderBottom: "1px solid #334155",
-  paddingBottom: "12px"
-}}
+        style={{
+          marginBottom: "20px",
+          color: "#facc15",
+          fontSize: "22px",
+          fontWeight: "bold",
+          borderBottom: "1px solid #334155",
+          paddingBottom: "12px"
+        }}
       >
         {displayName}
       </h3>
 
       <div style={{ marginBottom: "20px" }}>
-        <strong>Goalie</strong>
+        <strong style={{ color: "white" }}>
+          Goalie
+        </strong>
 
         <div
           style={{
             marginTop: "10px",
-            backgroundColor: "white",
+            backgroundColor: "#111827",
+            color: "white",
+            border: "1px solid #374151",
             padding: "12px",
             borderRadius: "8px"
           }}
@@ -57,13 +61,17 @@ export default function TeamRoster({
       </div>
 
       <div>
-        <strong>Skaters</strong>
+        <strong style={{ color: "white" }}>
+          Skaters
+        </strong>
 
         <div style={{ marginTop: "10px" }}>
           {skaters.length === 0 ? (
             <div
               style={{
-               : "white",
+                backgroundColor: "#111827",
+                color: "white",
+                border: "1px solid #374151",
                 padding: "12px",
                 borderRadius: "8px"
               }}
@@ -75,7 +83,9 @@ export default function TeamRoster({
               <div
                 key={player.id}
                 style={{
-                 : "white",
+                  backgroundColor: "#111827",
+                  color: "white",
+                  border: "1px solid #374151",
                   padding: "12px",
                   borderRadius: "8px",
                   marginBottom: "10px"
