@@ -5,39 +5,42 @@ import { supabase } from "../../lib/supabase"
 export default function GameDetails() {
   const router = useRouter()
   const { id } = router.query
+
   const [game, setGame] = useState(null)
-const [signups, setSignups] = useState([])
+  const [signups, setSignups] = useState([])
+
   const skaters = signups.filter(
-  (player) => !player.is_goalie
-)
+    (player) => !player.is_goalie
+  )
 
-const goalies = signups.filter(
-  (player) => player.is_goalie
-)
-  
-useEffect(() => {
-  if (id) {
-    loadGame()
+  const goalies = signups.filter(
+    (player) => player.is_goalie
+  )
+
+  useEffect(() => {
+    if (id) {
+      loadGame()
+    }
+  }, [id])
+
+  async function loadGame() {
+    const { data, error } = await supabase
+      .from("games")
+      .select("*")
+      .eq("id", id)
+      .single()
+
+    if (!error) {
+      setGame(data)
+    }
+
+    const { data: signupData } = await supabase
+      .from("signups")
+      .select("*")
+      .eq("game_id", id)
+
+    setSignups(signupData || [])
   }
-}, [id])
-
-async function loadGame() {
-  const { data, error } = await supabase
-    .from("games")
-    .select("*")
-    .eq("id", id)
-    .single()
-
-  if (!error) {
-    setGame(data)
-  }
-  const { data: signupData } = await supabase
-  .from("signups")
-  .select("*")
-  .eq("game_id", id)
-
-setSignups(signupData || [])
-}
 
   return (
     <div
@@ -73,27 +76,30 @@ setSignups(signupData || [])
           boxShadow: "0 4px 20px rgba(0,0,0,0.35)"
         }}
       >
-        <h2 style={{ marginBottom: "20px" }}>Game Information</h2>
+        <h2 style={{ marginBottom: "20px" }}>
+          Game Information
+        </h2>
 
-       <p>
-  <strong>Arena:</strong> {game?.arena}
-</p>
+        <p>
+          <strong>Arena:</strong> {game?.arena}
+        </p>
 
-<p>
-  <strong>Date:</strong> {game?.game_date}
-</p>
+        <p>
+          <strong>Date:</strong> {game?.game_date}
+        </p>
 
-<p>
-  <strong>Time:</strong> {game?.game_time}
-</p>
+        <p>
+          <strong>Time:</strong> {game?.game_time}
+        </p>
 
-<p>
-  <strong>Skill Level:</strong> {game?.skill_level || "N/A"}
-</p>
+        <p>
+          <strong>Skill Level:</strong>{" "}
+          {game?.skill_level || "N/A"}
+        </p>
 
-<p>
-  <strong>Price:</strong> ${game?.price || 0}
-</p>
+        <p>
+          <strong>Price:</strong> ${game?.price || 0}
+        </p>
 
         <button
           style={{
@@ -109,47 +115,74 @@ setSignups(signupData || [])
         >
           Join Game
         </button>
-           <div
-  style={{
-    marginTop: "40px",
-    borderTop: "1px solid #d1d5db",
-    paddingTop: "30px"
-  }}
->
-  <h2 style={{ marginBottom: "20px" }}>
-    Current Players
-  </h2>
 
-  <div
-    style={{
-      display: "grid",
-      gap: "12px"
-    }}
-  >
-    {signups.length === 0 ? (
-      <p>No players joined yet.</p>
-    ) : (
-      signups.map((player) => (
         <div
-          key={player.id}
           style={{
-            backgroundColor: "#f3f4f6",
-            padding: "14px",
-            borderRadius: "10px"
+            marginTop: "40px",
+            borderTop: "1px solid #d1d5db",
+            paddingTop: "30px"
           }}
         >
-          <strong>{player.name}</strong>
+          <h2 style={{ marginBottom: "20px" }}>
+            Current Players
+          </h2>
 
-          <div style={{ marginTop: "5px" }}>
-            {player.is_goalie ? "Goalie" : "Player"}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "20px"
+            }}
+          >
+            <div>
+              <h3 style={{ marginBottom: "15px" }}>
+                Skaters
+              </h3>
+
+              {skaters.length === 0 ? (
+                <p>No skaters yet.</p>
+              ) : (
+                skaters.map((player) => (
+                  <div
+                    key={player.id}
+                    style={{
+                      backgroundColor: "#f3f4f6",
+                      padding: "12px",
+                      borderRadius: "10px",
+                      marginBottom: "10px"
+                    }}
+                  >
+                    {player.name}
+                  </div>
+                ))
+              )}
+            </div>
+
+            <div>
+              <h3 style={{ marginBottom: "15px" }}>
+                Goalies
+              </h3>
+
+              {goalies.length === 0 ? (
+                <p>No goalies yet.</p>
+              ) : (
+                goalies.map((player) => (
+                  <div
+                    key={player.id}
+                    style={{
+                      backgroundColor: "#f3f4f6",
+                      padding: "12px",
+                      borderRadius: "10px",
+                      marginBottom: "10px"
+                    }}
+                  >
+                    {player.name}
+                  </div>
+                ))
+              )}
+            </div>
           </div>
         </div>
-      ))
-    )}
-  </div>
-</div> 
-            <div
-  
       </div>
     </div>
   )
