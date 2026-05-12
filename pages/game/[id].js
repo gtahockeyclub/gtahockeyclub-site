@@ -95,6 +95,27 @@ async function loadGame() {
         >
           Join Game
         </button>
+            <div
+  style={{
+    marginTop: "40px",
+    borderTop: "1px solid #d1d5db",
+    paddingTop: "30px"
+  }}
+>
+  <h2 style={{ marginBottom: "20px" }}>
+    Current Players
+  </h2>
+
+  <div
+    style={{
+      backgroundColor: "#f3f4f6",
+      padding: "20px",
+      borderRadius: "12px"
+    }}
+  >
+    No players joined yet.
+  </div>
+</div>
       </div>
     </div>
   )
