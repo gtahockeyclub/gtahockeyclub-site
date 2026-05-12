@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { useEffect, useState } from "react"
 import { supabase } from "../lib/supabase"
 
@@ -246,8 +247,24 @@ export default function Dashboard() {
     display: "block"
   }}
 >
-  Manage Game
-</button>
+
+<Link href={`/game/${game.id}`}>
+  <button
+    style={{
+      marginTop: "15px",
+      backgroundColor: "#facc15",
+      color: "black",
+      border: "none",
+      padding: "10px 16px",
+      borderRadius: "8px",
+      cursor: "pointer",
+      fontWeight: "bold",
+      display: "block"
+    }}
+  >
+    Manage Game
+  </button>
+</Link>
               </div>
             ))}
           </div>
