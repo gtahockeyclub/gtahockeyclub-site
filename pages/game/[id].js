@@ -16,7 +16,11 @@ export default function GameDetails() {
   const goalies = signups.filter(
     (player) => player.is_goalie
   )
+const skaterSpotsLeft =
+  (game?.max_players || 0) - skaters.length
 
+const goalieSpotsLeft =
+  1 - goalies.length
   useEffect(() => {
     if (id) {
       loadGame()
@@ -126,6 +130,11 @@ export default function GameDetails() {
           <h2 style={{ marginBottom: "20px" }}>
             Current Players
           </h2>
+             <p style={{ marginBottom: "20px" }}>
+  <strong>Skater Spots Left:</strong> {skaterSpotsLeft}
+  {" | "}
+  <strong>Goalie Spots Left:</strong> {goalieSpotsLeft}
+</p> 
 
           <div
             style={{
