@@ -137,6 +137,14 @@ const goalieSpotsLeft =
   }}
 >
   <h2 style={{ marginBottom: "20px" }}>
+   <div
+  style={{
+    marginTop: "40px",
+    borderTop: "1px solid #d1d5db",
+    paddingTop: "30px"
+  }}
+>
+  <h2 style={{ marginBottom: "20px" }}>
     Team Rosters
   </h2>
 
@@ -165,7 +173,9 @@ const goalieSpotsLeft =
       teamName="Team 2"
     />
   </div>
+</div>
 
+      </div>
     </div>
   )
 }
