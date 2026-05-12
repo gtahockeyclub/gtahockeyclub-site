@@ -6,7 +6,8 @@ export default function GameDetails() {
   const router = useRouter()
   const { id } = router.query
   const [game, setGame] = useState(null)
-
+const [signups, setSignups] = useState([])
+  
 useEffect(() => {
   if (id) {
     loadGame()
@@ -23,6 +24,12 @@ async function loadGame() {
   if (!error) {
     setGame(data)
   }
+  const { data: signupData } = await supabase
+  .from("signups")
+  .select("*")
+  .eq("game_id", id)
+
+setSignups(signupData || [])
 }
 
   return (
