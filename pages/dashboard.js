@@ -169,6 +169,36 @@ async function loadGames() {
   </button>
 </div>
       </div>
+      <div style={{ marginTop: "50px" }}>
+  <h2 style={{ marginBottom: "20px", color: "white" }}>
+    My Active Games
+  </h2>
+
+  {games.length === 0 ? (
+    <p>No games found.</p>
+  ) : (
+    games.map((game) => (
+      <div
+        key={game.id}
+        style={{
+          backgroundColor: "white",
+          color: "#111827",
+          padding: "20px",
+          borderRadius: "12px",
+          marginBottom: "15px"
+        }}
+      >
+        <h3>{game.arena}</h3>
+
+        <p>
+          {game.game_date} • {game.game_time}
+        </p>
+
+        <p>Skill Level: {game.skill_level}</p>
+      </div>
+    ))
+  )}
+</div>
     </div>
   )
 }
