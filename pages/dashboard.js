@@ -3,236 +3,223 @@ import { supabase } from "../lib/supabase"
 
 export default function Dashboard() {
   const [games, setGames] = useState([])
+
   useEffect(() => {
-  loadGames()
-}, [])
+    loadGames()
+  }, [])
 
-async function loadGames() {
-  const { data, error } = await supabase
-    .from("games")
-    .select("*")
-    .order("game_date", { ascending: true })
+  async function loadGames() {
+    const { data, error } = await supabase
+      .from("games")
+      .select("*")
+      .order("game_date", { ascending: true })
 
-  if (!error) {
-    setGames(data || [])
+    if (!error) {
+      setGames(data || [])
+    }
   }
-}
+
   return (
     <div
       style={{
         minHeight: "100vh",
-        backgroundImage: "linear-gradient(rgba(15,23,42,0.88), rgba(15,23,42,0.88)), url('/dashboard-bg.jpg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
+        background:
+          "linear-gradient(135deg, #0f172a 0%, #111827 50%, #1e293b 100%)",
         color: "white",
         padding: "40px",
         fontFamily: "Arial"
       }}
     >
       <h1
-  style={{
-    fontSize: "42px",
-    marginBottom: "10px",
-    color: "#facc15"
-  }}
->
-  Organizer Dashboard
-</h1>
-      <p style={{ color: "#6b7280", marginBottom: "40px" }}>
+        style={{
+          fontSize: "42px",
+          marginBottom: "10px",
+          color: "#facc15"
+        }}
+      >
+        Organizer Dashboard
+      </h1>
+
+      <p
+        style={{
+          color: "#cbd5e1",
+          marginBottom: "40px"
+        }}
+      >
         Manage your GTA Hockey Club games and players.
       </p>
 
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-          gap: "20px"
+          gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+          gap: "20px",
+          marginBottom: "50px"
         }}
       >
-     <div
-  style={{
-    backgroundColor: "white",
-    padding: "25px",
-    borderRadius: "12px",
-    border: "1px solid #1f2937",
-    boxShadow: "0 4px 20px rgba(0,0,0,0.35)",
-  }}
->
-  <h2 style={{ marginBottom: "10px" }}>My Games</h2>
+        <div
+          style={{
+            backgroundColor: "white",
+            padding: "25px",
+            borderRadius: "12px",
+            border: "1px solid #1f2937",
+            boxShadow: "0 4px 20px rgba(0,0,0,0.35)",
+            color: "#111827"
+          }}
+        >
+          <h2 style={{ marginBottom: "10px" }}>My Games</h2>
 
-  <p style={{ color: "#6b7280", marginBottom: "20px" }}>
-    View and manage your posted games.
-  </p>
+          <p style={{ color: "#6b7280", marginBottom: "20px" }}>
+            View and manage your posted games.
+          </p>
 
-  <button
-    style={{
-      backgroundColor: "#facc15",
-      color: "black",
-      border: "none",
-      padding: "10px 16px",
-      borderRadius: "8px",
-      cursor: "pointer",
-      fontWeight: "bold"
-    }}
-  >
-    View Games
-  </button>
-</div>
-<div
-  style={{
-    backgroundColor: "white",
-    padding: "25px",
-    borderRadius: "12px",
-    border: "1px solid #1f2937",
-    boxShadow: "0 4px 20px rgba(0,0,0,0.35)"
-  }}
->
-  <h2 style={{ marginBottom: "10px" }}>Post Game</h2>
+          <button
+            style={{
+              backgroundColor: "#facc15",
+              color: "black",
+              border: "none",
+              padding: "10px 16px",
+              borderRadius: "8px",
+              cursor: "pointer",
+              fontWeight: "bold"
+            }}
+          >
+            View Games
+          </button>
+        </div>
 
-  <p style={{ color: "#6b7280", marginBottom: "20px" }}>
-    Create a new pickup hockey game.
-  </p>
+        <div
+          style={{
+            backgroundColor: "white",
+            padding: "25px",
+            borderRadius: "12px",
+            border: "1px solid #1f2937",
+            boxShadow: "0 4px 20px rgba(0,0,0,0.35)",
+            color: "#111827"
+          }}
+        >
+          <h2 style={{ marginBottom: "10px" }}>Post Game</h2>
 
-  <button
-    style={{
-      backgroundColor: "#facc15",
-      color: "black",
-      border: "none",
-      padding: "10px 16px",
-      borderRadius: "8px",
-      cursor: "pointer",
-      fontWeight: "bold"
-    }}
-  >
-    Create Game
-  </button>
-</div>
+          <p style={{ color: "#6b7280", marginBottom: "20px" }}>
+            Create a new pickup hockey game.
+          </p>
 
-       <div
-  style={{
-    backgroundColor: "white",
-    padding: "25px",
-    borderRadius: "12px",
-    border: "1px solid #1f2937",
-    boxShadow: "0 4px 20px rgba(0,0,0,0.35)"
-  }}
->
-  <h2 style={{ marginBottom: "10px" }}>Players</h2>
+          <button
+            style={{
+              backgroundColor: "#facc15",
+              color: "black",
+              border: "none",
+              padding: "10px 16px",
+              borderRadius: "8px",
+              cursor: "pointer",
+              fontWeight: "bold"
+            }}
+          >
+            Create Game
+          </button>
+        </div>
 
-  <p style={{ color: "#6b7280", marginBottom: "20px" }}>
-    Manage players and attendance.
-  </p>
+        <div
+          style={{
+            backgroundColor: "white",
+            padding: "25px",
+            borderRadius: "12px",
+            border: "1px solid #1f2937",
+            boxShadow: "0 4px 20px rgba(0,0,0,0.35)",
+            color: "#111827"
+          }}
+        >
+          <h2 style={{ marginBottom: "10px" }}>Players</h2>
 
-  <button
-    style={{
-      backgroundColor: "#facc15",
-      color: "black",
-      border: "none",
-      padding: "10px 16px",
-      borderRadius: "8px",
-      cursor: "pointer",
-      fontWeight: "bold"
-    }}
-  >
-    Manage Players
-  </button>
-</div>
+          <p style={{ color: "#6b7280", marginBottom: "20px" }}>
+            Manage players and attendance.
+          </p>
 
-<div
-  style={{
-    backgroundColor: "white",
-    padding: "25px",
-    borderRadius: "12px",
-    border: "1px solid #1f2937",
-    boxShadow: "0 4px 20px rgba(0,0,0,0.35)"
-  }}
->
-  <h2 style={{ marginBottom: "10px" }}>Payments</h2>
+          <button
+            style={{
+              backgroundColor: "#facc15",
+              color: "black",
+              border: "none",
+              padding: "10px 16px",
+              borderRadius: "8px",
+              cursor: "pointer",
+              fontWeight: "bold"
+            }}
+          >
+            Manage Players
+          </button>
+        </div>
 
-  <p style={{ color: "#6b7280", marginBottom: "20px" }}>
-    Track paid and unpaid players.
-  </p>
+        <div
+          style={{
+            backgroundColor: "white",
+            padding: "25px",
+            borderRadius: "12px",
+            border: "1px solid #1f2937",
+            boxShadow: "0 4px 20px rgba(0,0,0,0.35)",
+            color: "#111827"
+          }}
+        >
+          <h2 style={{ marginBottom: "10px" }}>Payments</h2>
 
-  <button
-    style={{
-      backgroundColor: "#facc15",
-      color: "black",
-      border: "none",
-      padding: "10px 16px",
-      borderRadius: "8px",
-      cursor: "pointer",
-      fontWeight: "bold"
-    }}
-  >
-    View Payments
-  </button>
-</div>
+          <p style={{ color: "#6b7280", marginBottom: "20px" }}>
+            Track paid and unpaid players.
+          </p>
+
+          <button
+            style={{
+              backgroundColor: "#facc15",
+              color: "black",
+              border: "none",
+              padding: "10px 16px",
+              borderRadius: "8px",
+              cursor: "pointer",
+              fontWeight: "bold"
+            }}
+          >
+            View Payments
+          </button>
+        </div>
       </div>
+
       <div style={{ marginTop: "50px" }}>
-  <h2 style={{ marginBottom: "20px", color: "white" }}>
-    My Active Games
-  </h2>
+        <h2 style={{ marginBottom: "20px", color: "white" }}>
+          My Active Games
+        </h2>
 
-  {games.length === 0 ? (
-  <p>No games found.</p>
-) : (
-  <div
-    style={{
-      display: "grid",
-      gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-      gap: "20px"
-    }}
-  >
-    {games.map((game) => (
-      <div
-        key={game.id}
-        style={{
-          backgroundColor: "white",
-          color: "#111827",
-          padding: "20px",
-          borderRadius: "12px"
-        }}
-      >
-        <h3>{game.arena}</h3>
+        {games.length === 0 ? (
+          <p>No games found.</p>
+        ) : (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+              gap: "20px"
+            }}
+          >
+            {games.map((game) => (
+              <div
+                key={game.id}
+                style={{
+                  backgroundColor: "white",
+                  color: "#111827",
+                  padding: "20px",
+                  borderRadius: "12px",
+                  boxShadow: "0 4px 20px rgba(0,0,0,0.35)"
+                }}
+              >
+                <h3>{game.arena}</h3>
 
-        <p>
-          {game.game_date} • {game.game_time}
-        </p>
+                <p>
+                  {game.game_date} • {game.game_time}
+                </p>
 
-        <p>Skill Level: {game.skill_level}</p>
+                <p>Skill Level: {game.skill_level}</p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
-    ))}
-  </div>
-)}
-<div
-  style={{
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-    gap: "20px"
-  }}
->
-    {games.map((game) => (
-      <div
-        key={game.id}
-        style={{
-          backgroundColor: "white",
-          color: "#111827",
-          padding: "20px",
-          borderRadius: "12px",
-          marginBottom: "15px"
-        }}
-      >
-        <h3>{game.arena}</h3>
-
-        <p>
-          {game.game_date} • {game.game_time}
-        </p>
-
-        <p>Skill Level: {game.skill_level}</p>
-      </div>
-    ))}
-  </div>
     </div>
   )
 }
