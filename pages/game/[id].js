@@ -17,11 +17,13 @@ export default function GameDetails() {
   const goalies = signups.filter(
     (player) => player.is_goalie
   )
-const skaterSpotsLeft =
-  (game?.max_players || 0) - skaters.length
 
-const goalieSpotsLeft =
-  1 - goalies.length
+  const skaterSpotsLeft =
+    (game?.max_players || 0) - skaters.length
+
+  const goalieSpotsLeft =
+    1 - goalies.length
+
   useEffect(() => {
     if (id) {
       loadGame()
@@ -129,52 +131,35 @@ const goalieSpotsLeft =
           }}
         >
           <h2 style={{ marginBottom: "20px" }}>
-         <div
-  style={{
-    marginTop: "40px",
-    borderTop: "1px solid #d1d5db",
-    paddingTop: "30px"
-  }}
->
-  <h2 style={{ marginBottom: "20px" }}>
-   <div
-  style={{
-    marginTop: "40px",
-    borderTop: "1px solid #d1d5db",
-    paddingTop: "30px"
-  }}
->
-  <h2 style={{ marginBottom: "20px" }}>
-    Team Rosters
-  </h2>
+            Team Rosters
+          </h2>
 
-  <p style={{ marginBottom: "20px" }}>
-    <strong>Skater Spots Left:</strong> {skaterSpotsLeft}
-    {" | "}
-    <strong>Goalie Spots Left:</strong> {goalieSpotsLeft}
-  </p>
+          <p style={{ marginBottom: "20px" }}>
+            <strong>Skater Spots Left:</strong> {skaterSpotsLeft}
+            {" | "}
+            <strong>Goalie Spots Left:</strong> {goalieSpotsLeft}
+          </p>
 
-  <div
-    style={{
-      display: "grid",
-      gridTemplateColumns: "1fr 1fr",
-      gap: "20px"
-    }}
-  >
-    <TeamRoster
-      displayName={game?.team1_name || "Team 1"}
-      roster={signups}
-      teamName="Team 1"
-    />
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "20px"
+            }}
+          >
+            <TeamRoster
+              displayName={game?.team1_name || "Team 1"}
+              roster={signups}
+              teamName="Team 1"
+            />
 
-    <TeamRoster
-      displayName={game?.team2_name || "Team 2"}
-      roster={signups}
-      teamName="Team 2"
-    />
-  </div>
-</div>
-
+            <TeamRoster
+              displayName={game?.team2_name || "Team 2"}
+              roster={signups}
+              teamName="Team 2"
+            />
+          </div>
+        </div>
       </div>
     </div>
   )
