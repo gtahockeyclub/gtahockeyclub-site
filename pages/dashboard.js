@@ -208,7 +208,14 @@ export default function Dashboard() {
                   boxShadow: "0 4px 20px rgba(0,0,0,0.35)"
                 }}
               >
-                <h3>{game.arena}</h3>
+                <h3
+  style={{
+    minHeight: "50px",
+    marginBottom: "15px"
+  }}
+>
+  {game.arena}
+</h3>
 
                 <p>
                   {game.game_date} • {game.game_time}
