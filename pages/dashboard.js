@@ -10,16 +10,6 @@ export default function Dashboard() {
   }, [])
 
   async function loadGames() {
-    async function closeGame(gameId) {
-  const { error } = await supabase
-    .from("games")
-    .update({ is_active: false })
-    .eq("id", gameId)
-
-  if (!error) {
-    loadGames()
-  }
-}
     const { data, error } = await supabase
       .from("games")
       .select("*")
@@ -27,6 +17,17 @@ export default function Dashboard() {
 
     if (!error) {
       setGames(data || [])
+    }
+  }
+
+  async function closeGame(gameId) {
+    const { error } = await supabase
+      .from("games")
+      .update({ is_active: false })
+      .eq("id", gameId)
+
+    if (!error) {
+      loadGames()
     }
   }
 
