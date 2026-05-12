@@ -4,7 +4,7 @@ export default function Dashboard() {
       style={{
         minHeight: "100vh",
         backgroundColor: "#f3f4f6",
-        color: "#111827",
+        color: "white",
         padding: "40px",
         fontFamily: "Arial"
       }}
@@ -18,7 +18,7 @@ export default function Dashboard() {
 >
   Organizer Dashboard
 </h1>
-      <p style={{ color: "#94a3b8", marginBottom: "40px" }}>
+      <p style={{ color: "#6b7280", marginBottom: "40px" }}>
         Manage your GTA Hockey Club games and players.
       </p>
 
@@ -40,7 +40,7 @@ export default function Dashboard() {
 >
   <h2 style={{ marginBottom: "10px" }}>My Games</h2>
 
-  <p style={{ color: "#94a3b8", marginBottom: "20px" }}>
+  <p style={{ color: "#6b7280", marginBottom: "20px" }}>
     View and manage your posted games.
   </p>
 
@@ -60,7 +60,7 @@ export default function Dashboard() {
 </div>
 <div
   style={{
-    backgroundColor: "#111827",
+    backgroundColor: "white",
     padding: "25px",
     borderRadius: "12px",
     border: "1px solid #1f2937",
@@ -69,7 +69,7 @@ export default function Dashboard() {
 >
   <h2 style={{ marginBottom: "10px" }}>Post Game</h2>
 
-  <p style={{ color: "#94a3b8", marginBottom: "20px" }}>
+  <p style={{ color: "#6b7280", marginBottom: "20px" }}>
     Create a new pickup hockey game.
   </p>
 
@@ -90,7 +90,7 @@ export default function Dashboard() {
 
        <div
   style={{
-    backgroundColor: "#111827",
+    backgroundColor: "white",
     padding: "25px",
     borderRadius: "12px",
     border: "1px solid #1f2937",
@@ -99,7 +99,7 @@ export default function Dashboard() {
 >
   <h2 style={{ marginBottom: "10px" }}>Players</h2>
 
-  <p style={{ color: "#94a3b8", marginBottom: "20px" }}>
+  <p style={{ color: "#6b7280", marginBottom: "20px" }}>
     Manage players and attendance.
   </p>
 
@@ -120,7 +120,7 @@ export default function Dashboard() {
 
 <div
   style={{
-    backgroundColor: "#111827",
+    backgroundColor: "white",
     padding: "25px",
     borderRadius: "12px",
     border: "1px solid #1f2937",
@@ -129,7 +129,7 @@ export default function Dashboard() {
 >
   <h2 style={{ marginBottom: "10px" }}>Payments</h2>
 
-  <p style={{ color: "#94a3b8", marginBottom: "20px" }}>
+  <p style={{ color: "#6b7280", marginBottom: "20px" }}>
     Track paid and unpaid players.
   </p>
 
