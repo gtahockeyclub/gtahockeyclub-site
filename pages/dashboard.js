@@ -234,19 +234,7 @@ export default function Dashboard() {
   <strong>Spots:</strong> {game.max_players || 0}
 </p>
 
-<button
-  style={{
-    marginTop: "15px",
-    backgroundColor: "#facc15",
-    color: "black",
-    border: "none",
-    padding: "10px 16px",
-    borderRadius: "8px",
-    cursor: "pointer",
-    fontWeight: "bold",
-    display: "block"
-  }}
->
+
 
 <Link href={`/game/${game.id}`}>
   <button
