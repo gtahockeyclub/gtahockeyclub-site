@@ -184,7 +184,7 @@ async function loadGames() {
     gap: "20px"
   }}
 >
-    games.map((game) => (
+    {games.map((game) => (
       <div
         key={game.id}
         style={{
@@ -203,7 +203,7 @@ async function loadGames() {
 
         <p>Skill Level: {game.skill_level}</p>
       </div>
-    ))
+    ))}
   )}
 </div>
     </div>
