@@ -229,6 +229,16 @@ export default function Dashboard() {
                 >
                   {game.arena}
                 </h3>
+                  <p
+  style={{
+    fontWeight: "bold",
+    marginBottom: "12px",
+    color: "#374151"
+  }}
+>
+  {game.team1_name || "Team 1"} vs{" "}
+  {game.team2_name || "Team 2"}
+</p>
 
                 <p>
                   {game.game_date} • {game.game_time}
