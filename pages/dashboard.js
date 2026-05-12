@@ -10,6 +10,16 @@ export default function Dashboard() {
   }, [])
 
   async function loadGames() {
+    async function closeGame(gameId) {
+  const { error } = await supabase
+    .from("games")
+    .update({ is_active: false })
+    .eq("id", gameId)
+
+  if (!error) {
+    loadGames()
+  }
+}
     const { data, error } = await supabase
       .from("games")
       .select("*")
@@ -253,6 +263,45 @@ export default function Dashboard() {
     Manage Game
   </button>
 </Link>
+      <div
+  style={{
+    marginTop: "40px",
+    borderTop: "1px solid #d1d5db",
+    paddingTop: "30px"
+  }}
+>
+  <h2 style={{ marginBottom: "20px" }}>
+    Current Players
+  </h2>
+
+  <div
+    style={{
+      display: "grid",
+      gap: "12px"
+    }}
+  >
+    {signups.length === 0 ? (
+      <p>No players joined yet.</p>
+    ) : (
+      signups.map((player) => (
+        <div
+          key={player.id}
+          style={{
+            backgroundColor: "#f3f4f6",
+            padding: "14px",
+            borderRadius: "10px"
+          }}
+        >
+          <strong>{player.name}</strong>
+
+          <div style={{ marginTop: "5px" }}>
+            {player.is_goalie ? "Goalie" : "Player"}
+          </div>
+        </div>
+      ))
+    )}
+  </div>
+</div>
               </div>
             ))}
           </div>
