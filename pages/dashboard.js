@@ -58,16 +58,35 @@ export default function Dashboard() {
     View Games
   </button>
 </div>
-        <div
-          style={{
-            backgroundColor: "#111827",
-            padding: "25px",
-            borderRadius: "12px"
-          }}
-        >
-          <h2>Post Game</h2>
-          <p>Create a new pickup hockey game.</p>
-        </div>
+<div
+  style={{
+    backgroundColor: "#111827",
+    padding: "25px",
+    borderRadius: "12px",
+    border: "1px solid #1f2937",
+    boxShadow: "0 4px 20px rgba(0,0,0,0.35)"
+  }}
+>
+  <h2 style={{ marginBottom: "10px" }}>Post Game</h2>
+
+  <p style={{ color: "#94a3b8", marginBottom: "20px" }}>
+    Create a new pickup hockey game.
+  </p>
+
+  <button
+    style={{
+      backgroundColor: "#facc15",
+      color: "black",
+      border: "none",
+      padding: "10px 16px",
+      borderRadius: "8px",
+      cursor: "pointer",
+      fontWeight: "bold"
+    }}
+  >
+    Create Game
+  </button>
+</div>
 
        <div
   style={{
