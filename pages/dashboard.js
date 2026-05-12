@@ -3,7 +3,10 @@ export default function Dashboard() {
     <div
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #0f172a 0%, #111827 50%, #1e293b 100%)",
+        backgroundImage: "linear-gradient(rgba(15,23,42,0.88), rgba(15,23,42,0.88)), url('/dashboard-bg.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
         color: "white",
         padding: "40px",
         fontFamily: "Arial"
