@@ -166,3 +166,6 @@ const goalieSpotsLeft =
     />
   </div>
 </div>
+    </div>
+  )
+}
