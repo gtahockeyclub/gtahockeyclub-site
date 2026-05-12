@@ -224,7 +224,9 @@ export default function Dashboard() {
 
 <p>
   <strong>Spots:</strong> {game.max_players || 0}
-                  <button
+</p>
+
+<button
   style={{
     marginTop: "15px",
     backgroundColor: "#facc15",
@@ -233,12 +235,12 @@ export default function Dashboard() {
     padding: "10px 16px",
     borderRadius: "8px",
     cursor: "pointer",
-    fontWeight: "bold"
+    fontWeight: "bold",
+    display: "block"
   }}
 >
   Manage Game
 </button>
-</p>
               </div>
             ))}
           </div>
