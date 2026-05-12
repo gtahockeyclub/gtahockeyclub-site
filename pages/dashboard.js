@@ -214,7 +214,17 @@ export default function Dashboard() {
                   {game.game_date} • {game.game_time}
                 </p>
 
-                <p>Skill Level: {game.skill_level}</p>
+                <p>
+  <strong>Skill:</strong> {game.skill_level || "N/A"}
+</p>
+
+<p>
+  <strong>Price:</strong> ${game.price || 0}
+</p>
+
+<p>
+  <strong>Spots:</strong> {game.max_players || 0}
+</p>
               </div>
             ))}
           </div>
