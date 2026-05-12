@@ -165,7 +165,7 @@ const goalieSpotsLeft =
       teamName="Team 2"
     />
   </div>
-</div>
+
     </div>
   )
 }
