@@ -7,6 +7,13 @@ export default function GameDetails() {
   const { id } = router.query
   const [game, setGame] = useState(null)
 const [signups, setSignups] = useState([])
+  const skaters = signups.filter(
+  (player) => !player.is_goalie
+)
+
+const goalies = signups.filter(
+  (player) => player.is_goalie
+)
   
 useEffect(() => {
   if (id) {
@@ -142,26 +149,7 @@ setSignups(signupData || [])
   </div>
 </div> 
             <div
-  style={{
-    marginTop: "40px",
-    borderTop: "1px solid #d1d5db",
-    paddingTop: "30px"
-  }}
->
-  <h2 style={{ marginBottom: "20px" }}>
-    Current Players
-  </h2>
-
-  <div
-    style={{
-      backgroundColor: "#f3f4f6",
-      padding: "20px",
-      borderRadius: "12px"
-    }}
-  >
-    No players joined yet.
-  </div>
-</div>
+  
       </div>
     </div>
   )
