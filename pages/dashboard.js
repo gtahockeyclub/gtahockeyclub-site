@@ -204,8 +204,7 @@ async function loadGames() {
         <p>Skill Level: {game.skill_level}</p>
       </div>
     ))}
-  )}
-</div>
+  </div>
     </div>
   )
 }
