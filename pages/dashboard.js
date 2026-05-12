@@ -3,8 +3,8 @@ export default function Dashboard() {
     <div
       style={{
         minHeight: "100vh",
-        backgroundColor: "#0b1220",
-        color: "white",
+        backgroundColor: "#f3f4f6",
+        color: "#111827",
         padding: "40px",
         fontFamily: "Arial"
       }}
@@ -31,7 +31,7 @@ export default function Dashboard() {
       >
      <div
   style={{
-    backgroundColor: "#111827",
+    backgroundColor: "white",
     padding: "25px",
     borderRadius: "12px",
     border: "1px solid #1f2937",
