@@ -3,7 +3,7 @@ export default function Dashboard() {
     <div
       style={{
         minHeight: "100vh",
-        backgroundColor: "#f3f4f6",
+        background: "linear-gradient(135deg, #0f172a 0%, #111827 50%, #1e293b 100%)",
         color: "white",
         padding: "40px",
         fontFamily: "Arial"
