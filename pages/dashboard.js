@@ -1,4 +1,22 @@
+import { useEffect, useState } from "react"
+import { supabase } from "../lib/supabase"
+
 export default function Dashboard() {
+  const [games, setGames] = useState([])
+  useEffect(() => {
+  loadGames()
+}, [])
+
+async function loadGames() {
+  const { data, error } = await supabase
+    .from("games")
+    .select("*")
+    .order("game_date", { ascending: true })
+
+  if (!error) {
+    setGames(data || [])
+  }
+}
   return (
     <div
       style={{
