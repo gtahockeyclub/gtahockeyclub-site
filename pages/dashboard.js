@@ -177,33 +177,7 @@ async function loadGames() {
   {games.length === 0 ? (
   <p>No games found.</p>
 ) : (
-  <div
-    style={{
-      display: "grid",
-      gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-      gap: "20px"
-    }}
-  >
-    {games.map((game) => (
-      <div
-        key={game.id}
-        style={{
-          backgroundColor: "white",
-          color: "#111827",
-          padding: "20px",
-          borderRadius: "12px"
-        }}
-      >
-        <h3>{game.arena}</h3>
 
-        <p>
-          {game.game_date} • {game.game_time}
-        </p>
-
-        <p>Skill Level: {game.skill_level}</p>
-      </div>
-    ))}
-  </div>
 )}
 <div
   style={{
