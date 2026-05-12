@@ -1,6 +1,7 @@
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { supabase } from "../../lib/supabase"
+import TeamRoster from "../../components/TeamRoster"
 
 export default function GameDetails() {
   const router = useRouter()
@@ -128,71 +129,40 @@ const goalieSpotsLeft =
           }}
         >
           <h2 style={{ marginBottom: "20px" }}>
-            Current Players
-          </h2>
-             <p style={{ marginBottom: "20px" }}>
-  <strong>Skater Spots Left:</strong> {skaterSpotsLeft}
-  {" | "}
-  <strong>Goalie Spots Left:</strong> {goalieSpotsLeft}
-</p> 
+         <div
+  style={{
+    marginTop: "40px",
+    borderTop: "1px solid #d1d5db",
+    paddingTop: "30px"
+  }}
+>
+  <h2 style={{ marginBottom: "20px" }}>
+    Team Rosters
+  </h2>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "20px"
-            }}
-          >
-            <div>
-              <h3 style={{ marginBottom: "15px" }}>
-                Skaters
-              </h3>
+  <p style={{ marginBottom: "20px" }}>
+    <strong>Skater Spots Left:</strong> {skaterSpotsLeft}
+    {" | "}
+    <strong>Goalie Spots Left:</strong> {goalieSpotsLeft}
+  </p>
 
-              {skaters.length === 0 ? (
-                <p>No skaters yet.</p>
-              ) : (
-                skaters.map((player) => (
-                  <div
-                    key={player.id}
-                    style={{
-                      backgroundColor: "#f3f4f6",
-                      padding: "12px",
-                      borderRadius: "10px",
-                      marginBottom: "10px"
-                    }}
-                  >
-                    {player.name}
-                  </div>
-                ))
-              )}
-            </div>
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      gap: "20px"
+    }}
+  >
+    <TeamRoster
+      displayName={game?.team1_name || "Team 1"}
+      roster={signups}
+      teamName="Team 1"
+    />
 
-            <div>
-              <h3 style={{ marginBottom: "15px" }}>
-                Goalies
-              </h3>
-
-              {goalies.length === 0 ? (
-                <p>No goalies yet.</p>
-              ) : (
-                goalies.map((player) => (
-                  <div
-                    key={player.id}
-                    style={{
-                      backgroundColor: "#f3f4f6",
-                      padding: "12px",
-                      borderRadius: "10px",
-                      marginBottom: "10px"
-                    }}
-                  >
-                    {player.name}
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
+    <TeamRoster
+      displayName={game?.team2_name || "Team 2"}
+      roster={signups}
+      teamName="Team 2"
+    />
+  </div>
+</div>
