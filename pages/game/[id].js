@@ -1,8 +1,29 @@
 import { useRouter } from "next/router"
+import { useEffect, useState } from "react"
+import { supabase } from "../../lib/supabase"
 
 export default function GameDetails() {
   const router = useRouter()
   const { id } = router.query
+  const [game, setGame] = useState(null)
+
+useEffect(() => {
+  if (id) {
+    loadGame()
+  }
+}, [id])
+
+async function loadGame() {
+  const { data, error } = await supabase
+    .from("games")
+    .select("*")
+    .eq("id", id)
+    .single()
+
+  if (!error) {
+    setGame(data)
+  }
+}
 
   return (
     <div
@@ -40,11 +61,25 @@ export default function GameDetails() {
       >
         <h2 style={{ marginBottom: "20px" }}>Game Information</h2>
 
-        <p>Arena:</p>
-        <p>Date:</p>
-        <p>Time:</p>
-        <p>Skill Level:</p>
-        <p>Price:</p>
+       <p>
+  <strong>Arena:</strong> {game?.arena}
+</p>
+
+<p>
+  <strong>Date:</strong> {game?.game_date}
+</p>
+
+<p>
+  <strong>Time:</strong> {game?.game_time}
+</p>
+
+<p>
+  <strong>Skill Level:</strong> {game?.skill_level || "N/A"}
+</p>
+
+<p>
+  <strong>Price:</strong> ${game?.price || 0}
+</p>
 
         <button
           style={{
