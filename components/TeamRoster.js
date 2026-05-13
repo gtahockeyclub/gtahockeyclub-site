@@ -91,7 +91,7 @@ export default function TeamRoster({
                   marginBottom: "10px"
                 }}
               >
-                player.player_name || player.name
+                {player.player_name || player.name}
               </div>
             ))
           )}
