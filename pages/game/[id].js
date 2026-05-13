@@ -43,7 +43,7 @@ export default function GameDetails() {
     }
 
     const { data: signupData } = await supabase
-      .from("signups")
+      .from("game_signups")
       .select("*")
       .eq("game_id", id)
 
