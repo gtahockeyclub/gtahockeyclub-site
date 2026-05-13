@@ -1,12 +1,132 @@
 import { useState } from "react"
-
-export default function JoinGameForm() {
+import { supabase } from "../lib/supabase"
+export default function JoinGameForm({
+  game,
+  signups,
+  loadGame
+}) {
   const [name, setName] = useState("")
   const [phone, setPhone] = useState("")
   const [email, setEmail] = useState("")
   const [playerType, setPlayerType] =
     useState("Skater")
+const [joining, setJoining] = useState(false)
+  async function handleJoin() {
+  if (!name || !phone || !email) {
+    alert("Please fill in all fields.")
+    return
+  }
 
+  setJoining(true)
+
+  const cleanEmail = email.trim().toLowerCase()
+
+  const roster = signups || []
+
+  const skaterRoster = roster.filter(
+    (p) => p.player_type !== "Goalie"
+  )
+
+  const alreadySignedUp = roster.some(
+    (p) =>
+      p.email &&
+      p.email.trim().toLowerCase() === cleanEmail
+  )
+
+  if (alreadySignedUp) {
+    alert("You are already signed up.")
+    setJoining(false)
+    return
+  }
+
+  if (
+    playerType === "Skater" &&
+    skaterRoster.length >= game.max_players
+  ) {
+    alert("Game is full for skaters.")
+    setJoining(false)
+    return
+  }
+
+  const team1Count = roster.filter(
+    (p) =>
+      p.team === "Team 1" &&
+      p.player_type !== "Goalie"
+  ).length
+
+  const team2Count = roster.filter(
+    (p) =>
+      p.team === "Team 2" &&
+      p.player_type !== "Goalie"
+  ).length
+
+  let assignedTeam =
+    team1Count <= team2Count
+      ? "Team 1"
+      : "Team 2"
+
+  if (playerType === "Goalie") {
+    const team1Goalie = roster.find(
+      (p) =>
+        p.team === "Team 1" &&
+        p.player_type === "Goalie"
+    )
+
+    const team2Goalie = roster.find(
+      (p) =>
+        p.team === "Team 2" &&
+        p.player_type === "Goalie"
+    )
+
+    if (!team1Goalie) {
+      assignedTeam = "Team 1"
+    } else if (!team2Goalie) {
+      assignedTeam = "Team 2"
+    } else {
+      alert("Goalie spots are full.")
+      setJoining(false)
+      return
+    }
+  }
+
+  const { error } = await supabase
+    .from("game_signups")
+    .insert([
+      {
+        game_id: game.id,
+        game_name:
+          game.arena +
+          " - " +
+          game.game_date +
+          " " +
+          game.game_time,
+        player_name: name,
+        phone,
+        email: cleanEmail,
+        player_type: playerType,
+        team: assignedTeam,
+        paid:
+          playerType === "Goalie"
+            ? true
+            : false
+      }
+    ])
+
+  if (error) {
+    alert(error.message)
+  } else {
+    alert("Successfully joined game!")
+
+    setName("")
+    setPhone("")
+    setEmail("")
+    setPlayerType("Skater")
+
+    await loadGame()
+  }
+
+  setJoining(false)
+}
   return (
     <div
       style={{
@@ -99,6 +219,8 @@ export default function JoinGameForm() {
       </select>
 
       <button
+  onClick={handleJoin}
+  disabled={joining}
         style={{
           width: "100%",
           backgroundColor: "#facc15",
@@ -110,7 +232,7 @@ export default function JoinGameForm() {
           cursor: "pointer"
         }}
       >
-        Join Game
+        {joining ? "Joining..." : "Join Game"}
       </button>
     </div>
   )
