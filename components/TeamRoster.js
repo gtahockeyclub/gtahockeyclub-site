@@ -55,7 +55,7 @@ export default function TeamRoster({
           }}
         >
           {goalie
-            ? goalie.player_name
+            ? goalie.player_name || goalie.name
             : "Open Goalie Spot"}
         </div>
       </div>
@@ -91,7 +91,7 @@ export default function TeamRoster({
                   marginBottom: "10px"
                 }}
               >
-                {player.player_name}
+                player.player_name || player.name
               </div>
             ))
           )}
