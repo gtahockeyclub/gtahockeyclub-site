@@ -109,7 +109,11 @@ export default function GameDetails() {
           <strong>Price:</strong> ${game?.price || 0}
         </p>
 
-       <JoinGameForm />
+       <JoinGameForm
+  game={game}
+  signups={signups}
+  loadGame={loadGame}
+/>
 
         <div
           style={{
