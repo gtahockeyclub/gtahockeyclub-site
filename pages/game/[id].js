@@ -2,6 +2,7 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { supabase } from "../../lib/supabase"
 import TeamRoster from "../../components/TeamRoster"
+import JoinGameForm from "../../components/JoinGameForm"
 
 export default function GameDetails() {
   const router = useRouter()
@@ -108,20 +109,7 @@ export default function GameDetails() {
           <strong>Price:</strong> ${game?.price || 0}
         </p>
 
-        <button
-          style={{
-            marginTop: "30px",
-            backgroundColor: "#facc15",
-            color: "black",
-            border: "none",
-            padding: "12px 18px",
-            borderRadius: "8px",
-            cursor: "pointer",
-            fontWeight: "bold"
-          }}
-        >
-          Join Game
-        </button>
+       <JoinGameForm />
 
         <div
           style={{
