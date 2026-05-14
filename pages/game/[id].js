@@ -156,12 +156,14 @@ async function checkUser() {
               displayName={game?.team1_name || "Team 1"}
               roster={signups}
               teamName="Team 1"
+              isOrganizer={isOrganizer}
             />
 
             <TeamRoster
               displayName={game?.team2_name || "Team 2"}
               roster={signups}
               teamName="Team 2"
+              isOrganizer={isOrganizer}
             />
           </div>
         </div>
