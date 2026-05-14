@@ -1145,39 +1145,20 @@ const error = response.error
                   <strong>Payment:</strong> {paidCount} skaters paid • {unpaidCount} skaters unpaid • Goalies free
                 </div>
 
-                <div style={styles.signupBox}>
-                  <h4 style={styles.signupTitle}>Join this game</h4>
+               <div style={styles.signupBox}>
+  <h4 style={styles.signupTitle}>
+    Ready to Join?
+  </h4>
 
-                  <input placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} style={styles.input} />
-                  <input placeholder="Phone" value={phone} onChange={(e) => setPhone(e.target.value)} style={styles.input} />
-                  <input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} style={styles.input} />
-
-                  <select value={playerType} onChange={(e) => setPlayerType(e.target.value)} style={styles.input}>
-                    <option>Skater</option>
-                    <option>Goalie</option>
-                  </select>
-
-                  {playerType === 'Skater' && !isSkaterFull && (
-                    <p style={styles.goalieNote}>
-                      Teams are automatically balanced for fairness.
-                    </p>
-                  )}
-
-                  {playerType === 'Goalie' && (
-                    <p style={styles.goalieNote}>
-                      Goalies are automatically assigned to the first open goalie spot.
-                    </p>
-                  )}
-
-                  {playerType === 'Skater' && isSkaterFull ? (
-                    <button onClick={() => handleJoinWaitlist(game)} style={styles.waitlistButton}>
-                      Join Waitlist
-                    </button>
-                  ) : (
-                    <button onClick={() => handleJoin(game)} style={styles.joinButton}>
-                      Join Game
-                    </button>
-                  )}
+  <button
+    onClick={() =>
+      router.push(`/game/${game.id}`)
+    }
+    style={styles.joinButton}
+  >
+    View Game Details
+  </button>
+</div> 
                 </div>
 
                 <div style={isMobile ? styles.rosterHeaderMobile : styles.rosterHeader}>
