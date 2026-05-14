@@ -293,6 +293,9 @@ setConfirmation({
     </p>
 
     <p>
+     {confirmation.playerType !== "Goalie" && (
+  <>
+    <p>
       <strong>Cost:</strong> $
       {confirmation.cost}
     </p>
@@ -304,7 +307,9 @@ setConfirmation({
     <strong>
       {confirmation.organizerEmail}
     </strong>
-  </div>
+  </>
+)} 
+      </div>
 )}
 </>
   )
