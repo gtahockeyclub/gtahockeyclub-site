@@ -292,8 +292,7 @@ setConfirmation({
       {confirmation.time}
     </p>
 
-    <p>
-     {confirmation.playerType !== "Goalie" && (
+  {confirmation.playerType !== "Goalie" && (
   <>
     <p>
       <strong>Cost:</strong> $
@@ -308,7 +307,7 @@ setConfirmation({
       {confirmation.organizerEmail}
     </strong>
   </>
-)} 
+)}
       </div>
 )}
 </>
