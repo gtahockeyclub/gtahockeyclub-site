@@ -55,20 +55,26 @@ export default function TeamRoster({
             borderRadius: "8px"
           }}
         >
-          {goalie
-            ? goalie.player_name || goalie.name
-            {isOrganizer && goalie && (
-  <div
-    style={{
-      marginTop: "8px",
-      fontSize: "13px",
-      color: goalie.paid
-        ? "#4ade80"
-        : "#f87171"
-    }}
-  >
-    {goalie.paid ? "PAID" : "UNPAID"}
-  </div>
+       {goalie ? (
+  <>
+    {goalie.player_name || goalie.name}
+
+    {isOrganizer && (
+      <div
+        style={{
+          marginTop: "8px",
+          fontSize: "13px",
+          color: "#4ade80"
+        }}
+      >
+        FREE GOALIE
+      </div>
+    )}
+  </>
+) : (
+  "Open Goalie Spot"
+)}
+       
 )}
             : "Open Goalie Spot"}
         </div>
