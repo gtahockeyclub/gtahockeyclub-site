@@ -1,7 +1,8 @@
 export default function TeamRoster({
   displayName,
   roster,
-  teamName
+  teamName,
+  isOrganizer
 }) {
   const teamRoster = roster.filter(
     (p) => p.team === teamName
@@ -56,6 +57,19 @@ export default function TeamRoster({
         >
           {goalie
             ? goalie.player_name || goalie.name
+            {isOrganizer && goalie && (
+  <div
+    style={{
+      marginTop: "8px",
+      fontSize: "13px",
+      color: goalie.paid
+        ? "#4ade80"
+        : "#f87171"
+    }}
+  >
+    {goalie.paid ? "PAID" : "UNPAID"}
+  </div>
+)}
             : "Open Goalie Spot"}
         </div>
       </div>
@@ -92,6 +106,19 @@ export default function TeamRoster({
                 }}
               >
                 {player.player_name || player.name}
+{isOrganizer && (
+  <div
+    style={{
+      marginTop: "8px",
+      fontSize: "13px",
+      color: player.paid
+        ? "#4ade80"
+        : "#f87171"
+    }}
+  >
+    {player.paid ? "PAID" : "UNPAID"}
+  </div>
+)}
               </div>
             ))
           )}
