@@ -11,6 +11,8 @@ export default function JoinGameForm({
   const [playerType, setPlayerType] =
     useState("Skater")
 const [joining, setJoining] = useState(false)
+  const [confirmation, setConfirmation] =
+  useState(null)
   async function handleJoin() {
   if (!name || !phone || !email) {
     alert("Please fill in all fields.")
@@ -115,7 +117,22 @@ const [joining, setJoining] = useState(false)
   if (error) {
     alert(error.message)
   } else {
-    alert("Successfully joined game!")
+    const displayTeam =
+  assignedTeam === "Team 1"
+    ? game.team1_name
+    : game.team2_name
+
+setConfirmation({
+  arena: game.arena,
+  date: game.game_date,
+  time: game.game_time,
+  team: displayTeam,
+  playerType,
+  playerName: name,
+  organizerName: game.organizer_name,
+  organizerEmail: game.organizer_email,
+  cost: game.cost
+})
 
     setName("")
     setPhone("")
@@ -128,6 +145,7 @@ const [joining, setJoining] = useState(false)
   setJoining(false)
 }
   return (
+    <>
     <div
       style={{
         background:
@@ -235,5 +253,59 @@ const [joining, setJoining] = useState(false)
         {joining ? "Joining..." : "Join Game"}
       </button>
     </div>
+{confirmation && (
+  <div
+    style={{
+      marginTop: "20px",
+      backgroundColor: "#dcfce7",
+      padding: "20px",
+      borderRadius: "12px",
+      color: "#166534"
+    }}
+  >
+    <h3 style={{ marginBottom: "12px" }}>
+      Successfully Joined Game
+    </h3>
+
+    <p>
+      <strong>Player:</strong>{" "}
+      {confirmation.playerName}
+    </p>
+
+    <p>
+      <strong>Team:</strong>{" "}
+      {confirmation.team}
+    </p>
+
+    <p>
+      <strong>Type:</strong>{" "}
+      {confirmation.playerType}
+    </p>
+
+    <p>
+      <strong>Date:</strong>{" "}
+      {confirmation.date}
+    </p>
+
+    <p>
+      <strong>Time:</strong>{" "}
+      {confirmation.time}
+    </p>
+
+    <p>
+      <strong>Cost:</strong> $
+      {confirmation.cost}
+    </p>
+
+    <p style={{ marginTop: "12px" }}>
+      Please send e-transfer to:
+    </p>
+
+    <strong>
+      {confirmation.organizerEmail}
+    </strong>
+  </div>
+)}
+</>
   )
 }
