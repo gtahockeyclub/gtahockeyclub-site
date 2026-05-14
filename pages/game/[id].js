@@ -10,6 +10,7 @@ export default function GameDetails() {
 
   const [game, setGame] = useState(null)
   const [signups, setSignups] = useState([])
+  const [user, setUser] = useState(null)
 
   const skaters = signups.filter(
     (player) => !player.is_goalie
@@ -24,7 +25,19 @@ export default function GameDetails() {
 
   const goalieSpotsLeft =
     1 - goalies.length
+  const isOrganizer =
+  game?.organizer_id === user?.id
+useEffect(() => {
+  checkUser()
+}, [])
 
+async function checkUser() {
+  const {
+    data: { user }
+  } = await supabase.auth.getUser()
+
+  setUser(user)
+}
   useEffect(() => {
     if (id) {
       loadGame()
