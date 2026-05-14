@@ -73,10 +73,7 @@ export default function TeamRoster({
   </>
 ) : (
   "Open Goalie Spot"
-)}
-       
-)}
-            : "Open Goalie Spot"}
+
         </div>
       </div>
 
