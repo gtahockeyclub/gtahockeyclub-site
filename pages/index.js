@@ -1158,7 +1158,7 @@ const error = response.error
   >
     View Game Details
   </button>
-</div> 
+
                 </div>
 
                 <div style={isMobile ? styles.rosterHeaderMobile : styles.rosterHeader}>
