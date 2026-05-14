@@ -1,3 +1,4 @@
+import { useRouter } from "next/router"
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import GameCard from "../components/GameCard"
@@ -5,6 +6,7 @@ import GameCard from "../components/GameCard"
 const ORGANIZER_CODE = 'GTA2026'
 
 export default function Home() {
+  const router = useRouter()
   const [games, setGames] = useState([])
   const [arenas, setArenas] = useState([])
   const [signups, setSignups] = useState([])
