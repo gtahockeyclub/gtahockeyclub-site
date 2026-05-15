@@ -1302,12 +1302,10 @@ const error = response.error
             )
           })
         )}
-      </section>
-    </div>
-
+          </section>
     </div>
   )
-  }
+}
 
 const styles = {
   page: { fontFamily: 'Arial, sans-serif', margin: 0, background: '#f3f5f8', color: '#07152b' },
