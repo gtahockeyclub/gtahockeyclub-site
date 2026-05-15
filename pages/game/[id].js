@@ -68,7 +68,7 @@ export default function GameDetails() {
     setSignups(signupData || [])
   }
 
-  const  = async () => {
+  const handleUpdateGame = async () => {
     const { error } = await supabase
       .from("games")
       .update({
