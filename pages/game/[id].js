@@ -66,10 +66,12 @@ export default function GameDetails() {
 
     setSignups(signupData || [])
 
-    const { data: arenaData } = await supabase
-      .from("arenas")
-      .select("*")
-      .order("name")
+const { data: arenaData, error: arenaError } = await supabase
+  .from("arenas")
+  .select("uuid,name,city")
+    
+console.log("ARENA ERROR:", arenaError)
+console.log("ARENA DATA:", arenaData)
 
 setArenas(arenaData || [])
 
