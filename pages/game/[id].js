@@ -68,14 +68,19 @@ export default function GameDetails() {
     setSignups(signupData || [])
   }
 
-  const handleUpdateGame = async () => {
+  const  = async () => {
     const { error } = await supabase
       .from("games")
       .update({
-        team1_name: game.team1_name,
-        team2_name: game.team2_name,
-        cost: game.cost
-      })
+  arena: game.arena,
+  game_date: game.game_date,
+  game_time: game.game_time,
+  skill_level: game.skill_level,
+  max_players: game.max_players,
+  team1_name: game.team1_name,
+  team2_name: game.team2_name,
+  cost: game.cost
+})
       .eq("id", game.id)
 
     if (error) {
@@ -271,6 +276,58 @@ export default function GameDetails() {
                   team1_name: e.target.value
                 })
               }
+<input
+  value={game?.arena || ""}
+  onChange={(e) =>
+    setGame({
+      ...game,
+      arena: e.target.value
+    })
+  }
+  placeholder="Arena"
+  style={styles.input}
+/>
+
+<input
+  type="date"
+  value={game?.game_date || ""}
+  onChange={(e) =>
+    setGame({
+      ...game,
+      game_date: e.target.value
+    })
+  }
+  style={styles.input}
+/>
+
+<input
+  type="time"
+  value={game?.game_time || ""}
+  onChange={(e) =>
+    setGame({
+      ...game,
+      game_time: e.target.value
+    })
+  }
+  style={styles.input}
+/>
+
+<select
+  value={game?.skill_level || ""}
+  onChange={(e) =>
+    setGame({
+      ...game,
+      skill_level: e.target.value
+    })
+  }
+  style={styles.input}
+>
+  <option value="">Select Skill Level</option>
+  <option value="Beginner">Beginner</option>
+  <option value="Low-Mid">Low-Mid</option>
+  <option value="Intermediate">Intermediate</option>
+  <option value="Advance">Advance</option>
+</select>
               placeholder="Team 1 Name"
               style={styles.input}
             />
