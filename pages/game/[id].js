@@ -75,6 +75,7 @@ console.log("ARENA DATA:", arenaData)
 
 setArenas(arenaData || [])
 
+console.log("ARENA ERROR:", arenaError)
 console.log("ARENAS:", arenaData)
   }
 
