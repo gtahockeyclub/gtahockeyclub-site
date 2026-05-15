@@ -241,7 +241,7 @@ export default function GameDetails() {
         </p>
 
         <p>
-          <strong>Price:</strong> ${game?.price || 0}
+          <strong>Price:</strong> ${game?.cost || 0}
         </p>
 
         {isOrganizer && (
