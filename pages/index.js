@@ -1042,7 +1042,8 @@ const error = response.error
   </div>
 )}
    
-        
+</div>
+</section>    
     
       <section style={isMobile ? styles.gamesSectionMobile : styles.gamesSection}>
         <h2 style={isMobile ? styles.sectionTitleMobile : styles.sectionTitle}>Upcoming Games</h2>
