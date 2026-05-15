@@ -63,6 +63,12 @@ async function checkUser() {
     setSignups(signupData || [])
   }
 
+  const handleRemovePlayer = async (
+    playerId,
+    playerName
+  ) => {
+
+  }  
   return (
     <div
       style={{
