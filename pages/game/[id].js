@@ -277,6 +277,11 @@ export default function GameDetails() {
                 })
               }
 <input
+      }
+    }
+    placeholder="Team 1 Name"
+    style={styles.input}
+  />
   value={game?.arena || ""}
   onChange={(e) =>
     setGame({
