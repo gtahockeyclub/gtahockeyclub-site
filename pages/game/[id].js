@@ -274,17 +274,27 @@ setArenas(arenaData || [])
               Edit Game Information
             </h3>
 
-            <input
-              value={game?.arena || ""}
-              onChange={(e) =>
-                setGame({
-                  ...game,
-                  arena: e.target.value
-                })
-              }
-              placeholder="Arena"
-              style={styles.input}
-            />
+            <select
+  value={game?.arena || ""}
+  onChange={(e) =>
+    setGame({
+      ...game,
+      arena: e.target.value
+    })
+  }
+  style={styles.input}
+>
+  <option value="">Select Arena</option>
+
+  {arenas.map((arena) => (
+    <option
+      key={arena.id}
+      value={arena.name}
+    >
+      {arena.name} - {arena.city}
+    </option>
+  ))}
+</select>
 
             <input
               type="date"
