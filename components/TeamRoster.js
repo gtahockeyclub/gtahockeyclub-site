@@ -2,7 +2,10 @@ export default function TeamRoster({
   displayName,
   roster,
   teamName,
-  isOrganizer
+  isOrganizer,
+  handleRemovePlayer,
+  handleMovePlayer,
+  handleTogglePaid
 }) {
   const teamRoster = roster.filter(
     (p) => p.team === teamName
@@ -109,6 +112,77 @@ export default function TeamRoster({
                 }}
               >
                 {player.player_name || player.name}
+{isOrganizer && (
+  <div
+    style={{
+      display: "flex",
+      gap: "8px",
+      marginTop: "10px",
+      flexWrap: "wrap"
+    }}
+  >
+    <button
+      onClick={() =>
+        handleTogglePaid(player)
+      }
+      style={{
+        backgroundColor: player.paid
+          ? "#16a34a"
+          : "#dc2626",
+        color: "white",
+        border: "none",
+        padding: "6px 10px",
+        borderRadius: "6px",
+        cursor: "pointer",
+        fontSize: "12px"
+      }}
+    >
+      {player.paid
+        ? "PAID"
+        : "UNPAID"}
+    </button>
+
+    <button
+      onClick={() =>
+        handleMovePlayer(
+          player,
+          roster
+        )
+      }
+      style={{
+        backgroundColor: "#2563eb",
+        color: "white",
+        border: "none",
+        padding: "6px 10px",
+        borderRadius: "6px",
+        cursor: "pointer",
+        fontSize: "12px"
+      }}
+    >
+      MOVE
+    </button>
+
+    <button
+      onClick={() =>
+        handleRemovePlayer(
+          player.id,
+          player.player_name
+        )
+      }
+      style={{
+        backgroundColor: "#111827",
+        color: "white",
+        border: "none",
+        padding: "6px 10px",
+        borderRadius: "6px",
+        cursor: "pointer",
+        fontSize: "12px"
+      }}
+    >
+      REMOVE
+    </button>
+  </div>
+)}
 {isOrganizer && (
   <div
     style={{
