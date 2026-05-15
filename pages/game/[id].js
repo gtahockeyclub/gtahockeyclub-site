@@ -65,8 +65,7 @@ async function checkUser() {
     setSignups(signupData || [])
   }
 
- const handleRemovePlayer = async (
-   const handleUpdateGame = async () => {
+const handleUpdateGame = async () => {
   const { error } = await supabase
     .from("games")
     .update({
@@ -83,6 +82,11 @@ async function checkUser() {
     loadGame()
   }
 }
+
+const handleRemovePlayer = async (
+  playerId,
+  playerName
+) => {
   playerId,
   playerName
 ) => {
