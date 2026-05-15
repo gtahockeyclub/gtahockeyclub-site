@@ -68,7 +68,7 @@ export default function GameDetails() {
 
 const { data: arenaData, error: arenaError } = await supabase
   .from("arenas")
-  .select("uuid,name,city")
+  .select("*")
     
 console.log("ARENA ERROR:", arenaError)
 console.log("ARENA DATA:", arenaData)
