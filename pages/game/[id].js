@@ -13,12 +13,14 @@ export default function GameDetails() {
   const [user, setUser] = useState(null)
 
   const skaters = signups.filter(
-    (player) => !player.is_goalie
-  )
+  (player) =>
+    player.player_type !== "Goalie"
+)
 
-  const goalies = signups.filter(
-    (player) => player.is_goalie
-  )
+const goalies = signups.filter(
+  (player) =>
+    player.player_type === "Goalie"
+)
 
   const skaterSpotsLeft =
     (game?.max_players || 0) - skaters.length
