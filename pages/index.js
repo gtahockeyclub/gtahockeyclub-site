@@ -943,42 +943,104 @@ const error = response.error
           </button>
         </div>
 
-        {showPostForm && (
-          <div style={isMobile ? styles.organizerCardMobile : styles.organizerCard}>
-            <h2 style={isMobile ? styles.sectionTitleMobile : styles.sectionTitle}>Post a Game</h2>
+      {showPostForm && (
+  <div style={isMobile ? styles.organizerCardMobile : styles.organizerCard}>
+    <h2 style={isMobile ? styles.sectionTitleMobile : styles.sectionTitle}>
+      Post a Game
+    </h2>
 
-            <div style={styles.formGrid}>
-              <select value={selectedArena} onChange={(e) => setSelectedArena(e.target.value)} style={styles.input}>
-                <option value="">Select Arena</option>
-                {arenas.map((arena) => (
-                  <option key={arena.id} value={arena.id}>
-                    {arena.name} - {arena.city}
-                  </option>
-                ))}
-              </select>
+    <div style={styles.formGrid}>
+      <select
+        value={selectedArena}
+        onChange={(e) => setSelectedArena(e.target.value)}
+        style={styles.input}
+      >
+        <option value="">Select Arena</option>
 
-              <input type="date" value={date} onChange={(e) => setDate(e.target.value)} style={styles.input} />
-              <input type="time" value={time} onChange={(e) => setTime(e.target.value)} style={styles.input} />
-              <input placeholder="Cost, example $20" value={cost} onChange={(e) => setCost(e.target.value)} style={styles.input} />
+        {arenas.map((arena) => (
+          <option key={arena.id} value={arena.id}>
+            {arena.name} - {arena.city}
+          </option>
+        ))}
+      </select>
 
-              <select value={level} onChange={(e) => setLevel(e.target.value)} style={styles.input}>
-                <option value="">Select Skill Level</option>
-                <option value="Beginner">Beginner</option>
-                <option value="Low-Mid">Low-Mid</option>
-                <option value="Intermediate">Intermediate</option>
-                <option value="Advance">Advance</option>
-              </select>
+      <input
+        type="date"
+        value={date}
+        onChange={(e) => setDate(e.target.value)}
+        style={styles.input}
+      />
 
-              <input placeholder="# of Skaters" value={maxPlayers} onChange={(e) => setMaxPlayers(e.target.value)} style={styles.input} />
-              <input placeholder="Team 1 Name" value={team1Name} onChange={(e) => setTeam1Name(e.target.value)} style={styles.input} />
-              <input placeholder="Team 2 Name" value={team2Name} onChange={(e) => setTeam2Name(e.target.value)} style={styles.input} />
-              <input placeholder="Organizer Name" value={organizer} onChange={(e) => setOrganizer(e.target.value)} style={styles.input} />
-              <input placeholder="Organizer Email / E-transfer Email" value={organizerEmail} onChange={(e) => setOrganizerEmail(e.target.value)} style={styles.input} />
-            </div>
+      <input
+        type="time"
+        value={time}
+        onChange={(e) => setTime(e.target.value)}
+        style={styles.input}
+      />
 
-            <button onClick={handlePostGame} style={styles.postButton}>
-              Post Game
-            </button>
+      <input
+        placeholder="Cost, example $20"
+        value={cost}
+        onChange={(e) => setCost(e.target.value)}
+        style={styles.input}
+      />
+
+      <select
+        value={level}
+        onChange={(e) => setLevel(e.target.value)}
+        style={styles.input}
+      >
+        <option value="">Select Skill Level</option>
+        <option value="Beginner">Beginner</option>
+        <option value="Low-Mid">Low-Mid</option>
+        <option value="Intermediate">Intermediate</option>
+        <option value="Advance">Advance</option>
+      </select>
+
+      <input
+        placeholder="# of Skaters"
+        value={maxPlayers}
+        onChange={(e) => setMaxPlayers(e.target.value)}
+        style={styles.input}
+      />
+
+      <input
+        placeholder="Team 1 Name"
+        value={team1Name}
+        onChange={(e) => setTeam1Name(e.target.value)}
+        style={styles.input}
+      />
+
+      <input
+        placeholder="Team 2 Name"
+        value={team2Name}
+        onChange={(e) => setTeam2Name(e.target.value)}
+        style={styles.input}
+      />
+
+      <input
+        placeholder="Organizer Name"
+        value={organizer}
+        onChange={(e) => setOrganizer(e.target.value)}
+        style={styles.input}
+      />
+
+      <input
+        placeholder="Organizer Email / E-transfer Email"
+        value={organizerEmail}
+        onChange={(e) => setOrganizerEmail(e.target.value)}
+        style={styles.input}
+      />
+    </div>
+
+    <button
+      onClick={handlePostGame}
+      style={styles.postButton}
+    >
+      Post Game
+    </button>
+  </div>
+)}
    
         
     
