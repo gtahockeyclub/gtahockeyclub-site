@@ -930,7 +930,7 @@ const error = response.error
         {!user ? (
   <div style={isMobile ? styles.organizerCardMobile : styles.organizerCard}>
     <h2 style={isMobile ? styles.sectionTitleMobile : styles.sectionTitle}>
-      Organizer Login
+     
     </h2>
 
     <input
