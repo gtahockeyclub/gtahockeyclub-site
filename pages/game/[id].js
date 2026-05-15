@@ -88,57 +88,78 @@ async function checkUser() {
   }
 
 }
-   const handleMovePlayer = async (player, gameRoster) => {
-    const newTeam = player.team === 'Team 1' ? 'Team 2' : 'Team 1'
+const handleMovePlayer = async (
+  player,
+  gameRoster
+) => {
 
-    if (player.player_type === 'Goalie') {
-      const goalieExistsOnNewTeam = gameRoster.some(
+  const newTeam =
+    player.team === "Team 1"
+      ? "Team 2"
+      : "Team 1"
+
+  if (player.player_type === "Goalie") {
+
+    const goalieExistsOnNewTeam =
+      gameRoster.some(
         (p) =>
           p.team === newTeam &&
-          p.player_type === 'Goalie' &&
+          p.player_type === "Goalie" &&
           p.id !== player.id
       )
 
-      if (goalieExistsOnNewTeam) {
-        alert('Cannot move goalie. The other team already has a goalie.')
-        return
-      }
-    }
-
-    const { error } = await supabase
-      .from('game_signups')
-      .update({ team: newTeam })
-      .eq('id', player.id)
-
-    if (error) {
-      alert('Error moving player.')
-      console.log(error)
-    } else {
-      alert(`${player.player_name} moved.`)
-      loadSignups()
-    }
-     const handleTogglePaid = async (player) => {
-
-    if (player.player_type === 'Goalie') {
-      alert('Goalies do not pay for pickup hockey.')
+    if (goalieExistsOnNewTeam) {
+      alert(
+        "Cannot move goalie. The other team already has a goalie."
+      )
       return
     }
-  
-   const response = await supabase
-  .from('game_signups')
-  .update({ paid: !player.paid })
-  .eq('id', player.id)
-  .select()
-
-const error = response.error
-    
-    if (error) {
-      alert(error.message)
-      console.log(error)
-    } else {
-      loadSignups()
-   }
   }
+
+  const { error } = await supabase
+    .from("game_signups")
+    .update({ team: newTeam })
+    .eq("id", player.id)
+
+  if (error) {
+    alert("Error moving player.")
+    console.log(error)
+  } else {
+    alert(`${player.player_name} moved.`)
+    loadGame()
+  }
+
+}
+
+const handleTogglePaid = async (
+  player
+) => {
+
+  if (player.player_type === "Goalie") {
+    alert(
+      "Goalies do not pay for pickup hockey."
+    )
+    return
+  }
+
+  const response = await supabase
+    .from("game_signups")
+    .update({
+      paid: !player.paid
+    })
+    .eq("id", player.id)
+    .select()
+
+  const error = response.error
+
+  if (error) {
+    alert(error.message)
+    console.log(error)
+  } else {
+    loadGame()
+  }
+
+}
   return (
     <div
       style={{
