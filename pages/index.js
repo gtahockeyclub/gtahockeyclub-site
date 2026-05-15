@@ -933,10 +933,7 @@ const error = response.error
      
     </h2>
 
-    <input
-   
-  </div>
-)}
+  
         <div style={{ textAlign: 'center', marginBottom: '20px' }}>
           <button
             onClick={() => setShowPostForm(!showPostForm)}
