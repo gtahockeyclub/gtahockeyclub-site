@@ -13,33 +13,36 @@ export default function GameDetails() {
   const [user, setUser] = useState(null)
 
   const skaters = signups.filter(
-  (player) =>
-    player.player_type !== "Goalie"
-)
+    (player) =>
+      player.player_type !== "Goalie"
+  )
 
-const goalies = signups.filter(
-  (player) =>
-    player.player_type === "Goalie"
-)
+  const goalies = signups.filter(
+    (player) =>
+      player.player_type === "Goalie"
+  )
 
   const skaterSpotsLeft =
     (game?.max_players || 0) - skaters.length
 
   const goalieSpotsLeft =
     1 - goalies.length
+
   const isOrganizer =
-  game?.organizer_id === user?.id
-useEffect(() => {
-  checkUser()
-}, [])
+    game?.organizer_id === user?.id
 
-async function checkUser() {
-  const {
-    data: { user }
-  } = await supabase.auth.getUser()
+  useEffect(() => {
+    checkUser()
+  }, [])
 
-  setUser(user)
-}
+  async function checkUser() {
+    const {
+      data: { user }
+    } = await supabase.auth.getUser()
+
+    setUser(user)
+  }
+
   useEffect(() => {
     if (id) {
       loadGame()
@@ -65,125 +68,123 @@ async function checkUser() {
     setSignups(signupData || [])
   }
 
-const handleUpdateGame = async () => {
-  const { error } = await supabase
-    .from("games")
-    .update({
-      team1_name: game.team1_name,
-      team2_name: game.team2_name,
-      price: game.price
-    })
-    .eq("id", game.id)
+  const handleUpdateGame = async () => {
+    const { error } = await supabase
+      .from("games")
+      .update({
+        team1_name: game.team1_name,
+        team2_name: game.team2_name,
+        price: game.price
+      })
+      .eq("id", game.id)
 
-  if (error) {
-    alert(error.message)
-  } else {
-    alert("Game updated successfully.")
-    loadGame()
-  }
-}
-
-const handleRemovePlayer = async (
-  playerId,
-  playerName
-  
-const handleRemovePlayer = async (
-  playerId,
-  playerName
-) => {
-
-  const confirmRemove = confirm(
-    `Remove ${playerName} from the roster?`
-  )
-
-  if (!confirmRemove) return
-
-  const { error } = await supabase
-    .from("game_signups")
-    .delete()
-    .eq("id", playerId)
-
-  if (error) {
-    alert("Error removing player.")
-    console.log(error)
-  } else {
-    alert("Player removed.")
-    loadGame()
-  }
-
-}
-const handleMovePlayer = async (
-  player,
-  gameRoster
-) => {
-
-  const newTeam =
-    player.team === "Team 1"
-      ? "Team 2"
-      : "Team 1"
-
-  if (player.player_type === "Goalie") {
-
-    const goalieExistsOnNewTeam =
-      gameRoster.some(
-        (p) =>
-          p.team === newTeam &&
-          p.player_type === "Goalie" &&
-          p.id !== player.id
-      )
-
-    if (goalieExistsOnNewTeam) {
-      alert(
-        "Cannot move goalie. The other team already has a goalie."
-      )
-      return
+    if (error) {
+      alert(error.message)
+    } else {
+      alert("Game updated successfully.")
+      loadGame()
     }
   }
 
-  const { error } = await supabase
-    .from("game_signups")
-    .update({ team: newTeam })
-    .eq("id", player.id)
+  const handleRemovePlayer = async (
+    playerId,
+    playerName
+  ) => {
 
-  if (error) {
-    alert("Error moving player.")
-    console.log(error)
-  } else {
-    alert(`${player.player_name} moved.`)
-    loadGame()
-  }
-
-}
-
-const handleTogglePaid = async (
-  player
-) => {
-
-  if (player.player_type === "Goalie") {
-    alert(
-      "Goalies do not pay for pickup hockey."
+    const confirmRemove = confirm(
+      `Remove ${playerName} from the roster?`
     )
-    return
+
+    if (!confirmRemove) return
+
+    const { error } = await supabase
+      .from("game_signups")
+      .delete()
+      .eq("id", playerId)
+
+    if (error) {
+      alert("Error removing player.")
+      console.log(error)
+    } else {
+      alert("Player removed.")
+      loadGame()
+    }
+
   }
 
-  const response = await supabase
-    .from("game_signups")
-    .update({
-      paid: !player.paid
-    })
-    .eq("id", player.id)
-    .select()
+  const handleMovePlayer = async (
+    player,
+    gameRoster
+  ) => {
 
-  const error = response.error
+    const newTeam =
+      player.team === "Team 1"
+        ? "Team 2"
+        : "Team 1"
 
-  if (error) {
-    alert(error.message)
-    console.log(error)
-  } else {
-    loadGame()
+    if (player.player_type === "Goalie") {
+
+      const goalieExistsOnNewTeam =
+        gameRoster.some(
+          (p) =>
+            p.team === newTeam &&
+            p.player_type === "Goalie" &&
+            p.id !== player.id
+        )
+
+      if (goalieExistsOnNewTeam) {
+        alert(
+          "Cannot move goalie. The other team already has a goalie."
+        )
+        return
+      }
+    }
+
+    const { error } = await supabase
+      .from("game_signups")
+      .update({ team: newTeam })
+      .eq("id", player.id)
+
+    if (error) {
+      alert("Error moving player.")
+      console.log(error)
+    } else {
+      alert(`${player.player_name} moved.`)
+      loadGame()
+    }
+
   }
 
-}
+  const handleTogglePaid = async (
+    player
+  ) => {
+
+    if (player.player_type === "Goalie") {
+      alert(
+        "Goalies do not pay for pickup hockey."
+      )
+      return
+    }
+
+    const response = await supabase
+      .from("game_signups")
+      .update({
+        paid: !player.paid
+      })
+      .eq("id", player.id)
+      .select()
+
+    const error = response.error
+
+    if (error) {
+      alert(error.message)
+      console.log(error)
+    } else {
+      loadGame()
+    }
+
+  }
+
   return (
     <div
       style={{
@@ -242,83 +243,85 @@ const handleTogglePaid = async (
         <p>
           <strong>Price:</strong> ${game?.price || 0}
         </p>
-{isOrganizer && (
-  <div
-    style={{
-      marginTop: "30px",
-      padding: "20px",
-      backgroundColor: "#f8fafc",
-      borderRadius: "12px",
-      border: "1px solid #d1d5db"
-    }}
-  >
-    <h3
-      style={{
-        marginBottom: "20px",
-        color: "#111827"
-      }}
-    >
-      Edit Game Information
-    </h3>
 
-    <input
-      value={game?.team1_name || ""}
-      onChange={(e) =>
-        setGame({
-          ...game,
-          team1_name: e.target.value
-        })
-      }
-      placeholder="Team 1 Name"
-      style={styles.input}
-    />
+        {isOrganizer && (
+          <div
+            style={{
+              marginTop: "30px",
+              padding: "20px",
+              backgroundColor: "#f8fafc",
+              borderRadius: "12px",
+              border: "1px solid #d1d5db"
+            }}
+          >
+            <h3
+              style={{
+                marginBottom: "20px",
+                color: "#111827"
+              }}
+            >
+              Edit Game Information
+            </h3>
 
-    <input
-      value={game?.team2_name || ""}
-      onChange={(e) =>
-        setGame({
-          ...game,
-          team2_name: e.target.value
-        })
-      }
-      placeholder="Team 2 Name"
-      style={styles.input}
-    />
+            <input
+              value={game?.team1_name || ""}
+              onChange={(e) =>
+                setGame({
+                  ...game,
+                  team1_name: e.target.value
+                })
+              }
+              placeholder="Team 1 Name"
+              style={styles.input}
+            />
 
-    <input
-      value={game?.price || ""}
-      onChange={(e) =>
-        setGame({
-          ...game,
-          price: e.target.value
-        })
-      }
-      placeholder="Price"
-      style={styles.input}
-    />
+            <input
+              value={game?.team2_name || ""}
+              onChange={(e) =>
+                setGame({
+                  ...game,
+                  team2_name: e.target.value
+                })
+              }
+              placeholder="Team 2 Name"
+              style={styles.input}
+            />
 
-    <button
-      onClick={handleUpdateGame}
-      style={{
-        marginTop: "15px",
-        backgroundColor: "#2563eb",
-        color: "white",
-        border: "none",
-        padding: "12px 18px",
-        borderRadius: "8px",
-        cursor: "pointer",
-        fontWeight: "bold"
-      }}
-    >
-      Save Changes
-    </button>
-  </div>
-)}
-       <JoinGameForm
-  game={game}
-  signups={signups}
-  loadGame={loadGame}
-/>
+            <input
+              value={game?.price || ""}
+              onChange={(e) =>
+                setGame({
+                  ...game,
+                  price: e.target.value
+                })
+              }
+              placeholder="Price"
+              style={styles.input}
+            />
+
+            <button
+              onClick={handleUpdateGame}
+              style={{
+                marginTop: "15px",
+                backgroundColor: "#2563eb",
+                color: "white",
+                border: "none",
+                padding: "12px 18px",
+                borderRadius: "8px",
+                cursor: "pointer",
+                fontWeight: "bold"
+              }}
+            >
+              Save Changes
+            </button>
+          </div>
+        )}
+
+        <JoinGameForm
+          game={game}
+          signups={signups}
+          loadGame={loadGame}
+        />
 
         <div
           style={{
@@ -368,4 +371,15 @@ const handleTogglePaid = async (
       </div>
     </div>
   )
+}
+
+const styles = {
+  input: {
+    width: "100%",
+    padding: "12px",
+    marginBottom: "15px",
+    borderRadius: "8px",
+    border: "1px solid #d1d5db",
+    fontSize: "15px"
+  }
 }
