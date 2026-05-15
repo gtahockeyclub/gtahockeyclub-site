@@ -72,6 +72,8 @@ export default function GameDetails() {
       .order("name")
 
 setArenas(arenaData || [])
+
+console.log("ARENAS:", arenaData)
   }
 
   const handleUpdateGame = async () => {
