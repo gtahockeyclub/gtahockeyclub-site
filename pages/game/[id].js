@@ -288,7 +288,7 @@ setArenas(arenaData || [])
 
   {arenas.map((arena) => (
     <option
-      key={arena.id}
+      key={arena.uuid}
       value={arena.name}
     >
       {arena.name} - {arena.city}
