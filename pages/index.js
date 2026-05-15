@@ -927,7 +927,7 @@ const error = response.error
       )}
 
       <section style={isMobile ? styles.organizerSectionMobile : styles.organizerSection}>
-        {!user ? (
+       
   <div style={isMobile ? styles.organizerCardMobile : styles.organizerCard}>
     <h2 style={isMobile ? styles.sectionTitleMobile : styles.sectionTitle}>
      
