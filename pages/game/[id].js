@@ -74,7 +74,7 @@ export default function GameDetails() {
       .update({
         team1_name: game.team1_name,
         team2_name: game.team2_name,
-        price: game.price
+        cost: game.cost
       })
       .eq("id", game.id)
 
@@ -288,11 +288,11 @@ export default function GameDetails() {
             />
 
             <input
-              value={game?.price || ""}
+              value={game?.cost || ""}
               onChange={(e) =>
                 setGame({
                   ...game,
-                  price: e.target.value
+                  cost: e.target.value
                 })
               }
               placeholder="Price"
