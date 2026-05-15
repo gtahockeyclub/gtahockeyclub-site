@@ -81,7 +81,7 @@ setArenas(arenaData || [])
         arena: game.arena,
         game_date: game.game_date,
         game_time: game.game_time,
-        skill_level: game.skill_level,
+        level: game.level,
         max_players: game.max_players,
         team1_name: game.team1_name,
         team2_name: game.team2_name,
@@ -321,11 +321,11 @@ setArenas(arenaData || [])
             />
 
             <select
-              value={game?.skill_level || ""}
+              value={game?.level || ""}
               onChange={(e) =>
                 setGame({
                   ...game,
-                  skill_level: e.target.value
+                  level: e.target.value
                 })
               }
               style={styles.input}
