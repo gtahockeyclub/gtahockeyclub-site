@@ -802,13 +802,25 @@ const error = response.error
     )}
 
     <div style={styles.navButtons}>
-      <button style={styles.loginButton}>
-        Log In
-      </button>
+   <button
+  style={styles.loginButton}
+  onClick={() => router.push('/login')}
+>
+  Login
+</button>
 
-      <button style={styles.joinButton}>
-        Join Community
-      </button>
+{user && (
+  <button
+    style={styles.dashboardButton}
+    onClick={() => router.push('/dashboard')}
+  >
+    Dashboard
+  </button>
+)}
+
+<button style={styles.joinButton}>
+  Join Community
+</button>
     </div>
   </nav>
 
