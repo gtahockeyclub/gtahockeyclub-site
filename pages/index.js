@@ -1145,17 +1145,7 @@ const error = response.error
 
                 </div>
 
-                <div style={isMobile ? styles.rosterHeaderMobile : styles.rosterHeader}>
-                  <h4 style={styles.rosterTitle}>Roster</h4>
-                  <p style={styles.rosterCount}>
-                    {skaterRoster.length} / {game.max_players} skaters • {goalieRoster.length} / 2 goalies
-                  </p>
-                </div>
-
-                <div style={isMobile ? styles.rosterGridMobile : styles.rosterGrid}>
-                  {renderTeamRoster(roster, 'Team 1', game.team1_name, toolsUnlocked)}
-                  {renderTeamRoster(roster, 'Team 2', game.team2_name, toolsUnlocked)}
-                </div>
+              
 
                 {isOwner && !toolsUnlocked && (
                   <button
