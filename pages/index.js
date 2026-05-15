@@ -979,7 +979,7 @@ const error = response.error
             <button onClick={handlePostGame} style={styles.postButton}>
               Post Game
             </button>
-          </div>
+   
         
     
       <section style={isMobile ? styles.gamesSectionMobile : styles.gamesSection}>
