@@ -10,6 +10,7 @@ export default function GameDetails() {
 
   const [game, setGame] = useState(null)
   const [signups, setSignups] = useState([])
+  const [arenas, setArenas] = useState([])
   const [user, setUser] = useState(null)
 
   const skaters = signups.filter(
@@ -64,6 +65,13 @@ export default function GameDetails() {
       .eq("game_id", id)
 
     setSignups(signupData || [])
+
+    const { data: arenaData } = await supabase
+      .from("arenas")
+      .select("*")
+      .order("name")
+
+setArenas(arenaData || [])
   }
 
   const handleUpdateGame = async () => {
