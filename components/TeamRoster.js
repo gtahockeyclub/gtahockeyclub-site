@@ -71,6 +71,54 @@ export default function TeamRoster({
         }}
       >
         FREE GOALIE
+          <div
+  style={{
+    display: "flex",
+    gap: "8px",
+    marginTop: "10px",
+    flexWrap: "wrap"
+  }}
+>
+  <button
+    onClick={() =>
+      handleMovePlayer(
+        goalie,
+        roster
+      )
+    }
+    style={{
+      backgroundColor: "#2563eb",
+      color: "white",
+      border: "none",
+      padding: "6px 10px",
+      borderRadius: "6px",
+      cursor: "pointer",
+      fontSize: "12px"
+    }}
+  >
+    MOVE
+  </button>
+
+  <button
+    onClick={() =>
+      handleRemovePlayer(
+        goalie.id,
+        goalie.player_name
+      )
+    }
+    style={{
+      backgroundColor: "#111827",
+      color: "white",
+      border: "none",
+      padding: "6px 10px",
+      borderRadius: "6px",
+      cursor: "pointer",
+      fontSize: "12px"
+    }}
+  >
+    REMOVE
+  </button>
+</div>
       </div>
     )}
   </>
