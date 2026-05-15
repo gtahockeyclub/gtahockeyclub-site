@@ -86,7 +86,8 @@ const handleUpdateGame = async () => {
 const handleRemovePlayer = async (
   playerId,
   playerName
-) => {
+  
+const handleRemovePlayer = async (
   playerId,
   playerName
 ) => {
