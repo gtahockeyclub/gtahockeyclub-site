@@ -726,25 +726,7 @@ const error = response.error
       return (
         <span>
           {player.player_name}
-    {isOrganizer && (
-  <button
-    onClick={() =>
-      router.push(`/game/${game.id}`)
-    }
-    style={{
-      marginLeft: "10px",
-      backgroundColor: "#2563eb",
-      color: "white",
-      border: "none",
-      padding: "4px 8px",
-      borderRadius: "6px",
-      cursor: "pointer",
-      fontSize: "11px"
-    }}
-  >
-    Manage
-  </button>
-)}
+ 
           {isGoalie ? ' (Goalie)' : ''}
 
           {!isGoalie && (
