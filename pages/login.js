@@ -1,7 +1,118 @@
-export default function Login() {
+import { useState } from "react"
+import { useRouter } from "next/router"
+import { supabase } from "../lib/supabase"
+
+export default function LoginPage() {
+  const router = useRouter()
+
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [loading, setLoading] = useState(false)
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      alert("Please enter email and password.")
+      return
+    }
+
+    setLoading(true)
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    })
+
+    setLoading(false)
+
+    if (error) {
+      alert(error.message)
+      return
+    }
+
+    router.push("/dashboard")
+  }
+
   return (
-    <div style={{ padding: "40px" }}>
-      <h1>Log In</h1>
+    <div
+      style={{
+        minHeight: "100vh",
+        background:
+          "linear-gradient(135deg, #0f172a 0%, #111827 50%, #1e293b 100%)",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "20px"
+      }}
+    >
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "420px",
+          background: "white",
+          padding: "40px",
+          borderRadius: "18px",
+          boxShadow: "0 10px 30px rgba(0,0,0,0.35)"
+        }}
+      >
+        <h1
+          style={{
+            fontSize: "32px",
+            marginBottom: "30px",
+            textAlign: "center",
+            color: "#07152b"
+          }}
+        >
+          Organizer Login
+        </h1>
+
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          style={{
+            width: "100%",
+            padding: "14px",
+            marginBottom: "16px",
+            borderRadius: "10px",
+            border: "1px solid #d1d5db",
+            fontSize: "16px"
+          }}
+        />
+
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          style={{
+            width: "100%",
+            padding: "14px",
+            marginBottom: "20px",
+            borderRadius: "10px",
+            border: "1px solid #d1d5db",
+            fontSize: "16px"
+          }}
+        />
+
+        <button
+          onClick={handleLogin}
+          disabled={loading}
+          style={{
+            width: "100%",
+            padding: "14px",
+            borderRadius: "10px",
+            border: "none",
+            background: "#07152b",
+            color: "white",
+            fontSize: "16px",
+            fontWeight: "bold",
+            cursor: "pointer"
+          }}
+        >
+          {loading ? "Logging In..." : "Login"}
+        </button>
+      </div>
     </div>
   )
 }
