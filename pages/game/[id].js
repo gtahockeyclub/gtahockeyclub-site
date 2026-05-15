@@ -66,6 +66,23 @@ async function checkUser() {
   }
 
  const handleRemovePlayer = async (
+   const handleUpdateGame = async () => {
+  const { error } = await supabase
+    .from("games")
+    .update({
+      team1_name: game.team1_name,
+      team2_name: game.team2_name,
+      price: game.price
+    })
+    .eq("id", game.id)
+
+  if (error) {
+    alert(error.message)
+  } else {
+    alert("Game updated successfully.")
+    loadGame()
+  }
+}
   playerId,
   playerName
 ) => {
@@ -220,7 +237,78 @@ const handleTogglePaid = async (
         <p>
           <strong>Price:</strong> ${game?.price || 0}
         </p>
+{isOrganizer && (
+  <div
+    style={{
+      marginTop: "30px",
+      padding: "20px",
+      backgroundColor: "#f8fafc",
+      borderRadius: "12px",
+      border: "1px solid #d1d5db"
+    }}
+  >
+    <h3
+      style={{
+        marginBottom: "20px",
+        color: "#111827"
+      }}
+    >
+      Edit Game Information
+    </h3>
 
+    <input
+      value={game?.team1_name || ""}
+      onChange={(e) =>
+        setGame({
+          ...game,
+          team1_name: e.target.value
+        })
+      }
+      placeholder="Team 1 Name"
+      style={styles.input}
+    />
+
+    <input
+      value={game?.team2_name || ""}
+      onChange={(e) =>
+        setGame({
+          ...game,
+          team2_name: e.target.value
+        })
+      }
+      placeholder="Team 2 Name"
+      style={styles.input}
+    />
+
+    <input
+      value={game?.price || ""}
+      onChange={(e) =>
+        setGame({
+          ...game,
+          price: e.target.value
+        })
+      }
+      placeholder="Price"
+      style={styles.input}
+    />
+
+    <button
+      onClick={handleUpdateGame}
+      style={{
+        marginTop: "15px",
+        backgroundColor: "#2563eb",
+        color: "white",
+        border: "none",
+        padding: "12px 18px",
+        borderRadius: "8px",
+        cursor: "pointer",
+        fontWeight: "bold"
+      }}
+    >
+      Save Changes
+    </button>
+  </div>
+)}
        <JoinGameForm
   game={game}
   signups={signups}
