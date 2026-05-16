@@ -1,44 +1,40 @@
 export default function About() {
   return (
     <div
-      style={{
-        minHeight: "100vh",
-        background: "#f3f5f8",
-        padding: "60px 20px",
-        fontFamily: "Arial, sans-serif",
-        color: "#07152b"
-      }}
-    >
-      <div
   style={{
-    width: "100%",
-    maxHeight: "500px",
-    overflow: "hidden",
-    marginBottom: "40px"
+    minHeight: "100vh",
+    background: "#f3f5f8",
+    padding: "40px 40px",
+    fontFamily: "Arial, sans-serif",
+    color: "#07152b"
   }}
 >
-  <img
-    src="/about-hero.png"
-    alt="About GTA Hockey Club"
+
+  <div
     style={{
       width: "100%",
-      maxHeight: "500px",
-      borderRadius: "24px",
-      objectFit: "cover"
+      marginBottom: "40px"
     }}
-  />
-</div>
-      <div
-        style={{
-          maxWidth: "1200px",
-          margin: "0 auto",
-          background: "white",
-          padding: "50px",
-          borderRadius: "20px",
-          boxShadow: "0 4px 20px rgba(0,0,0,0.08)"
-        }}
-      >
-        <h1
+  >
+    <img
+      src="/about-hero.png"
+      alt="About GTA Hockey Club"
+      style={{
+        width: "100%",
+        borderRadius: "24px",
+        objectFit: "cover"
+      }}
+    />
+  </div>
+
+  <div
+    style={{
+      maxWidth: "1200px",
+      margin: "0 auto",
+      padding: "20px 0"
+    }}
+  >
+               <h1
           style={{
             fontSize: "48px",
             marginBottom: "10px"
