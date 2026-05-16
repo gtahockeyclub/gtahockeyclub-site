@@ -23,7 +23,7 @@ export default function About() {
   width: "100%",
   height: "420px",
   borderRadius: "24px",
-  objectFit: "cover"
+  objectFit: "contain"
 }}
     />
   </div>
