@@ -200,7 +200,11 @@ console.log("ARENAS:", arenaData)
     }
 
   }
-
+  const getArenaDetails = (arenaName) => {
+  return arenas.find((a) => a.name === arenaName)
+}
+  
+const arenaDetails = getArenaDetails(game?.arena)
   return (
     <div
       style={{
