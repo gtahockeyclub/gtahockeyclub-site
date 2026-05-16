@@ -246,6 +246,19 @@ const arenaDetails = getArenaDetails(game?.arena)
         <p>
           <strong>Arena:</strong> {game?.arena}
         </p>
+            {arenaDetails?.address && (
+  <p>{arenaDetails.address}</p>
+)}
+
+{arenaDetails?.google_maps_url && (
+  <a
+    href={arenaDetails.google_maps_url}
+    target="_blank"
+    rel="noreferrer"
+  >
+    Open in Google Maps
+  </a>
+)}
 
         <p>
           <strong>Date:</strong> {game?.game_date}
