@@ -10,23 +10,61 @@ export default function About() {
   }}
 >
 
+<div
+  style={{
+    position: "relative",
+    width: "100%",
+    height: "520px",
+    borderRadius: "24px",
+    overflow: "hidden",
+    marginBottom: "50px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center"
+  }}
+>
+  <img
+    src="/about-hero.png"
+    alt="About GTA Hockey Club"
+    style={{
+      position: "absolute",
+      width: "100%",
+      height: "100%",
+      objectFit: "cover",
+      filter: "brightness(45%)"
+    }}
+  />
+
   <div
     style={{
-      width: "100%",
-      marginBottom: "40px"
+      position: "relative",
+      zIndex: 2,
+      textAlign: "center",
+      color: "white",
+      padding: "20px"
     }}
   >
-    <img
-      src="/about-hero.png"
-      alt="About GTA Hockey Club"
+    <h1
       style={{
-  width: "100%",
-  height: "420px",
-  borderRadius: "24px",
-  objectFit: "contain"
-}}
-    />
+        fontSize: "64px",
+        marginBottom: "10px",
+        fontWeight: "900"
+      }}
+    >
+      About GTA Hockey Club
+    </h1>
+
+    <h2
+      style={{
+        fontSize: "28px",
+        letterSpacing: "4px",
+        color: "#facc15"
+      }}
+    >
+      POST. CONNECT. PLAY.
+    </h2>
   </div>
+</div> 
 
   <div
     style={{
