@@ -1,82 +1,43 @@
 export default function About() {
   return (
     <div
-  style={{
-    minHeight: "100vh",
-    background: "#f3f5f8",
-    padding: "40px 40px",
-    fontFamily: "Arial, sans-serif",
-    color: "#07152b"
-  }}
->
-
-<div
-  style={{
-    position: "relative",
-    width: "100%",
-    height: "520px",
-    borderRadius: "24px",
-    overflow: "hidden",
-    marginBottom: "50px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center"
-  }}
->
-  <img
-    src="/about-hero.png"
-    alt="About GTA Hockey Club"
-    style={{
-      position: "absolute",
-      width: "100%",
-      height: "100%",
-      objectFit: "cover",
-      filter: "brightness(45%)"
-    }}
-  />
-
-  <div
-    style={{
-      position: "relative",
-      zIndex: 2,
-      textAlign: "center",
-      color: "white",
-      padding: "20px"
-    }}
-  >
-    <h1
       style={{
-        fontSize: "64px",
-        marginBottom: "10px",
-        fontWeight: "900"
+        minHeight: "100vh",
+        backgroundImage: "url('/about-hero.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed",
+        position: "relative",
+        padding: "60px 40px",
+        fontFamily: "Arial, sans-serif",
+        color: "white"
       }}
     >
-      About GTA Hockey Club
-    </h1>
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          background: "rgba(0,0,0,0.68)",
+          zIndex: 1
+        }}
+      />
 
-    <h2
-      style={{
-        fontSize: "28px",
-        letterSpacing: "4px",
-        color: "#facc15"
-      }}
-    >
-      POST. CONNECT. PLAY.
-    </h2>
-  </div>
-</div> 
-
-  <div
-    style={{
-      maxWidth: "1200px",
-      margin: "0 auto",
-      padding: "20px 0"
-    }}
-  >
-               <h1
+      <div
+        style={{
+          maxWidth: "1200px",
+          margin: "0 auto",
+          position: "relative",
+          zIndex: 2
+        }}
+      >
+        <h1
           style={{
-            fontSize: "48px",
-            marginBottom: "10px"
+            fontSize: "64px",
+            marginBottom: "10px",
+            fontWeight: "900"
           }}
         >
           About GTA Hockey Club
@@ -84,8 +45,10 @@ export default function About() {
 
         <h2
           style={{
+            fontSize: "28px",
+            letterSpacing: "4px",
             color: "#facc15",
-            marginBottom: "40px"
+            marginBottom: "50px"
           }}
         >
           POST. CONNECT. PLAY.
@@ -122,8 +85,9 @@ export default function About() {
         </ul>
 
         <p style={styles.paragraph}>
-          Our goal is simple: Help players find more games and help
-          organizers keep games full.
+          Our goal is simple:
+          Help players find more games and help organizers keep
+          games full.
         </p>
 
         <p style={styles.paragraph}>
@@ -185,10 +149,10 @@ export default function About() {
 
         <div
           style={{
-            marginTop: "50px",
+            marginTop: "60px",
             textAlign: "center",
             fontWeight: "bold",
-            fontSize: "22px"
+            fontSize: "24px"
           }}
         >
           One hockey community.
@@ -202,33 +166,38 @@ export default function About() {
 
 const styles = {
   paragraph: {
-    fontSize: "18px",
-    lineHeight: "1.8",
-    marginBottom: "25px"
+    fontSize: "20px",
+    lineHeight: "1.9",
+    marginBottom: "28px",
+    maxWidth: "1000px"
   },
 
   sectionTitle: {
-    marginTop: "50px",
-    marginBottom: "20px",
-    fontSize: "32px"
+    marginTop: "60px",
+    marginBottom: "25px",
+    fontSize: "38px",
+    color: "#facc15"
   },
 
   list: {
-    paddingLeft: "25px",
+    paddingLeft: "28px",
     lineHeight: "2",
-    marginBottom: "30px"
+    marginBottom: "30px",
+    fontSize: "19px"
   },
 
   grid: {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
-    gap: "20px",
+    gap: "24px",
     marginTop: "30px"
   },
 
   card: {
-    background: "#f8fafc",
-    padding: "25px",
-    borderRadius: "16px"
+    background: "rgba(255,255,255,0.12)",
+    backdropFilter: "blur(8px)",
+    padding: "28px",
+    borderRadius: "20px",
+    border: "1px solid rgba(255,255,255,0.18)"
   }
 }
