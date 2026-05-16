@@ -793,12 +793,24 @@ const error = response.error
 
     {!isMobile && (
       <div style={styles.navLinks}>
-        <a style={styles.navLink}>Home</a>
-        <a style={styles.navLink}>Find Games</a>
-        <a style={styles.navLink}>Post Game</a>
-        <a style={styles.navLink}>Organizers</a>
-        <a style={styles.navLink}>About</a>
-      </div>
+  <a href="/" style={styles.navLink}>Home</a>
+
+  <a href="/find-games" style={styles.navLink}>
+    Find Games
+  </a>
+
+  <a href="/post-game" style={styles.navLink}>
+    Post Game
+  </a>
+
+  <a href="/organizers" style={styles.navLink}>
+    Organizers
+  </a>
+
+  <a href="/about" style={styles.navLink}>
+    About
+  </a>
+</div>
     )}
 
     <div style={styles.navButtons}>
