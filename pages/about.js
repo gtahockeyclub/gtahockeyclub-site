@@ -12,6 +12,8 @@ export default function About() {
       <div
   style={{
     width: "100%",
+    maxHeight: "500px",
+    overflow: "hidden",
     marginBottom: "40px"
   }}
 >
@@ -20,6 +22,7 @@ export default function About() {
     alt="About GTA Hockey Club"
     style={{
       width: "100%",
+      maxHeight: "500px",
       borderRadius: "24px",
       objectFit: "cover"
     }}
@@ -27,7 +30,7 @@ export default function About() {
 </div>
       <div
         style={{
-          maxWidth: "900px",
+          maxWidth: "1200px",
           margin: "0 auto",
           background: "white",
           padding: "50px",
