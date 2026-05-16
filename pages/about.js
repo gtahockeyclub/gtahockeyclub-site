@@ -10,6 +10,22 @@ export default function About() {
       }}
     >
       <div
+  style={{
+    width: "100%",
+    marginBottom: "40px"
+  }}
+>
+  <img
+    src="/about-hero.png"
+    alt="About GTA Hockey Club"
+    style={{
+      width: "100%",
+      borderRadius: "24px",
+      objectFit: "cover"
+    }}
+  />
+</div>
+      <div
         style={{
           maxWidth: "900px",
           margin: "0 auto",
