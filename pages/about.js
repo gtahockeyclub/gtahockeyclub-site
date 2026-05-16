@@ -20,10 +20,11 @@ export default function About() {
       src="/about-hero.png"
       alt="About GTA Hockey Club"
       style={{
-        width: "100%",
-        borderRadius: "24px",
-        objectFit: "cover"
-      }}
+  width: "100%",
+  height: "420px",
+  borderRadius: "24px",
+  objectFit: "cover"
+}}
     />
   </div>
 
