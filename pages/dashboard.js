@@ -59,7 +59,54 @@ async function loadArenas() {
       loadGames()
     }
   }
+const handlePostGame = async () => {
 
+  const arenaDetails = arenas.find((a) => a.id === selectedArena)
+
+  if (!arenaDetails || !date || !time || !cost || !level) {
+    alert('Please select arena, date, time, cost, and skill level.')
+    return
+  }
+
+  const { error } = await supabase.from('games').insert([
+    {
+      arena: arenaDetails.name,
+      game_date: date,
+      game_time: time,
+      cost,
+      level,
+      max_players: Number(maxPlayers),
+      team1_name: team1Name || 'Team 1',
+      team2_name: team2Name || 'Team 2',
+      organizer_name: organizer,
+      organizer_email: organizerEmail,
+      organizer_id: user.id,
+      is_active: true
+    },
+  ])
+
+  if (error) {
+    alert('Error posting game.')
+    console.log(error)
+  } else {
+    alert('Game posted!')
+
+    setSelectedArena('')
+    setDate('')
+    setTime('')
+    setCost('')
+    setLevel('')
+    setMaxPlayers(20)
+    setTeam1Name('Team 1')
+    setTeam2Name('Team 2')
+    setOrganizer('')
+    setOrganizerEmail('')
+    setOrganizerCode('')
+    setShowPostForm(false)
+
+    loadGames()
+  }
+}
   return (
     <div
       style={{
