@@ -84,7 +84,6 @@ console.log(user)
       team2_name: team2Name || 'Team 2',
       organizer_name: organizer,
       organizer_email: organizerEmail,
-      organizer_id: null,
       is_active: true
     },
   ])
