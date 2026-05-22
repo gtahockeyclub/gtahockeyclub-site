@@ -212,10 +212,9 @@ export default function Dashboard() {
           >
             {games.map((game) => (
               <div
-           
-  key={game.id}
-  style={styles.gameCard}
->
+                key={game.id}
+                style={styles.gameCard}
+          >
   <div style={styles.gameCardTop}>
     <div>
       <h2 style={styles.gameArena}>
