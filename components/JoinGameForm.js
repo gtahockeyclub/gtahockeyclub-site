@@ -292,24 +292,31 @@ setConfirmation({
       <strong>Time:</strong>{" "}
       {confirmation.time}
     </p>
-
-  {confirmation.playerType !== "Goalie" && (
+{confirmation.playerType !== "Goalie" && (
   <>
     <p>
-      <strong>Cost:</strong> $
-      {confirmation.cost}
-    </p>
-{!isOrganizer && (
-  <>
-    <p style={{ marginTop: "12px" }}>
-      Please send e-transfer to:
+      <strong>Cost:</strong> ${confirmation.cost}
     </p>
 
-    <strong>
-      {confirmation.organizerEmail}
-    </strong>
+    {!isOrganizer && (
+      <>
+        <p style={{ marginTop: "12px" }}>
+          Please send e-transfer to:
+        </p>
+
+        <strong>
+          {confirmation.organizerEmail}
+        </strong>
+      </>
+    )}
   </>
 )}
+
+</div>
+</>
+)
+}
+  
 
 </>
 )}
