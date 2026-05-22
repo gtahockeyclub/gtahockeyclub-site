@@ -254,17 +254,7 @@ console.log(user)
       }}
     />
 
-    <input
-      type="number"
-      placeholder="Cost"
-      value={cost}
-      onChange={(e) => setCost(e.target.value)}
-      style={{
-        width: "100%",
-        padding: "10px",
-        marginBottom: "10px"
-      }}
-    />
+    
 
     <select
       value={level}
@@ -281,6 +271,19 @@ console.log(user)
       <option value="Intermediate">Intermediate</option>
       <option value="Advanced">Advanced</option>
     </select>
+      
+<input
+      type="number"
+      placeholder="Cost"
+      value={cost}
+      onChange={(e) => setCost(e.target.value)}
+      style={{
+        width: "100%",
+        padding: "10px",
+        marginBottom: "10px"
+      }}
+    />
+      
 <input
   type="number"
   placeholder="Max Players"
