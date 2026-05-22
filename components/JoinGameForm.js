@@ -257,62 +257,58 @@ setConfirmation({
 {confirmation && (
   <div
     style={{
-      marginTop: "20px",
-      backgroundColor: "#dcfce7",
+      background: "#d1fae5",
+      color: "#065f46",
       padding: "20px",
       borderRadius: "12px",
-      color: "#166534"
+      marginTop: "20px",
+      lineHeight: "1.8"
     }}
   >
-    <h3 style={{ marginBottom: "12px" }}>
-      Successfully Joined Game
-    </h3>
+    <h3>Successfully Joined Game</h3>
 
     <p>
-      <strong>Player:</strong>{" "}
-      {confirmation.playerName}
+      <strong>Player:</strong> {confirmation.name}
     </p>
 
     <p>
-      <strong>Team:</strong>{" "}
-      {confirmation.team}
+      <strong>Team:</strong> {confirmation.team}
     </p>
 
     <p>
-      <strong>Type:</strong>{" "}
-      {confirmation.playerType}
+      <strong>Type:</strong> {confirmation.playerType}
     </p>
 
     <p>
-      <strong>Date:</strong>{" "}
-      {confirmation.date}
+      <strong>Date:</strong> {confirmation.date}
     </p>
 
     <p>
-      <strong>Time:</strong>{" "}
-      {confirmation.time}
-    </p>
-{confirmation.playerType !== "Goalie" && (
-  <>
-    <p>
-      <strong>Cost:</strong> ${confirmation.cost}
+      <strong>Time:</strong> {confirmation.time}
     </p>
 
-    {!isOrganizer && (
+    {confirmation.playerType !== "Goalie" && (
       <>
-        <p style={{ marginTop: "12px" }}>
-          Please send e-transfer to:
+        <p>
+          <strong>Cost:</strong> ${confirmation.cost}
         </p>
 
-        <strong>
-          {confirmation.organizerEmail}
-        </strong>
+        {!isOrganizer && (
+          <>
+            <p style={{ marginTop: "12px" }}>
+              Please send e-transfer to:
+            </p>
+
+            <strong>
+              {confirmation.organizerEmail}
+            </strong>
+          </>
+        )}
       </>
     )}
-  </>
+  </div>
 )}
 
-</div>
+</>
 )
 }
-  
