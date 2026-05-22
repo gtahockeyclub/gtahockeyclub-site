@@ -27,8 +27,7 @@ export default function GameDetails() {
   const goalieSpotsLeft =
     1 - goalies.length
 
-  const isOrganizer =
-    const isOwner = true
+  const isOrganizer = true
 
   useEffect(() => {
     checkUser()
