@@ -206,6 +206,19 @@ console.log("ARENAS:", arenaData)
   
 const arenaDetails = getArenaDetails(game?.arena)
   return (
+    <div style={{ marginBottom: "30px" }}>
+  <a
+    href="/dashboard"
+    style={{
+      color: "#facc15",
+      textDecoration: "none",
+      fontWeight: "bold",
+      fontSize: "18px"
+    }}
+  >
+    ← Back to Dashboard
+  </a>
+</div>
     <div
       style={{
         minHeight: "100vh",
