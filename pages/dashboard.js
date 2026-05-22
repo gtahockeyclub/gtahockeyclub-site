@@ -4,6 +4,7 @@ import { supabase } from "../lib/supabase"
 
 export default function Dashboard() {
   const [games, setGames] = useState([])
+  const [user, setUser] = useState(null)
   const [showPostForm, setShowPostForm] = useState(false)
 
 const [selectedArena, setSelectedArena] = useState('')
@@ -19,12 +20,15 @@ const [organizerEmail, setOrganizerEmail] = useState('')
 const [organizerCode, setOrganizerCode] = useState('')
 const [arenas, setArenas] = useState([])
 
-  useEffect(() => {
-    loadGames()
-  }, [])
 useEffect(() => {
+
+  supabase.auth.getUser().then(({ data }) => {
+    setUser(data.user)
+  })
+
   loadArenas()
   loadGames()
+
 }, [])
 
 async function loadArenas() {
