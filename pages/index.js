@@ -71,7 +71,6 @@ const today =
   .from('games')
   .select('*')
   .eq('is_active', true)
-  .gte('game_date', today)
   .order('game_date', { ascending: true })
 
     setGames(data || [])
