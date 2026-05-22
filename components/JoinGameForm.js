@@ -3,7 +3,8 @@ import { supabase } from "../lib/supabase"
 export default function JoinGameForm({
   game,
   signups,
-  loadGame
+  loadGame,
+  isOrganizer = false
 }) {
   const [name, setName] = useState("")
   const [phone, setPhone] = useState("")
@@ -163,7 +164,7 @@ setConfirmation({
           marginBottom: "20px"
         }}
       >
-        Join This Game
+        {isOrganizer ? "Add Player to Game" : "Join This Game"}
       </h2>
 
       <input
@@ -298,7 +299,8 @@ setConfirmation({
       <strong>Cost:</strong> $
       {confirmation.cost}
     </p>
-
+{!isOrganizer && (
+  <>
     <p style={{ marginTop: "12px" }}>
       Please send e-transfer to:
     </p>
