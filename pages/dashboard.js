@@ -80,7 +80,7 @@ const handlePostGame = async () => {
       team2_name: team2Name || 'Team 2',
       organizer_name: organizer,
       organizer_email: organizerEmail,
-      organizer_id: user.id,
+      organizer_id: null,
       is_active: true
     },
   ])
@@ -291,6 +291,65 @@ const handlePostGame = async () => {
         width: "100%"
       }}
     >
+<input
+  type="number"
+  placeholder="Max Players"
+  value={maxPlayers}
+  onChange={(e) => setMaxPlayers(e.target.value)}
+  style={{
+    width: "100%",
+    padding: "10px",
+    marginBottom: "10px"
+  }}
+/>
+
+<input
+  type="text"
+  placeholder="Team 1 Name"
+  value={team1Name}
+  onChange={(e) => setTeam1Name(e.target.value)}
+  style={{
+    width: "100%",
+    padding: "10px",
+    marginBottom: "10px"
+  }}
+/>
+
+<input
+  type="text"
+  placeholder="Team 2 Name"
+  value={team2Name}
+  onChange={(e) => setTeam2Name(e.target.value)}
+  style={{
+    width: "100%",
+    padding: "10px",
+    marginBottom: "10px"
+  }}
+/>
+
+<input
+  type="text"
+  placeholder="Organizer Name"
+  value={organizer}
+  onChange={(e) => setOrganizer(e.target.value)}
+  style={{
+    width: "100%",
+    padding: "10px",
+    marginBottom: "10px"
+  }}
+/>
+
+<input
+  type="email"
+  placeholder="Organizer Email"
+  value={organizerEmail}
+  onChange={(e) => setOrganizerEmail(e.target.value)}
+  style={{
+    width: "100%",
+    padding: "10px",
+    marginBottom: "10px"
+  }}
+/>
       Post Game
     </button>
 
