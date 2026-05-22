@@ -212,89 +212,137 @@ export default function Dashboard() {
           >
             {games.map((game) => (
               <div
-                key={game.id}
-                style={{
-                  backgroundColor: "white",
-                  color: "#111827",
-                  padding: "20px",
-                  borderRadius: "12px",
-                  boxShadow: "0 4px 20px rgba(0,0,0,0.35)"
-                }}
-              >
-                <h3
-                  style={{
-                    minHeight: "50px",
-                    marginBottom: "15px"
-                  }}
-                >
-                  {game.arena}
-                </h3>
-                  <p
-  style={{
-    fontWeight: "bold",
-    marginBottom: "12px",
-    color: "#374151"
-  }}
+            <div
+  key={game.id}
+  style={styles.gameCard}
 >
-  {game.team1_name || "Team 1"} vs{" "}
-  {game.team2_name || "Team 2"}
-</p>
+  <div style={styles.gameCardTop}>
+    <div>
+      <h2 style={styles.gameArena}>
+        {game.arena}
+      </h2>
 
-                <p>
-                  {game.game_date} • {game.game_time}
-                </p>
+      <div style={styles.gameDate}>
+        {game.game_date} • {game.game_time}
+      </div>
+    </div>
 
-                <p>
-                  <strong>Skill:</strong> {game.skill_level || "N/A"}
-                </p>
+    <div style={styles.skillBadge}>
+      {game.level || "All Levels"}
+    </div>
+  </div>
 
-                <p>
-                  <strong>Price:</strong> ${game.price || 0}
-                </p>
+  <div style={styles.teamMatchup}>
+    {game.team1_name || "Team 1"} vs{" "}
+    {game.team2_name || "Team 2"}
+  </div>
 
-                <p>
-                  <strong>Spots:</strong> {game.max_players || 0}
-                </p>
+  <div style={styles.gameStatsRow}>
+    <div style={styles.statPill}>
+      ${game.price || 0}
+    </div>
 
-                <Link href={`/game/${game.id}`}>
-                  <button
-                    style={{
-                      marginTop: "15px",
-                      backgroundColor: "#facc15",
-                      color: "black",
-                      border: "none",
-                      padding: "10px 16px",
-                      borderRadius: "8px",
-                      cursor: "pointer",
-                      fontWeight: "bold",
-                      display: "block"
-                    }}
-                  >
-                    Manage Game
-                  </button>
-                </Link>
+    <div style={styles.statPill}>
+      {game.max_players || 20} Spots
+    </div>
+  </div>
 
-                <button
-                  onClick={() => closeGame(game.id)}
-                  style={{
-                    marginTop: "10px",
-                    backgroundColor: "#dc2626",
-                    color: "white",
-                    border: "none",
-                    padding: "10px 16px",
-                    borderRadius: "8px",
-                    cursor: "pointer",
-                    fontWeight: "bold",
-                    display: "block"
-                  }}
-                >
-                  Close Game
-                </button>
-              </div>
+  <div style={styles.buttonRow}>
+    <Link href={`/game/${game.id}`}>
+      <button style={styles.manageButton}>
+        Manage Game
+      </button>
+    </Link>
+
+    <button
+      onClick={() => closeGame(game.id)}
+      style={styles.closeButton}
+    >
+      Close Game
+    </button>
+  </div>
+</div>   
             ))}
           </div>
         )}
       </div>
     </div>
   )
+}
+const styles = {
+  gameCard: {
+    background: "rgba(255,255,255,0.08)",
+    backdropFilter: "blur(10px)",
+    border: "1px solid rgba(255,255,255,0.12)",
+    borderRadius: "24px",
+    padding: "24px",
+    color: "white"
+  },
+
+  gameCardTop: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: "20px"
+  },
+
+  gameArena: {
+    fontSize: "28px",
+    marginBottom: "8px"
+  },
+
+  gameDate: {
+    opacity: 0.8
+  },
+
+  skillBadge: {
+    background: "#facc15",
+    color: "#07152b",
+    padding: "8px 14px",
+    borderRadius: "999px",
+    fontWeight: "bold"
+  },
+
+  teamMatchup: {
+    fontSize: "22px",
+    fontWeight: "700",
+    marginBottom: "20px"
+  },
+
+  gameStatsRow: {
+    display: "flex",
+    gap: "12px",
+    marginBottom: "24px"
+  },
+
+  statPill: {
+    background: "rgba(255,255,255,0.12)",
+    padding: "10px 16px",
+    borderRadius: "999px"
+  },
+
+  buttonRow: {
+    display: "flex",
+    gap: "12px"
+  },
+
+  manageButton: {
+    backgroundColor: "#facc15",
+    color: "black",
+    border: "none",
+    padding: "12px 18px",
+    borderRadius: "10px",
+    cursor: "pointer",
+    fontWeight: "bold"
+  },
+
+  closeButton: {
+    backgroundColor: "#dc2626",
+    color: "white",
+    border: "none",
+    padding: "12px 18px",
+    borderRadius: "10px",
+    cursor: "pointer",
+    fontWeight: "bold"
+  }
 }
