@@ -28,7 +28,7 @@ export default function GameDetails() {
     1 - goalies.length
 
   const isOrganizer =
-    game?.organizer_id === game?.organizer_email
+    const isOwner = true
 
   useEffect(() => {
     checkUser()
