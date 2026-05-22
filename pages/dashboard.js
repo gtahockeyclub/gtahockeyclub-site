@@ -212,7 +212,7 @@ export default function Dashboard() {
           >
             {games.map((game) => (
               <div
-            <div
+           
   key={game.id}
   style={styles.gameCard}
 >
