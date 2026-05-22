@@ -71,7 +71,7 @@ const handlePostGame = async () => {
     alert('Please select arena, date, time, cost, and skill level.')
     return
   }
-
+console.log(user)
   const { error } = await supabase.from('games').insert([
     {
       arena: arenaDetails.name,
