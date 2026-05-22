@@ -444,6 +444,7 @@ const arenaDetails = getArenaDetails(game?.arena)
           game={game}
           signups={signups}
           loadGame={loadGame}
+          isOrganizer={true}
         />
 
         <div
