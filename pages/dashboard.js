@@ -90,7 +90,7 @@ console.log(user)
 
   if (error) {
     console.log("SUPABASE ERROR:", error)
-    alert(JSON.stringify(error))
+    alert(JSON.stringify(error, null, 2))
   } else {
     alert('Game posted!')
 
