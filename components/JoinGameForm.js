@@ -310,8 +310,8 @@ setConfirmation({
     </strong>
   </>
 )}
-      </div>
-)}
+
 </>
+)}
   )
 }
