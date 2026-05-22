@@ -210,6 +210,13 @@ const arenaDetails = getArenaDetails(game?.arena)
     <div
       style={{
         minHeight: "100vh",
+         background:
+          "linear-gradient(135deg, #0f172a 0%, #111827 50%, #1e293b 100%)",
+        padding: "40px",
+        color: "white",
+        fontFamily: "Arial"
+      }}
+    >
          <div style={{ marginBottom: "30px" }}>
   <a
     href="/dashboard"
@@ -223,13 +230,7 @@ const arenaDetails = getArenaDetails(game?.arena)
     ← Back to Dashboard
   </a>
 </div>
-        background:
-          "linear-gradient(135deg, #0f172a 0%, #111827 50%, #1e293b 100%)",
-        padding: "40px",
-        color: "white",
-        fontFamily: "Arial"
-      }}
-    >
+       
       <h1
         style={{
           fontSize: "42px",
