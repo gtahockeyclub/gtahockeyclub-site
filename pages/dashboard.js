@@ -191,20 +191,111 @@ const handlePostGame = async () => {
           <p style={{ color: "#6b7280", marginBottom: "20px" }}>
             Create a new pickup hockey game.
           </p>
+<button
+  onClick={() => setShowPostForm(!showPostForm)}
+  style={{
+    background: "#facc15",
+    color: "#111827",
+    border: "none",
+    padding: "12px 20px",
+    borderRadius: "10px",
+    fontWeight: "bold",
+    cursor: "pointer",
+    marginTop: "15px"
+  }}
+>
+  {showPostForm ? "Close Form" : "Post New Game"}
+</button>
 
-          <button
-            style={{
-              backgroundColor: "#facc15",
-              color: "black",
-              border: "none",
-              padding: "10px 16px",
-              borderRadius: "8px",
-              cursor: "pointer",
-              fontWeight: "bold"
-            }}
-          >
-            Create Game
-          </button>
+{showPostForm && (
+  <div style={{ marginTop: "20px" }}>
+
+    <select
+      value={selectedArena}
+      onChange={(e) => setSelectedArena(e.target.value)}
+      style={{
+        width: "100%",
+        padding: "10px",
+        marginBottom: "10px"
+      }}
+    >
+      <option value="">Select Arena</option>
+
+      {arenas.map((arena) => (
+        <option key={arena.id} value={arena.id}>
+          {arena.name}
+        </option>
+      ))}
+    </select>
+
+    <input
+      type="date"
+      value={date}
+      onChange={(e) => setDate(e.target.value)}
+      style={{
+        width: "100%",
+        padding: "10px",
+        marginBottom: "10px"
+      }}
+    />
+
+    <input
+      type="time"
+      value={time}
+      onChange={(e) => setTime(e.target.value)}
+      style={{
+        width: "100%",
+        padding: "10px",
+        marginBottom: "10px"
+      }}
+    />
+
+    <input
+      type="number"
+      placeholder="Cost"
+      value={cost}
+      onChange={(e) => setCost(e.target.value)}
+      style={{
+        width: "100%",
+        padding: "10px",
+        marginBottom: "10px"
+      }}
+    />
+
+    <select
+      value={level}
+      onChange={(e) => setLevel(e.target.value)}
+      style={{
+        width: "100%",
+        padding: "10px",
+        marginBottom: "10px"
+      }}
+    >
+      <option value="">Select Skill Level</option>
+      <option value="Beginner">Beginner</option>
+      <option value="Low-Mid">Low-Mid</option>
+      <option value="Intermediate">Intermediate</option>
+      <option value="Advanced">Advanced</option>
+    </select>
+
+    <button
+      onClick={handlePostGame}
+      style={{
+        background: "#22c55e",
+        color: "white",
+        border: "none",
+        padding: "12px 20px",
+        borderRadius: "10px",
+        fontWeight: "bold",
+        cursor: "pointer",
+        width: "100%"
+      }}
+    >
+      Post Game
+    </button>
+
+  </div>
+)}
         </div>
 
         <div
