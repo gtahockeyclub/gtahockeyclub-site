@@ -277,20 +277,6 @@ const handlePostGame = async () => {
       <option value="Intermediate">Intermediate</option>
       <option value="Advanced">Advanced</option>
     </select>
-
-    <button
-      onClick={handlePostGame}
-      style={{
-        background: "#22c55e",
-        color: "white",
-        border: "none",
-        padding: "12px 20px",
-        borderRadius: "10px",
-        fontWeight: "bold",
-        cursor: "pointer",
-        width: "100%"
-      }}
-    >
 <input
   type="number"
   placeholder="Max Players"
@@ -350,8 +336,22 @@ const handlePostGame = async () => {
     marginBottom: "10px"
   }}
 />
-      Post Game
-    </button>
+
+<button
+  onClick={handlePostGame}
+  style={{
+    background: "#22c55e",
+    color: "white",
+    border: "none",
+    padding: "12px 20px",
+    borderRadius: "10px",
+    fontWeight: "bold",
+    cursor: "pointer",
+    width: "100%"
+  }}
+>
+  Post Game
+</button>
 
   </div>
 )}
