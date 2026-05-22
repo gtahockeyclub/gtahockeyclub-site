@@ -306,13 +306,12 @@ setConfirmation({
 
         <strong>
           {confirmation.organizerEmail}
-            </strong>
+        </strong>
+      </>
+    )}
   </>
 )}
 
-</>
-)}
-</>
 </div>
 )
 }
