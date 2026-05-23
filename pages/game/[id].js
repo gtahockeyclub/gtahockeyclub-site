@@ -228,8 +228,7 @@ const arenaDetails = getArenaDetails(game?.arena)
 >
   ← Back to Games
 </a>
-  {isOrganizer ? "← Back to Dashboard" : "← Back to Games"}
-</a>
+
 </div>
        
       <h1
