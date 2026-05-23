@@ -823,7 +823,7 @@ const error = response.error
 {user && (
   <button
     style={styles.dashboardButton}
-    onClick={() => router.push('/dashboard')}
+    onClick={() => router.push('/find-games')}
   >
     Dashboard
   </button>
