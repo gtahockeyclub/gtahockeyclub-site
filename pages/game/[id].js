@@ -218,16 +218,16 @@ const arenaDetails = getArenaDetails(game?.arena)
     >
          <div style={{ marginBottom: "30px" }}>
   <a
-    href="/find-games"
-    style={{
-      color: "#facc15",
-      textDecoration: "none",
-      fontWeight: "bold",
-      fontSize: "18px"
-    }}
-  >
-    ← Back to Games
-  </a>
+  href={isOrganizer ? "/dashboard" : "/find-games"}
+  style={{
+    color: "#facc15",
+    textDecoration: "none",
+    fontWeight: "bold",
+    fontSize: "18px"
+  }}
+>
+  {isOrganizer ? "← Back to Dashboard" : "← Back to Games"}
+</a>
 </div>
        
       <h1
