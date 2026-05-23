@@ -218,7 +218,7 @@ const arenaDetails = getArenaDetails(game?.arena)
     >
          <div style={{ marginBottom: "30px" }}>
   <a
-    href="/dashboard"
+    href="/find-games"
     style={{
       color: "#facc15",
       textDecoration: "none",
@@ -226,7 +226,7 @@ const arenaDetails = getArenaDetails(game?.arena)
       fontSize: "18px"
     }}
   >
-    ← Back to Dashboard
+    ← Back to Games
   </a>
 </div>
        
