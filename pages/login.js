@@ -55,13 +55,17 @@ if (!existingProfile) {
       return
     }
 
-    const { data: profile } = await supabase
+   const { data: profileData } = await supabase
   .from("profiles")
   .select("role")
   .eq("id", data.user.id)
   .single()
 
-if (profile?.role === "organizer") {
+if (profileData?.role === "organizer") {
+  router.push("/dashboard")
+} else {
+  router.push("/")
+}
   router.push("/dashboard")
 } else {
   router.push("/")
