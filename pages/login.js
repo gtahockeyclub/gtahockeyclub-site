@@ -56,11 +56,13 @@ const { data: profileData } = await supabase
   .eq("id", data.user.id)
   .single()
 console.log("PROFILE DATA:", profileData)
+alert(JSON.stringify(profileData))
+
 if (profileData?.role === "organizer") {
   router.push("/dashboard")
 } else {
   router.push("/")
-} 
+}
   }
 
   return (
