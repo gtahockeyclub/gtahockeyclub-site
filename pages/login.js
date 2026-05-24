@@ -55,7 +55,7 @@ const { data: profileData } = await supabase
   .select("role")
   .eq("id", data.user.id)
   .single()
-
+console.log("PROFILE DATA:", profileData)
 if (profileData?.role === "organizer") {
   router.push("/dashboard")
 } else {
