@@ -17,11 +17,37 @@ export default function LoginPage() {
 
     setLoading(true)
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    })
+   const {
+  data,
+  error
+} = await supabase.auth.signInWithPassword({
+  email,
+  password
+})
 
+if (error) {
+  setLoading(false)
+  alert(error.message)
+  return
+}
+
+const user = data.user
+
+const { data: existingProfile } = await supabase
+  .from("profiles")
+  .select("id")
+  .eq("id", user.id)
+  .single()
+
+if (!existingProfile) {
+  await supabase.from("profiles").insert([
+    {
+      id: user.id,
+      email: user.email,
+      role: "player"
+    }
+  ])
+}
     setLoading(false)
 
     if (error) {
