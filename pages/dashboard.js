@@ -64,6 +64,11 @@ async function loadArenas() {
     }
   }
 const handlePostGame = async () => {
+ 
+  if (!user) {
+  alert("User not loaded yet. Please wait a moment and try again.")
+  return
+}
 
   const arenaDetails = arenas.find((a) => a.id === selectedArena)
 
