@@ -48,14 +48,9 @@ if (!existingProfile) {
     }
   ])
 }
-    setLoading(false)
+ setLoading(false)
 
-    if (error) {
-      alert(error.message)
-      return
-    }
-
-   const { data: profileData } = await supabase
+const { data: profileData } = await supabase
   .from("profiles")
   .select("role")
   .eq("id", data.user.id)
@@ -65,11 +60,7 @@ if (profileData?.role === "organizer") {
   router.push("/dashboard")
 } else {
   router.push("/")
-}
-  router.push("/dashboard")
-} else {
-  router.push("/")
-}
+} 
   }
 
   return (
