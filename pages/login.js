@@ -88,7 +88,7 @@ if (!existingProfile) {
             color: "#07152b"
           }}
         >
-          Organizer Login
+          Account Login
         </h1>
 
         <input
