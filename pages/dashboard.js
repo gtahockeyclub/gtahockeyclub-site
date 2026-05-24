@@ -23,10 +23,22 @@ const [arenas, setArenas] = useState([])
 
 useEffect(() => {
 
-  supabase.auth.getUser().then(({ data }) => {
-    setUser(data.user)
-  })
+ supabase.auth.getUser().then(async ({ data }) => {
 
+  setUser(data.user)
+
+  if (data.user) {
+
+    const { data: profileData } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", data.user.id)
+      .single()
+
+    setProfile(profileData)
+  }
+
+})
   loadArenas()
   loadGames()
 
