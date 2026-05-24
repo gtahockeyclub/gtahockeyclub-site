@@ -36,6 +36,9 @@ useEffect(() => {
       .single()
 
     setProfile(profileData)
+    if (profileData?.role !== "organizer") {
+      window.location.href = "/"
+}
   }
 
 })
