@@ -138,6 +138,26 @@ if (!existingProfile) {
         >
           {loading ? "Logging In..." : "Login"}
         </button>
+          
+        <p
+          style={{
+    marginTop: "20px",
+    textAlign: "center",
+    color: "#475569"
+  }}
+>
+  Don’t have an account?{" "}
+  <a
+    href="/signup"
+    style={{
+      color: "#2563eb",
+      fontWeight: "bold",
+      textDecoration: "none"
+    }}
+  >
+    Create Account
+  </a>
+</p>
       </div>
     </div>
   )
