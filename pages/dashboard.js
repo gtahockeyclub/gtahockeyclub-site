@@ -5,6 +5,7 @@ import { supabase } from "../lib/supabase"
 export default function Dashboard() {
   const [games, setGames] = useState([])
   const [user, setUser] = useState(null)
+  const [profile, setProfile] = useState(null)
   const [showPostForm, setShowPostForm] = useState(false)
 
 const [selectedArena, setSelectedArena] = useState('')
