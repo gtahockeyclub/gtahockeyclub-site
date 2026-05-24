@@ -27,7 +27,10 @@ export default function GameDetails() {
   const goalieSpotsLeft =
     1 - goalies.length
 
-  const isOrganizer = user?.id === game?.organizer_id
+  const isOrganizer =
+  user &&
+  game &&
+  user.id === game.organizer_id
 
   useEffect(() => {
     checkUser()
@@ -217,8 +220,8 @@ const arenaDetails = getArenaDetails(game?.arena)
       }}
     >
          <div style={{ marginBottom: "30px" }}>
- <a
-  href="/find-games"
+<a
+  href={isOrganizer ? "/dashboard" : "/find-games"}
   style={{
     color: "#facc15",
     textDecoration: "none",
@@ -226,7 +229,7 @@ const arenaDetails = getArenaDetails(game?.arena)
     fontSize: "18px"
   }}
 >
-  ← Back to Games
+  {isOrganizer ? "← Back to Dashboard" : "← Back to Games"}
 </a>
 
 </div>
