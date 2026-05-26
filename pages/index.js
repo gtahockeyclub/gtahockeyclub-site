@@ -1412,14 +1412,16 @@ hero: {
   position: 'relative',
   display: 'flex',
   alignItems: 'center',
-  minHeight: '620px',
-  padding: '70px 100px 50px',
+  justifyContent: 'space-between',
+  minHeight: '720px',
+  padding: '60px 80px',
   margin: '0 auto',
   backgroundImage: 'url("/hero-hockey-bg.png.png")',
   backgroundSize: 'cover',
   backgroundPosition: 'center right',
   backgroundRepeat: 'no-repeat',
-  borderBottom: '1px solid #e5e7eb'
+  borderBottom: '1px solid #e5e7eb',
+  overflow: 'hidden'
 },
 
 heroMobile: {
@@ -1429,17 +1431,20 @@ heroMobile: {
 },
 
 heroLeft: {
+  maxWidth: '620px',
+  zIndex: 2,
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center'
 },
 
 heroTitle: {
-  fontSize: '88px',
-  lineHeight: '0.92',
+  fontSize: '96px',
+  lineHeight: '0.88',
   margin: 0,
   fontWeight: '900',
-  letterSpacing: '-2px'
+  letterSpacing: '-3px',
+  textTransform: 'uppercase'
 },
 
 heroTitleMobile: {
