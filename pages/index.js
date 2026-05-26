@@ -1097,10 +1097,9 @@ const error = response.error
       </section>
     </div>
 
-    </div>
-  )
-  }
-  </div>
+  
+      </div>
+
   </>
 )
 }
