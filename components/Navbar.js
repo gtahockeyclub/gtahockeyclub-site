@@ -38,178 +38,169 @@ export default function Navbar() {
     window.location.href = "/"
   }
 
-return (
-  <nav
-    style={{
-      position: "sticky",
-      top: 0,
-      zIndex: 1000,
-      background: "white",
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      padding: "18px 40px",
-      borderBottom: "1px solid #e5e7eb",
-      boxShadow: "0 2px 8px rgba(0,0,0,0.04)"
-    }}
-  >
-
-    <div
+  return (
+    <nav
       style={{
+        position: "sticky",
+        top: 0,
+        zIndex: 1000,
+        background: "white",
         display: "flex",
+        justifyContent: "space-between",
         alignItems: "center",
-        gap: "14px"
+        padding: "18px 40px",
+        borderBottom: "1px solid #e5e7eb",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.04)"
       }}
     >
 
-      <img
-        src="/gtahockey-logo-clean.png.png"
-        alt="GTA Hockey Club"
+      <div
         style={{
-          width: "70px",
-          height: "70px",
-          objectFit: "contain"
+          display: "flex",
+          alignItems: "center",
+          gap: "14px"
         }}
-      />
+      >
 
-      <div>
-
-        <h2
+        <img
+          src="/gtahockey-logo-clean.png.png"
+          alt="GTA Hockey Club"
           style={{
-            margin: 0,
-            fontSize: "28px",
-            fontWeight: "900",
-            letterSpacing: "1px"
+            width: "70px",
+            height: "70px",
+            objectFit: "contain"
           }}
-        >
-          <span style={{ color: "#0B1F3A" }}>GTA </span>
-          <span style={{ color: "#D62828" }}>HOCKEY </span>
-          <span style={{ color: "#0B1F3A" }}>CLUB</span>
-        </h2>
+        />
 
-        <p
-          style={{
-            margin: 0,
-            color: "#667085",
-            fontSize: "12px",
-            fontWeight: "bold",
-            letterSpacing: "2px"
-          }}
-        >
-          POST. CONNECT. PLAY.
-        </p>
+        <div>
+
+          <h2
+            style={{
+              margin: 0,
+              fontSize: "28px",
+              fontWeight: "900",
+              letterSpacing: "1px"
+            }}
+          >
+            <span style={{ color: "#0B1F3A" }}>GTA </span>
+            <span style={{ color: "#D62828" }}>HOCKEY </span>
+            <span style={{ color: "#0B1F3A" }}>CLUB</span>
+          </h2>
+
+          <p
+            style={{
+              margin: 0,
+              color: "#667085",
+              fontSize: "12px",
+              fontWeight: "bold",
+              letterSpacing: "2px"
+            }}
+          >
+            POST. CONNECT. PLAY.
+          </p>
+
+        </div>
 
       </div>
 
-    </div>
+      <div
+        style={{
+          display: "flex",
+          gap: "28px",
+          alignItems: "center"
+        }}
+      >
 
-    <div
-      style={{
-        display: "flex",
-        gap: "28px",
-        alignItems: "center"
-      }}
-    >
-
-      <Link href="/" style={styles.link}>
-        Home
-      </Link>
-
-      <Link href="/find-games" style={styles.link}>
-        Find Games
-      </Link>
-
-      <Link href="/about" style={styles.link}>
-        About
-      </Link>
-
-      {profile?.role === "organizer" && (
-        <Link href="/dashboard" style={styles.link}>
-          Dashboard
+        <Link href="/" style={styles.link}>
+          Home
         </Link>
-      )}
 
-    </div>
+        <Link href="/find-games" style={styles.link}>
+          Find Games
+        </Link>
 
-    <div
-      style={{
-        display: "flex",
-        gap: "10px",
-        alignItems: "center"
-      }}
-    >
+        <Link href="/about" style={styles.link}>
+          About
+        </Link>
 
-      {!user && (
-        <Link href="/login">
+        {profile?.role === "organizer" && (
+          <Link href="/dashboard" style={styles.link}>
+            Dashboard
+          </Link>
+        )}
+
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          gap: "10px",
+          alignItems: "center"
+        }}
+      >
+
+        {!user && (
+          <Link href="/login">
+            <button
+              style={{
+                background: "white",
+                border: "2px solid #07152b",
+                color: "#07152b",
+                padding: "10px 18px",
+                borderRadius: "8px",
+                fontWeight: "bold",
+                cursor: "pointer"
+              }}
+            >
+              Login
+            </button>
+          </Link>
+        )}
+
+        {user && (
           <button
+            onClick={handleLogout}
             style={{
-              background: "white",
-              border: "2px solid #07152b",
-              color: "#07152b",
+              background: "#dc2626",
+              color: "white",
+              border: "none",
               padding: "10px 18px",
               borderRadius: "8px",
               fontWeight: "bold",
               cursor: "pointer"
             }}
           >
-            Login
+            Logout
           </button>
-        </Link>
-      )}
+        )}
 
-      {user && (
         <button
-          onClick={handleLogout}
           style={{
-            background: "#dc2626",
+            background: "#ef4444",
             color: "white",
             border: "none",
-            padding: "10px 18px",
-            borderRadius: "8px",
+            padding: "12px 22px",
+            borderRadius: "10px",
             fontWeight: "bold",
             cursor: "pointer"
           }}
         >
-          Logout
+          Join Community
         </button>
-      )}
 
-      <button
-        style={{
-          background: "#ef4444",
-          color: "white",
-          border: "none",
-          padding: "12px 22px",
-          borderRadius: "10px",
-          fontWeight: "bold",
-          cursor: "pointer"
-        }}
-      >
-        Join Community
-      </button>
+      </div>
 
-    </div>
-
-  </nav>
-) 
+    </nav>
+  )
 }
 
 const styles = {
 
   link: {
-    color: "white",
+    color: "#07152b",
     textDecoration: "none",
-    fontWeight: "600",
+    fontWeight: "bold",
     fontSize: "15px"
-  },
-
-  logoutButton: {
-    background: "#dc2626",
-    color: "white",
-    border: "none",
-    padding: "10px 14px",
-    borderRadius: "8px",
-    cursor: "pointer",
-    fontWeight: "bold"
   }
+
 }
