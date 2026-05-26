@@ -2,6 +2,7 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import GameCard from "../components/GameCard"
+import Navbar from "../components/Navbar"
 
 const ORGANIZER_CODE = 'GTA2026'
 
