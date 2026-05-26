@@ -767,8 +767,11 @@ const error = response.error
     )
   }
 
-  return (
-   <div style={styles.page}>
+ return (
+  <>
+    <Navbar />
+
+    <div style={styles.page}>
 
   <nav style={styles.topNav}>
     <div style={styles.logoSection}>
@@ -1097,7 +1100,10 @@ const error = response.error
     </div>
   )
   }
-
+  </div>
+  </>
+)
+}
 const styles = {
   page: { fontFamily: 'Arial, sans-serif', margin: 0, background: '#f3f5f8', color: '#07152b' },
   bannerWrap: { width: '100%', backgroundColor: '#07152b', display: 'flex', justifyContent: 'center' },
@@ -1594,3 +1600,4 @@ heroImage: {
   objectFit: 'cover'
 },
 }
+  
