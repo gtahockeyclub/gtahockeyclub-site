@@ -1038,9 +1038,28 @@ const error = response.error
 )
 }
 const styles = {
-  page: { fontFamily: 'Arial, sans-serif', margin: 0, background: '#f3f5f8', color: '#07152b' },
-  bannerWrap: { width: '100%', backgroundColor: '#07152b', display: 'flex', justifyContent: 'center' },
-  banner: { width: '100%', maxWidth: '1200px', display: 'block' },
+
+  page: {
+    fontFamily: 'Arial, sans-serif',
+    margin: 0,
+    background: '#f3f5f8',
+    color: '#07152b',
+    width: '100%',
+    overflowX: 'hidden'
+  },
+
+  bannerWrap: {
+    width: '100%',
+    backgroundColor: '#07152b',
+    display: 'flex',
+    justifyContent: 'center'
+  },
+
+  banner: {
+    width: '100%',
+    maxWidth: '1200px',
+    display: 'block'
+  },
 
   intro: { background: '#07152b', color: 'white', textAlign: 'center', padding: '34px 20px' },
   introMobile: { background: '#07152b', color: 'white', textAlign: 'center', padding: '24px 14px' },
@@ -1431,12 +1450,14 @@ heroMobile: {
   alignItems: 'flex-start',
   padding: '40px 22px 50px',
   minHeight: 'auto',
+  width: '100%',
+  boxSizing: 'border-box',
+  overflow: 'hidden',
   backgroundImage: 'url("/hero-hockey-bg.png.png")',
   backgroundSize: 'cover',
   backgroundPosition: 'center',
   backgroundRepeat: 'no-repeat'
 },
-
 heroLeft: {
   maxWidth: '620px',
   zIndex: 2,
