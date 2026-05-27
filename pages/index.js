@@ -6,24 +6,24 @@ export default function Home() {
 
   const [games, setGames] = useState([])
 
- useEffect(() => {
+  useEffect(() => {
 
-  async function loadGames() {
+    async function loadGames() {
 
-    const { data, error } = await supabase
-      .from("games")
-      .select("*")
-      .eq("is_active", true)
-      .order("game_date", { ascending: true })
+      const { data, error } = await supabase
+        .from("games")
+        .select("*")
+        .eq("is_active", true)
+        .order("game_date", { ascending: true })
 
-    if (!error && data) {
-      setGames(data)
+      if (!error && data) {
+        setGames(data)
+      }
     }
-  }
 
-  loadGames()
+    loadGames()
 
-}, [])
+  }, [])
 
   return (
     <>
@@ -124,56 +124,39 @@ export default function Home() {
           }}
         >
 
-          <div style={styles.gameCard}>
+          {games.map((game) => (
 
-            <div style={styles.skillBadge}>
-              Intermediate
+            <div
+              key={game.id}
+              style={styles.gameCard}
+            >
+
+              <div style={styles.skillBadge}>
+                {game.level}
+              </div>
+
+              <h3 style={styles.gameArena}>
+                {game.arena}
+              </h3>
+
+              <p style={styles.gameInfo}>
+                {game.game_date} • {game.game_time}
+              </p>
+
+              <p style={styles.gameInfo}>
+                ${game.cost}
+              </p>
+
+              <button
+                style={styles.joinButton}
+                onClick={() => alert("Live signup system reconnecting next")}
+              >
+                Join Game
+              </button>
+
             </div>
 
-            <h3 style={styles.gameArena}>
-              Chesswood Arena
-            </h3>
-
-            <p style={styles.gameInfo}>
-              Friday • 9:00 PM
-            </p>
-
-            <p style={styles.gameInfo}>
-              12 / 16 Skaters
-            </p>
-
-            <button
-  style={styles.joinButton}
-  onClick={() => alert("Game signup system coming next")}
->
-  Join Game
-</button>
-
-          </div>
-
-          <div style={styles.gameCard}>
-
-            <div style={styles.skillBadge}>
-              Beginner
-            </div>
-
-            <h3 style={styles.gameArena}>
-              Scotiabank Pond
-            </h3>
-
-            <p style={styles.gameInfo}>
-              Saturday • 7:30 PM
-            </p>
-
-            <p style={styles.gameInfo}>
-              10 / 16 Skaters
-            </p>
-
-            <button style={styles.joinButton}>
-              Join Game
-            </button>
-
-          </div>
+          ))}
 
         </div>
 
