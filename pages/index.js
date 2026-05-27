@@ -10,7 +10,7 @@ export default function Home() {
 
   return (
   <>
-    <Navbar />
+    <div>Navbar Test</div>
 
     <div style={{
       padding: "40px",
