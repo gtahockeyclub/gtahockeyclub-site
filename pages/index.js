@@ -1,1504 +1,385 @@
 import { useRouter } from "next/router"
-import { useEffect, useState } from 'react'
-import { supabase } from '../lib/supabase'
-import GameCard from "../components/GameCard"
+import { useEffect, useState } from "react"
+import { supabase } from "../lib/supabase"
 import Navbar from "../components/Navbar"
 
-const ORGANIZER_CODE = 'GTA2026'
-
 export default function Home() {
+
   const router = useRouter()
+
   const [games, setGames] = useState([])
-  const [arenas, setArenas] = useState([])
-  const [signups, setSignups] = useState([])
-  const [waitlist, setWaitlist] = useState([])
-  const [showPostForm, setShowPostForm] = useState(false)
-  const [unlockedGames, setUnlockedGames] = useState({})
-  const [confirmation, setConfirmation] = useState(null)
-  const [editingGameId, setEditingGameId] = useState(null)
-  const [editData, setEditData] = useState({})
   const [isMobile, setIsMobile] = useState(false)
 
-const [user, setUser] = useState(null)
-const [authEmail, setAuthEmail] = useState('')
-const [authPassword, setAuthPassword] = useState('')
-
-const [name, setName] = useState('')
-   const [phone, setPhone] = useState('')
-  const [email, setEmail] = useState('')
-  const [playerType, setPlayerType] = useState('Skater')
-  const [team, setTeam] = useState('Team 1')
-
-  const [manualName, setManualName] = useState('')
-  const [manualPhone, setManualPhone] = useState('')
-  const [manualEmail, setManualEmail] = useState('')
-  const [manualPlayerType, setManualPlayerType] = useState('Skater')
-  const [manualTeam, setManualTeam] = useState('Team 1')
-  const [manualCode, setManualCode] = useState('')
-
-  const [selectedArena, setSelectedArena] = useState('')
-  const [date, setDate] = useState('')
-  const [time, setTime] = useState('')
-  const [cost, setCost] = useState('')
-  const [level, setLevel] = useState('')
-  const [maxPlayers, setMaxPlayers] = useState(20)
-  const [team1Name, setTeam1Name] = useState('Team 1')
-  const [team2Name, setTeam2Name] = useState('Team 2')
-  const [organizer, setOrganizer] = useState('')
-  const [organizerEmail, setOrganizerEmail] = useState('')
-  const [organizerCode, setOrganizerCode] = useState('')
-
-  const loadArenas = async () => {
-    const { data } = await supabase
-      .from('arenas')
-      .select('*')
-      .eq('is_active', true)
-      .order('name', { ascending: true })
-
-    setArenas(data || [])
-  }
-
-  const loadGames = async () => {
- const now = new Date()
-
-const today =
-  now.getFullYear() +
-  '-' +
-  String(now.getMonth() + 1).padStart(2, '0') +
-  '-' +
-  String(now.getDate()).padStart(2, '0')
-
-  const { data } = await supabase
-  .from('games')
-  .select('*')
-  .eq('is_active', true)
-  .order('game_date', { ascending: true })
-
-    setGames(data || [])
-  }
-
-  const loadSignups = async () => {
-    const { data } = await supabase
-      .from('game_signups')
-      .select('*')
-      .order('created_at', { ascending: true })
-
-    setSignups(data || [])
-  }
-
-  const loadWaitlist = async () => {
-    const { data } = await supabase
-      .from('game_waitlist')
-      .select('*')
-      .order('created_at', { ascending: true })
-
-    setWaitlist(data || [])
-  }
-
   useEffect(() => {
-    loadArenas()
+
+    const loadGames = async () => {
+
+      const { data } = await supabase
+        .from("games")
+        .select("*")
+        .eq("is_active", true)
+        .order("game_date", { ascending: true })
+
+      setGames(data || [])
+    }
+
     loadGames()
-    loadSignups()
-    loadWaitlist()
-    
-supabase.auth.getUser().then(({ data }) => {
-  setUser(data.user)
-})
-const checkMobile = () => {
+
+    const checkMobile = () => {
       setIsMobile(window.innerWidth <= 768)
     }
 
     checkMobile()
-    window.addEventListener('resize', checkMobile)
 
-    return () => window.removeEventListener('resize', checkMobile)
+    window.addEventListener("resize", checkMobile)
+
+    return () => {
+      window.removeEventListener("resize", checkMobile)
+    }
+
   }, [])
 
-  const refreshGameData = () => {
-    loadGames()
-    loadSignups()
-    loadWaitlist()
-  }
-const handleLogin = async () => {
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: authEmail,
-    password: authPassword,
-  })
+  return (
+    <>
 
-  if (error) {
-    alert(error.message)
-  } else {
-    setUser(data.user)
-    alert('Logged in successfully.')
-  }
-}
+      <Navbar />
 
-const handleLogout = async () => {
-  await supabase.auth.signOut()
-  setUser(null)
-  alert('Logged out.')
-}
-  const unlockOrganizerTools = (gameId) => {
-    const code = prompt('Enter organizer code:')
+      <div style={styles.page}>
 
-    if (code !== ORGANIZER_CODE) {
-      alert('Invalid organizer code.')
-      return
-    }
+        <div style={styles.heroWrapper}>
 
-    setUnlockedGames({
-      ...unlockedGames,
-      [gameId]: true,
-    })
-  }
+          <section style={isMobile ? styles.heroMobile : styles.hero}>
 
-  const getArenaDetails = (arenaName) => {
-    return arenas.find((a) => a.name === arenaName)
-  }
+            <div style={styles.heroLeft}>
 
-  const getAvailableGoalieTeam = (roster) => {
-    const team1Goalie = roster.some(
-      (p) => p.team === 'Team 1' && p.player_type === 'Goalie'
-    )
+              <h1 style={isMobile ? styles.heroTitleMobile : styles.heroTitle}>
+                <span style={{ color: "#D62828" }}>POST.</span>
+                <br />
+                <span style={{ color: "#0B1F3A" }}>CONNECT.</span>
+                <br />
+                <span style={{ color: "#F4B400" }}>PLAY.</span>
+              </h1>
 
-    const team2Goalie = roster.some(
-      (p) => p.team === 'Team 2' && p.player_type === 'Goalie'
-    )
+              <h2 style={styles.heroSubtitle}>
+                ONE HOCKEY COMMUNITY ACROSS THE GTA
+              </h2>
 
-    if (!team1Goalie) return 'Team 1'
-    if (!team2Goalie) return 'Team 2'
-    return null
-  }
-
-  const getSmallerSkaterTeam = (roster) => {
-    const team1Skaters = roster.filter(
-      (p) => p.team === 'Team 1' && p.player_type !== 'Goalie'
-    ).length
-
-    const team2Skaters = roster.filter(
-      (p) => p.team === 'Team 2' && p.player_type !== 'Goalie'
-    ).length
-
-    return team1Skaters <= team2Skaters ? 'Team 1' : 'Team 2'
-  }
-
-  const createGoogleCalendarLink = (details) => {
-    if (!details) return '#'
-
-    const cleanDate = details.date || ''
-    const cleanTime = details.time || '19:00'
-    const start = new Date(`${cleanDate}T${cleanTime}`)
-    const end = new Date(start.getTime() + 90 * 60 * 1000)
-
-    const formatDate = (dateValue) => {
-      return dateValue
-        .toISOString()
-        .replace(/[-:]/g, '')
-        .split('.')[0] + 'Z'
-    }
-
-    const title = `GTA Hockey Club - ${details.arena}`
-    const calendarDetails = [
-      `Team: ${details.team}`,
-      `Cost: ${details.playerType === 'Goalie' ? 'Goalies free' : details.cost}`,
-      details.organizerEmail ? `E-transfer: ${details.organizerEmail}` : '',
-      `Posted through GTA Hockey Club`,
-    ]
-      .filter(Boolean)
-      .join('\n')
-
-    const params = new URLSearchParams({
-      action: 'TEMPLATE',
-      text: title,
-      dates: `${formatDate(start)}/${formatDate(end)}`,
-      details: calendarDetails,
-      location: details.arena,
-    })
-
-    return `https://calendar.google.com/calendar/render?${params.toString()}`
-  }
-
-  const copyPaymentDetails = async () => {
-    if (!confirmation) return
-
-    const paymentText = [
-      'GTA Hockey Club Payment Details',
-      `Player: ${confirmation.playerName}`,
-      `Amount: ${confirmation.cost}`,
-      `E-transfer to: ${confirmation.organizerEmail || 'Organizer email not provided'}`,
-      `Arena: ${confirmation.arena}`,
-      `Date: ${confirmation.date}`,
-      `Time: ${confirmation.time}`,
-      `Team: ${confirmation.team}`,
-      'Message: GTA Hockey Club payment',
-    ].join('\n')
-
-    try {
-      await navigator.clipboard.writeText(paymentText)
-      alert('Payment details copied.')
-    } catch (error) {
-      alert('Could not copy payment details. Please copy them manually.')
-      console.log(error)
-    }
-  }
-
-  const handleEditGame = (game) => {
-    setEditingGameId(game.id)
-    setEditData({
-      arena: game.arena,
-      game_date: game.game_date,
-      game_time: game.game_time,
-      cost: game.cost,
-      level: game.level,
-      max_players: game.max_players,
-      team1_name: game.team1_name,
-      team2_name: game.team2_name,
-    })
-  }
-
-  const handleCancelEdit = () => {
-    setEditingGameId(null)
-    setEditData({})
-  }
-
-  const handleUpdateGame = async () => {
-    if (!editingGameId) return
-
-    if (
-      !editData.arena ||
-      !editData.game_date ||
-      !editData.game_time ||
-      !editData.cost ||
-      !editData.level ||
-      !editData.max_players
-    ) {
-      alert('Please complete all edit fields.')
-      return
-    }
-
-    const { error } = await supabase
-      .from('games')
-      .update({
-        arena: editData.arena,
-        game_date: editData.game_date,
-        game_time: editData.game_time,
-        cost: editData.cost,
-        level: editData.level,
-        max_players: Number(editData.max_players),
-        team1_name: editData.team1_name || 'Team 1',
-        team2_name: editData.team2_name || 'Team 2',
-      })
-      .eq('id', editingGameId)
-
-    if (error) {
-      alert('Error updating game.')
-      console.log(error)
-    } else {
-      alert('Game updated.')
-      setEditingGameId(null)
-      setEditData({})
-      loadGames()
-    }
-  }
-
-  const handlePostGame = async () => {
-    
-    const arenaDetails = arenas.find((a) => a.id === selectedArena)
-
-    if (!arenaDetails || !date || !time || !cost || !level) {
-      alert('Please select arena, date, time, cost, and skill level.')
-      return
-    }
-
-    const { error } = await supabase.from('games').insert([
-      {
-        arena: arenaDetails.name,
-        game_date: date,
-        game_time: time,
-        cost,
-        level,
-        max_players: Number(maxPlayers),
-        team1_name: team1Name || 'Team 1',
-        team2_name: team2Name || 'Team 2',
-        organizer_name: organizer,
-        organizer_email: organizerEmail,
-        organizer_id: user.id,
-      },
-    ])
-
-    if (error) {
-      alert('Error posting game.')
-      console.log(error)
-    } else {
-      alert('Game posted!')
-      setSelectedArena('')
-      setDate('')
-      setTime('')
-      setCost('')
-      setLevel('')
-      setMaxPlayers(20)
-      setTeam1Name('Team 1')
-      setTeam2Name('Team 2')
-      setOrganizer('')
-      setOrganizerEmail('')
-      setOrganizerCode('')
-      setShowPostForm(false)
-      loadGames()
-    }
-  }
-
-  const handleCloseGame = async (gameId) => {
-    const confirmClose = confirm('Close this game and remove it from the public list?')
-    if (!confirmClose) return
-
-    const { error } = await supabase
-      .from('games')
-      .update({ is_active: false })
-      .eq('id', gameId)
-
-    if (error) {
-      alert('Error closing game.')
-      console.log(error)
-    } else {
-      alert('Game closed.')
-      refreshGameData()
-    }
-  }
-
-  const handleRemovePlayer = async (playerId, playerName) => {
-    const confirmRemove = confirm(`Remove ${playerName} from the roster?`)
-    if (!confirmRemove) return
-
-    const { error } = await supabase
-      .from('game_signups')
-      .delete()
-      .eq('id', playerId)
-
-    if (error) {
-      alert('Error removing player.')
-      console.log(error)
-    } else {
-      alert('Player removed.')
-      loadSignups()
-    }
-  }
-
-  const handleMovePlayer = async (player, gameRoster) => {
-    const newTeam = player.team === 'Team 1' ? 'Team 2' : 'Team 1'
-
-    if (player.player_type === 'Goalie') {
-      const goalieExistsOnNewTeam = gameRoster.some(
-        (p) =>
-          p.team === newTeam &&
-          p.player_type === 'Goalie' &&
-          p.id !== player.id
-      )
-
-      if (goalieExistsOnNewTeam) {
-        alert('Cannot move goalie. The other team already has a goalie.')
-        return
-      }
-    }
-
-    const { error } = await supabase
-      .from('game_signups')
-      .update({ team: newTeam })
-      .eq('id', player.id)
-
-    if (error) {
-      alert('Error moving player.')
-      console.log(error)
-    } else {
-      alert(`${player.player_name} moved.`)
-      loadSignups()
-    }
-  }
-
-  const handleTogglePaid = async (player) => {
-
-    if (player.player_type === 'Goalie') {
-      alert('Goalies do not pay for pickup hockey.')
-      return
-    }
-  
-   const response = await supabase
-  .from('game_signups')
-  .update({ paid: !player.paid })
-  .eq('id', player.id)
-  .select()
-
-const error = response.error
-    
-    if (error) {
-      alert(error.message)
-      console.log(error)
-    } else {
-      loadSignups()
-   }
-  }
-
-  const handleJoinWaitlist = async (game) => {
-    if (!name || !phone || !email) {
-      alert('Please enter your name, phone, and email.')
-      return
-    }
-
-    if (playerType === 'Goalie') {
-      alert('Waitlist is currently for skaters only.')
-      return
-    }
-
-    const cleanEmail = email.trim().toLowerCase()
-    const roster = signups.filter((p) => p.game_id === game.id)
-    const gameWaitlist = waitlist.filter((p) => p.game_id === game.id)
-
-    const alreadySignedUp = roster.some(
-      (p) => p.email && p.email.trim().toLowerCase() === cleanEmail
-    )
-
-    const alreadyWaitlisted = gameWaitlist.some(
-      (p) => p.email && p.email.trim().toLowerCase() === cleanEmail
-    )
-
-    if (alreadySignedUp) {
-      alert('You are already on the roster for this game.')
-      return
-    }
-
-    if (alreadyWaitlisted) {
-      alert('You are already on the waitlist for this game.')
-      return
-    }
-
-    const { error } = await supabase.from('game_waitlist').insert([
-      {
-        game_id: game.id,
-        game_name: game.arena + ' - ' + game.game_date + ' ' + game.game_time,
-        player_name: name,
-        phone,
-        email: cleanEmail,
-        player_type: 'Skater',
-      },
-    ])
-
-    if (error) {
-      alert('Error joining waitlist.')
-      console.log(error)
-    } else {
-      setConfirmation({
-        arena: game.arena,
-        date: game.game_date,
-        time: game.game_time,
-        team: 'Waitlist',
-        cost: game.cost,
-        playerType: 'Waitlist',
-        playerName: name,
-        organizerName: game.organizer_name,
-        organizerEmail: game.organizer_email,
-      })
-
-      alert('You have been added to the waitlist.')
-      setName('')
-      setPhone('')
-      setEmail('')
-      setPlayerType('Skater')
-      setTeam('Team 1')
-      loadWaitlist()
-    }
-  }
-
-  const handleMoveFirstWaitlistToRoster = async (game, gameRoster, gameWaitlist) => {
-    if (gameWaitlist.length === 0) {
-      alert('No players on the waitlist.')
-      return
-    }
-
-    const skaterRoster = gameRoster.filter((p) => p.player_type !== 'Goalie')
-
-    if (skaterRoster.length >= game.max_players) {
-      alert('This game is still full. Remove a skater first before moving someone from the waitlist.')
-      return
-    }
-
-    const firstWaitlistPlayer = gameWaitlist[0]
-    const assignedTeam = getSmallerSkaterTeam(gameRoster)
-
-    const confirmMove = confirm(
-      `Move ${firstWaitlistPlayer.player_name} from waitlist to ${assignedTeam === 'Team 1' ? game.team1_name : game.team2_name}?`
-    )
-
-    if (!confirmMove) return
-
-    const { error: insertError } = await supabase.from('game_signups').insert([
-      {
-        game_id: game.id,
-        game_name: game.arena + ' - ' + game.game_date + ' ' + game.game_time,
-        player_name: firstWaitlistPlayer.player_name,
-        phone: firstWaitlistPlayer.phone,
-        email: firstWaitlistPlayer.email,
-        player_type: 'Skater',
-        team: assignedTeam,
-        paid: false,
-      },
-    ])
-
-    if (insertError) {
-      alert('Error moving waitlist player to roster.')
-      console.log(insertError)
-      return
-    }
-
-    const { error: deleteError } = await supabase
-      .from('game_waitlist')
-      .delete()
-      .eq('id', firstWaitlistPlayer.id)
-
-    if (deleteError) {
-      alert('Player was added to roster, but could not be removed from waitlist. Please remove them manually.')
-      console.log(deleteError)
-    } else {
-      alert(`${firstWaitlistPlayer.player_name} was moved from waitlist to roster.`)
-    }
-
-    refreshGameData()
-  }
-
-  const handleJoin = async (game) => {
-    if (!name || !phone || !email) {
-      alert('Please enter your name, phone, and email.')
-      return
-    }
-
-    const cleanEmail = email.trim().toLowerCase()
-    const roster = signups.filter((p) => p.game_id === game.id)
-    const skaterRoster = roster.filter((p) => p.player_type !== 'Goalie')
-
-    const alreadySignedUp = roster.some(
-      (p) => p.email && p.email.trim().toLowerCase() === cleanEmail
-    )
-
-    if (alreadySignedUp) {
-      alert('You are already signed up for this game.')
-      return
-    }
-
-    if (playerType === 'Skater' && skaterRoster.length >= game.max_players) {
-      alert('This game is full for skaters. Please join the waitlist.')
-      return
-    }
-
-    let assignedTeam = getSmallerSkaterTeam(roster)
-
-    if (playerType === 'Goalie') {
-      assignedTeam = getAvailableGoalieTeam(roster)
-
-      if (!assignedTeam) {
-        alert('Both goalie spots are already filled.')
-        return
-      }
-    }
-
-    const { error } = await supabase.from('game_signups').insert([
-      {
-        game_id: game.id,
-        game_name: game.arena + ' - ' + game.game_date + ' ' + game.game_time,
-        player_name: name,
-        phone,
-        email: cleanEmail,
-        player_type: playerType,
-        team: assignedTeam,
-        paid: playerType === 'Goalie' ? true : false,
-      },
-    ])
-
-    if (error) {
-      alert(error.message)
-      console.log(error)
-    } else {
-      const displayTeam =
-        assignedTeam === 'Team 1' ? game.team1_name : game.team2_name
-
-      setConfirmation({
-        arena: game.arena,
-        date: game.game_date,
-        time: game.game_time,
-        team: displayTeam,
-        cost: game.cost,
-        playerType,
-        playerName: name,
-        organizerName: game.organizer_name,
-        organizerEmail: game.organizer_email,
-      })
-
-      setName('')
-      setPhone('')
-      setEmail('')
-      setPlayerType('Skater')
-      setTeam('Team 1')
-      loadSignups()
-    }
-  }
-
-  const handleManualAddPlayer = async (game) => {
-    const isOwner = game.organizer_id === user?.id
-  
-    if (!manualName) {
-      alert('Please enter player name.')
-      return
-    }
-
-    const roster = signups.filter((p) => p.game_id === game.id)
-    const skaterRoster = roster.filter((p) => p.player_type !== 'Goalie')
-
-    if (manualPlayerType === 'Skater' && skaterRoster.length >= game.max_players) {
-      alert('This game is full for skaters.')
-      return
-    }
-
-    const cleanManualEmail = manualEmail.trim().toLowerCase()
-
-    if (cleanManualEmail) {
-      const alreadySignedUp = roster.some(
-        (p) => p.email && p.email.trim().toLowerCase() === cleanManualEmail
-      )
-
-      if (alreadySignedUp) {
-        alert('This email is already signed up for this game.')
-        return
-      }
-    }
-
-    let assignedTeam = manualTeam
-
-    if (manualPlayerType === 'Goalie') {
-      assignedTeam = getAvailableGoalieTeam(roster)
-
-      if (!assignedTeam) {
-        alert('Both goalie spots are already filled.')
-        return
-      }
-    }
-
-    const { error } = await supabase.from('game_signups').insert([
-      {
-        game_id: game.id,
-        game_name: game.arena + ' - ' + game.game_date + ' ' + game.game_time,
-        player_name: manualName,
-        phone: manualPhone,
-        email: cleanManualEmail || 'manual-entry-' + Date.now() + '@noemail.local',
-        player_type: manualPlayerType,
-        team: assignedTeam,
-        paid: manualPlayerType === 'Goalie' ? true : false,
-      },
-    ])
-
-    if (error) {
-      alert(error.message)
-      console.log(error)
-    } else {
-      alert('Player added!')
-      setManualName('')
-      setManualPhone('')
-      setManualEmail('')
-      setManualPlayerType('Skater')
-      setManualTeam('Team 1')
-      setManualCode('')
-      loadSignups()
-    }
-  }
-
-  const renderTeamRoster = (roster, teamName, displayName, toolsUnlocked) => {
-    const teamRoster = roster.filter((p) => p.team === teamName)
-    const goalie = teamRoster.find((p) => p.player_type === 'Goalie')
-    const skaters = teamRoster.filter((p) => p.player_type !== 'Goalie')
-
-    const playerActions = (player) => {
-      if (!toolsUnlocked) return null
-
-      const isGoalie = player.player_type === 'Goalie'
-
-   
-    }
-
-    const playerLabel = (player) => {
-      const isGoalie = player.player_type === 'Goalie'
-
-      return (
-        <span>
-          {player.player_name}
- 
-          {isGoalie ? ' (Goalie)' : ''}
-
-          {!isGoalie && (
-            <span style={player.paid ? styles.paidBadge : styles.unpaidBadge}>
-              {player.paid ? 'Paid' : 'Unpaid'}
-            </span>
-          )}
-        </span>
-      )
-    }
-
-    return (
-      <div style={styles.teamBox}>
-        <h4 style={styles.teamTitle}>{displayName}</h4>
-
-        <ol style={styles.rosterList}>
-          <li style={styles.goalieLine}>
-            {goalie ? (
-              <span style={isMobile ? styles.playerRowMobile : styles.playerRow}>
-                <span>🥅 {playerLabel(goalie)}</span>
-                {playerActions(goalie)}
-              </span>
-            ) : (
-              '🥅 Open Goalie Spot'
-            )}
-          </li>
-
-          {skaters.map((player) => (
-            <li key={player.id} style={styles.playerLine}>
-              <span style={isMobile ? styles.playerRowMobile : styles.playerRow}>
-                {playerLabel(player)}
-                {playerActions(player)}
-              </span>
-            </li>
-          ))}
-        </ol>
-      </div>
-    )
-  }
-
- return (
-  <>
-    <Navbar />
-
-    <div style={styles.page}>
-
-  <div style={styles.heroWrapper}>    
-  <section style={isMobile ? styles.heroMobile : styles.hero}>
-
-    <div style={styles.heroLeft}>
-
-      <h1 style={isMobile ? styles.heroTitleMobile : styles.heroTitle}>
-        <span style={{ color: "#D62828" }}>POST.</span><br />
-        <span style={{ color: "#0B1F3A" }}>CONNECT.</span><br />
-        <span style={{ color: "#F4B400" }}>PLAY.</span>
-      </h1>
-
-      <h2 style={styles.heroSubtitle}>
-        ONE HOCKEY COMMUNITY ACROSS THE GTA
-      </h2>
-
-      <p style={styles.heroText}>
-        Built for players and organizers.
-      </p>
-
-      <div style={styles.heroButtons}>
-        <button style={styles.findGamesButton}>
-          FIND GAMES
-        </button>
-
-        <button style={styles.postGameButton}>
-          POST A GAME
-        </button>
-      </div>
-
-      <div style={styles.statsRow}>
-
-        <div style={styles.statBox}>
-          <h3 style={styles.statNumber}>48</h3>
-          <p style={styles.statLabel}>LIVE GAMES</p>
-        </div>
-
-        <div style={styles.statBox}>
-          <h3 style={styles.statNumber}>35+</h3>
-          <p style={styles.statLabel}>GTA ARENAS</p>
-        </div>
-
-        <div style={styles.statBox}>
-          <h3 style={styles.statNumber}>4200+</h3>
-          <p style={styles.statLabel}>ACTIVE PLAYERS</p>
-        </div>
-
-      </div>
-
-    </div>
-
-    </section>
-
-      {confirmation && (
-        <div style={isMobile ? styles.confirmationBoxMobile : styles.confirmationBox}>
-          <h3 style={styles.confirmationTitle}>You’re In! 🏒</h3>
-
-          <p><strong>Arena:</strong> {confirmation.arena}</p>
-          <p><strong>Date:</strong> {confirmation.date}</p>
-          <p><strong>Time:</strong> {confirmation.time}</p>
-          <p><strong>Status:</strong> {confirmation.team}</p>
-          <p><strong>Cost:</strong> {confirmation.playerType === 'Goalie' ? 'Goalies free' : confirmation.cost}</p>
-
-          {confirmation.playerType !== 'Goalie' && confirmation.playerType !== 'Waitlist' && (
-            <>
-              <p style={styles.paymentReminder}>
-                Please e-transfer the organizer to secure your spot.
+              <p style={styles.heroText}>
+                Built for players and organizers.
               </p>
 
-              {confirmation.organizerEmail ? (
-                <p style={styles.etransferLine}>
-                  <strong>E-transfer to:</strong> {confirmation.organizerEmail}
-                </p>
-              ) : (
-                <p style={styles.etransferLine}>
-                  Organizer e-transfer email was not provided. Please contact the organizer directly.
-                </p>
-              )}
+              <div style={styles.heroButtons}>
 
-              <button onClick={copyPaymentDetails} style={styles.copyButton}>
-                Copy Payment Details
-              </button>
-            </>
-          )}
+                <button
+                  style={styles.findGamesButton}
+                  onClick={() => router.push("/find-games")}
+                >
+                  FIND GAMES
+                </button>
 
-          {confirmation.playerType === 'Waitlist' && (
-            <p style={styles.waitlistNotice}>
-              You are on the waitlist. The organizer will contact you if a spot opens.
-            </p>
-          )}
+                <button
+                  style={styles.postGameButton}
+                  onClick={() => router.push("/dashboard")}
+                >
+                  POST A GAME
+                </button>
 
-          {confirmation.playerType === 'Goalie' && (
-            <p style={styles.paymentReminder}>
-              You are confirmed as goalie. No payment required.
-            </p>
-          )}
-
-          <a
-            href={createGoogleCalendarLink(confirmation)}
-            target="_blank"
-            rel="noreferrer"
-            style={styles.calendarButton}
-          >
-            Add to Calendar
-          </a>
-
-          <button
-            onClick={() => setConfirmation(null)}
-            style={styles.closeConfirmButton}
-          >
-            Close
-          </button>
-        </div>
-      )}
-          
-      <section style={isMobile ? styles.gamesSectionMobile : styles.gamesSection}>
-        <h2 style={isMobile ? styles.sectionTitleMobile : styles.sectionTitle}>Upcoming Games</h2>
-
-        {games.length === 0 ? (
-          <p style={{ textAlign: 'center' }}>No upcoming games posted yet.</p>
-        ) : (
-          games.map((game) => {
-            const roster = signups.filter((p) => p.game_id === game.id)
-            const gameWaitlist = waitlist.filter((p) => p.game_id === game.id)
-            const skaterRoster = roster.filter((p) => p.player_type !== 'Goalie')
-            const goalieRoster = roster.filter((p) => p.player_type === 'Goalie')
-            const skaterSpotsLeft = game.max_players - skaterRoster.length
-            const isSkaterFull = skaterSpotsLeft <= 0
-            const arenaDetails = getArenaDetails(game.arena)
-            const paidCount = skaterRoster.filter((p) => p.paid).length
-            const unpaidCount = skaterRoster.length - paidCount
-            const isOwner = game.organizer_id === user?.id
-          
-          const toolsUnlocked =
-              unlockedGames[game.id] || isOwner
-          
-            return (
-              <div
-  key={game.id}
-  className="premiumGameCard"
- style={{
-  ...(isMobile ? styles.gameCardMobile : styles.gameCard),
-  ...styles.premiumGameCard
-}}
->
-  <div
-  style={{
-    ...(isMobile
-      ? styles.gameHeaderMobile
-      : styles.gameHeader),
-    ...styles.gameImageHeader
-  }}
->
-  <div style={styles.gameOverlay}>
-  <div>
- <div style={styles.gameMetaTop}>
-
-  <div>
-
-    <div style={styles.liveRow}>
-      <span style={styles.liveDot}></span>
-      <span style={styles.liveText}>LIVE GAME</span>
-    </div>
-
-    <h3 style={styles.premiumArenaTitle}>
-      {game.arena}
-    </h3>
-
-    <p style={styles.gameInfo}>
-      {game.game_date} • {game.game_time}
-    </p>
-
-</div>
-</div>
-  <div style={styles.gameMetaColumn}>
-
-    <div style={styles.priceBadge}>
-      ${game.cost}
-    </div>
-
-    <div style={styles.skillBadge}>
-      {game.level}
-    </div>
-
-    {gameWaitlist.length > 0 && (
-      <div style={styles.waitlistBadgeModern}>
-        {gameWaitlist.length} WAITLIST
-      </div>
-    )}
-
-  </div>
-
-</div>
-</div>
-</div>
-
-                    <p style={styles.gameInfo}>{game.team1_name} vs {game.team2_name}</p>
-
-                    {arenaDetails && (
-                      <p style={styles.address}>
-                        {arenaDetails.address}, {arenaDetails.city}, {arenaDetails.province}
-                      </p>
-                    )}
-
-                    {arenaDetails?.google_maps_url && (
-                      <a href={arenaDetails.google_maps_url} target="_blank" rel="noreferrer" style={styles.mapLink}>
-                        Open in Google Maps
-                      </a>
-                    )}
-                 
-                  <div style={isSkaterFull ? styles.fullBadge : styles.openBadge}>
-                    {isSkaterFull ? 'SKATERS FULL' : `${skaterSpotsLeft} skater spots left`}
-                  </div>
-        
-                <div style={styles.organizerInfoBox}>
-                  <p style={styles.organizerInfoLine}>
-                    <strong>Organizer:</strong> {game.organizer_name || 'Organizer not listed'}
-                  </p>
-
-                  <p style={styles.organizerInfoLine}>
-                    <strong>Payment:</strong> E-transfer details are shown after signup.
-                  </p>
-
-                  <p style={styles.organizerNote}>
-                    Payment confirms your spot. Goalies are free.
-                  </p>
-                </div>
-
-                <div style={styles.paymentSummary}>
-                  <strong>Payment:</strong> {paidCount} skaters paid • {unpaidCount} skaters unpaid • Goalies free
-                </div>
-
-               <div style={styles.signupBox}>
-  <h4 style={styles.signupTitle}>
-    Ready to Join?
-  </h4>
-
-  <button
-    onClick={() =>
-      router.push(`/game/${game.id}`)
-    }
-    style={styles.joinButton}
-  >
-    View Game Details
-  </button>
-
-                </div>
-
-              
-
-{/* Organizer controls removed from homepage.
-    Organizer management now handled in dashboard and game management pages only. */}
               </div>
-            )
-          })
-        )}
-      </section>
-    </div>
 
-  
+              <div style={styles.statsRow}>
+
+                <div style={styles.statBox}>
+                  <h3 style={styles.statNumber}>48</h3>
+                  <p style={styles.statLabel}>LIVE GAMES</p>
+                </div>
+
+                <div style={styles.statBox}>
+                  <h3 style={styles.statNumber}>35+</h3>
+                  <p style={styles.statLabel}>GTA ARENAS</p>
+                </div>
+
+                <div style={styles.statBox}>
+                  <h3 style={styles.statNumber}>4200+</h3>
+                  <p style={styles.statLabel}>ACTIVE PLAYERS</p>
+                </div>
+
+              </div>
+
+            </div>
+
+          </section>
+
+        </div>
+
+        <section
+          style={
+            isMobile
+              ? styles.gamesSectionMobile
+              : styles.gamesSection
+          }
+        >
+
+          <h2
+            style={
+              isMobile
+                ? styles.sectionTitleMobile
+                : styles.sectionTitle
+            }
+          >
+            Upcoming Games
+          </h2>
+
+          {games.length === 0 ? (
+
+            <p style={{ textAlign: "center" }}>
+              No upcoming games posted yet.
+            </p>
+
+          ) : (
+
+            games.map((game) => (
+
+              <div
+                key={game.id}
+                style={
+                  isMobile
+                    ? styles.gameCardMobile
+                    : styles.gameCard
+                }
+              >
+
+                <h3 style={styles.arena}>
+                  {game.arena}
+                </h3>
+
+                <p style={styles.gameInfo}>
+                  {game.game_date} • {game.game_time}
+                </p>
+
+                <p style={styles.gameInfo}>
+                  {game.team1_name} vs {game.team2_name}
+                </p>
+
+                <div style={styles.signupBox}>
+
+                  <button
+                    style={styles.joinButton}
+                    onClick={() => router.push(`/game/${game.id}`)}
+                  >
+                    View Game Details
+                  </button>
+
+                </div>
+
+              </div>
+
+            ))
+
+          )}
+
+        </section>
+
       </div>
 
-  </>
-)
+    </>
+  )
 }
+
 const styles = {
 
   page: {
-    fontFamily: 'Arial, sans-serif',
+    fontFamily: "Arial, sans-serif",
     margin: 0,
-    background: '#f3f5f8',
-    color: '#07152b',
-    width: '100%',
-    overflowX: 'hidden'
+    background: "#f3f5f8",
+    color: "#07152b",
+    width: "100%",
+    overflowX: "hidden"
   },
 
-  bannerWrap: {
-    width: '100%',
-    backgroundColor: '#07152b',
-    display: 'flex',
-    justifyContent: 'center'
+  heroWrapper: {
+    background: "#ffffff",
+    paddingBottom: "20px"
   },
 
-  banner: {
-    width: '100%',
-    maxWidth: '1200px',
-    display: 'block'
+  hero: {
+    display: "flex",
+    alignItems: "center",
+    minHeight: "700px",
+    padding: "60px 80px",
+    backgroundImage: 'url("/hero-hockey-bg.png.png")',
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat"
   },
 
-  intro: { background: '#07152b', color: 'white', textAlign: 'center', padding: '34px 20px' },
-  introMobile: { background: '#07152b', color: 'white', textAlign: 'center', padding: '24px 14px' },
+  heroMobile: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    padding: "40px 22px 50px",
+    width: "100%",
+    boxSizing: "border-box",
+    overflow: "hidden",
+    backgroundImage: 'url("/hero-hockey-bg.png.png")',
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat"
+  },
 
-  mainTitle: { fontSize: '34px', margin: '0 0 10px' },
-  mainTitleMobile: { fontSize: '24px', lineHeight: '30px', margin: '0 0 10px' },
-  mainText: { fontSize: '18px', margin: 0, color: '#d7e3f5' },
+  heroLeft: {
+    maxWidth: "620px",
+    display: "flex",
+    flexDirection: "column"
+  },
 
-  confirmationBox: { background: 'white', padding: '20px', borderRadius: '12px', maxWidth: '500px', margin: '20px auto', textAlign: 'center', boxShadow: '0 8px 22px rgba(0,0,0,0.1)', border: '2px solid #e53935' },
-  confirmationBoxMobile: { background: 'white', padding: '16px', borderRadius: '12px', maxWidth: '92%', margin: '16px auto', textAlign: 'center', boxShadow: '0 8px 22px rgba(0,0,0,0.1)', border: '2px solid #e53935' },
-  confirmationTitle: { marginBottom: '10px', color: '#07152b' },
+  heroTitle: {
+    fontSize: "96px",
+    lineHeight: "0.88",
+    margin: 0,
+    fontWeight: "900"
+  },
 
-  paymentReminder: { marginTop: '10px', fontWeight: 'bold', color: '#e53935' },
-  etransferLine: { marginTop: '8px', fontWeight: 'bold', color: '#07152b', background: '#f7f9fc', padding: '10px', borderRadius: '8px' },
-  waitlistNotice: { marginTop: '10px', fontWeight: 'bold', color: '#175cd3', background: '#eef4ff', padding: '10px', borderRadius: '8px' },
+  heroTitleMobile: {
+    fontSize: "58px",
+    lineHeight: "0.92",
+    margin: 0,
+    fontWeight: "900"
+  },
 
-  copyButton: { marginTop: '10px', padding: '10px 18px', background: '#e53935', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' },
-  calendarButton: { display: 'inline-block', marginTop: '14px', marginRight: '8px', padding: '10px 18px', background: '#187a3b', color: 'white', borderRadius: '8px', textDecoration: 'none', fontWeight: 'bold' },
-  closeConfirmButton: { marginTop: '15px', padding: '10px 20px', background: '#07152b', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer' },
+  heroSubtitle: {
+    fontSize: "30px",
+    marginTop: "28px",
+    marginBottom: "10px",
+    fontWeight: "900"
+  },
 
-  organizerSection: { padding: '34px 18px 10px' },
-  organizerSectionMobile: { padding: '24px 10px 8px' },
-  organizerCard: { background: 'white', borderRadius: '16px', padding: '24px', margin: '0 auto', maxWidth: '900px', boxShadow: '0 8px 22px rgba(0,0,0,0.08)', border: '1px solid #e1e5eb' },
-  organizerCardMobile: { background: 'white', borderRadius: '14px', padding: '16px', margin: '0 auto', maxWidth: '100%', boxShadow: '0 8px 22px rgba(0,0,0,0.08)', border: '1px solid #e1e5eb' },
+  heroText: {
+    fontSize: "18px",
+    color: "#475467",
+    marginBottom: "30px"
+  },
 
-  toggleButton: { background: '#07152b', color: 'white', padding: '12px 20px', borderRadius: '8px', border: 'none', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px', width: '100%', maxWidth: '360px' },
+  heroButtons: {
+    display: "flex",
+    gap: "14px",
+    flexWrap: "wrap"
+  },
 
-  formGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px' },
+  findGamesButton: {
+    background: "#D62828",
+    color: "white",
+    border: "none",
+    padding: "16px 28px",
+    borderRadius: "10px",
+    fontWeight: "bold",
+    cursor: "pointer"
+  },
+
+  postGameButton: {
+    background: "white",
+    color: "#07152b",
+    border: "2px solid #07152b",
+    padding: "16px 28px",
+    borderRadius: "10px",
+    fontWeight: "bold",
+    cursor: "pointer"
+  },
+
+  statsRow: {
+    display: "flex",
+    gap: "14px",
+    flexWrap: "wrap",
+    marginTop: "30px"
+  },
+
+  statBox: {
+    background: "#f8fafc",
+    padding: "16px 18px",
+    borderRadius: "12px",
+    flex: "1 1 120px",
+    border: "1px solid #e5e7eb"
+  },
+
+  statNumber: {
+    margin: 0,
+    fontSize: "26px",
+    fontWeight: "900",
+    color: "#07152b"
+  },
+
+  statLabel: {
+    margin: "4px 0 0",
+    fontSize: "12px",
+    fontWeight: "bold",
+    color: "#667085"
+  },
 
   gamesSection: {
-  padding: '30px 18px 40px',
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-  gap: '24px',
-  alignItems: 'stretch'
-},
-  gamesSectionMobile: { padding: '22px 10px 32px' },
+    padding: "30px 18px 40px",
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+    gap: "24px"
+  },
 
-  sectionTitle: { textAlign: 'center', fontSize: '32px', marginBottom: '24px' },
-  sectionTitleMobile: { textAlign: 'center', fontSize: '24px', marginBottom: '18px' },
+  gamesSectionMobile: {
+    padding: "22px 10px 32px"
+  },
 
-gameCard: {
-  background: '#ffffff',
-  borderRadius: '20px',
-  padding: '28px',
-  margin: '24px auto',
-  width: '100%',
-  maxWidth: '420px',
-  boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
-  border: '1px solid #e5e7eb'
-}, 
-  gameCardMobile: { background: 'white', borderRadius: '14px', padding: '16px', margin: '18px auto', maxWidth: '100%', boxShadow: '0 8px 22px rgba(0,0,0,0.08)', border: '1px solid #e1e5eb' },
+  sectionTitle: {
+    textAlign: "center",
+    fontSize: "32px",
+    marginBottom: "24px",
+    gridColumn: "1 / -1"
+  },
 
-  gameHeader: {
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'flex-start',
-  gap: '20px',
-  borderBottom: '1px solid #e5e7eb',
-  paddingBottom: '18px',
-  marginBottom: '14px'
-},
-  gameImageHeader: {
-  position: 'relative',
-  borderRadius: '18px',
-  overflow: 'hidden',
-  padding: '22px',
-  minHeight: '240px',
-  backgroundImage:
-    "linear-gradient(rgba(0,0,0,0.18), rgba(0,0,0,0.42)), url('/rink-bg.png')",
-  backgroundSize: 'cover',
-  backgroundPosition: 'center',
-  marginBottom: '18px'
-},
+  sectionTitleMobile: {
+    textAlign: "center",
+    fontSize: "24px",
+    marginBottom: "18px"
+  },
 
-gameOverlay: {
-  display: 'flex',
-  justifyContent: 'space-between',
-  gap: '20px'
-},
-  gameHeaderMobile: { display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'stretch', borderBottom: '1px solid #e5e5e5', paddingBottom: '14px' },
+  gameCard: {
+    background: "#ffffff",
+    borderRadius: "20px",
+    padding: "28px",
+    width: "100%",
+    maxWidth: "420px",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
+    border: "1px solid #e5e7eb"
+  },
 
-  arena: { fontSize: '26px', margin: '0 0 8px' },
-  arenaMobile: { fontSize: '21px', lineHeight: '26px', margin: '0 0 8px' },
-  premiumGameTime: {
-  color: '#ffffff',
-  fontSize: '1.25rem',
-  fontWeight: '700',
-  marginTop: '8px',
-  textShadow: '0 2px 10px rgba(0,0,0,0.45)'
-},
+  gameCardMobile: {
+    background: "white",
+    borderRadius: "14px",
+    padding: "16px",
+    maxWidth: "100%",
+    boxShadow: "0 8px 22px rgba(0,0,0,0.08)",
+    border: "1px solid #e1e5eb"
+  },
 
-  gameInfo: { margin: '4px 0', color: '#42526b' },
-  gameMetaRow: { display: 'flex', gap: '8px', flexWrap: 'wrap', margin: '8px 0' },
+  arena: {
+    fontSize: "26px",
+    margin: "0 0 8px"
+  },
 
-  costBadge: { background: '#e9f7ef', color: '#187a3b', padding: '5px 10px', borderRadius: '999px', fontWeight: 'bold', fontSize: '13px' },
-  levelBadge: { background: '#eef4ff', color: '#175cd3', padding: '5px 10px', borderRadius: '999px', fontWeight: 'bold', fontSize: '13px' },
-  waitlistBadge: { background: '#fff8e6', color: '#92400e', padding: '5px 10px', borderRadius: '999px', fontWeight: 'bold', fontSize: '13px' },
-  gameMetaTop: {
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'flex-start',
-  gap: '20px',
-  marginBottom: '18px'
-},
-premiumGameCard: {
-background: 'linear-gradient(180deg, #0b1220 0%, #111827 100%)',
-borderRadius: '22px',
-padding: '18px',
-marginBottom: '28px',
-boxShadow: '0 10px 30px rgba(0,0,0,0.35)',
-border: '1px solid rgba(255,255,255,0.08)',
-overflow: 'hidden',
-position: 'relative',
-transition: 'all 0.25s ease',
-minHeight: '520px'
-},
-gameMetaColumn: {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-end',
-  gap: '10px'
-},
-priceBadge: {
-  background: '#dcfce7',
-  color: '#166534',
-  padding: '8px 14px',
-  borderRadius: '999px',
-  fontWeight: '700',
-  fontSize: '14px'
-},
+  gameInfo: {
+    margin: "4px 0",
+    color: "#42526b"
+  },
 
-skillBadge: {
-  background: '#dbeafe',
-  color: '#1d4ed8',
-  padding: '8px 14px',
-  borderRadius: '999px',
-  fontWeight: '700',
-  fontSize: '14px'
-},
+  signupBox: {
+    marginTop: "20px"
+  },
 
-waitlistBadgeModern: {
-  background: '#fef3c7',
-  color: '#92400e',
-  padding: '8px 14px',
-  borderRadius: '999px',
-  fontWeight: '700',
-  fontSize: '13px'
-},
-priceBadge: {
-  background: '#dcfce7',
-  color: '#166534',
-  padding: '8px 14px',
-  borderRadius: '999px',
-  fontWeight: '700',
-  fontSize: '14px'
-},
-
-skillBadge: {
-  background: '#dbeafe',
-  color: '#1d4ed8',
-  padding: '8px 14px',
-  borderRadius: '999px',
-  fontWeight: '700',
-  fontSize: '14px'
-},
-
-waitlistBadgeModern: {
-  background: '#fef3c7',
-  color: '#92400e',
-  padding: '8px 14px',
-  borderRadius: '999px',
-  fontWeight: '700',
-  fontSize: '13px'
-},
-  liveRow: {
-  display: 'flex',
-  alignItems: 'center',
-  gap: '6px',
-  marginBottom: '8px'
-},
-
-liveDot: {
-  width: '10px',
-  height: '10px',
-  borderRadius: '50%',
-  backgroundColor: '#22c55e',
-  boxShadow: '0 0 10px #22c55e'
-},
-
-liveText: {
-  fontSize: '12px',
-  fontWeight: '800',
-  color: '#16a34a',
-  letterSpacing: '1px',
-  textTransform: 'uppercase'
-},
- liveRow: {
-  display: 'flex',
-  alignItems: 'center',
-  gap: '8px',
-  marginBottom: '10px'
-},
-
-liveDot: {
-  width: '10px',
-  height: '10px',
-  borderRadius: '50%',
-  backgroundColor: '#22c55e',
-  boxShadow: '0 0 10px #22c55e'
-},
-
-liveText: {
-  fontSize: '11px',
-  fontWeight: '700',
-  color: '#22c55e',
-  letterSpacing: '1px'
-},
-
-gameMetaColumn: {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-end',
-  gap: '8px'
-},
-
-  address: { margin: '8px 0 4px', color: '#667085', fontSize: '14px' },
-  mapLink: { display: 'inline-block', marginTop: '4px', color: '#e53935', fontWeight: 'bold', textDecoration: 'none' },
-
-  openBadge: { background: '#e9f7ef', color: '#187a3b', padding: '8px 12px', borderRadius: '999px', fontWeight: 'bold', whiteSpace: 'nowrap', textAlign: 'center' },
-  fullBadge: { background: '#fdecea', color: '#b42318', padding: '8px 12px', borderRadius: '999px', fontWeight: 'bold', whiteSpace: 'nowrap', textAlign: 'center' },
-
-  organizerInfoBox: { background: '#f7f9fc', padding: '12px', borderRadius: '10px', marginTop: '16px', border: '1px solid #e1e5eb' },
-  organizerInfoLine: { margin: '4px 0', color: '#07152b', fontSize: '14px' },
-  organizerNote: { margin: '8px 0 0', color: '#e53935', fontWeight: 'bold', fontSize: '14px' },
-
-  paymentSummary: { background: '#eef4ff', color: '#175cd3', padding: '10px 12px', borderRadius: '10px', marginTop: '16px', fontSize: '14px' },
-
-  signupBox: { background: '#f7f9fc', padding: '18px', borderRadius: '12px', marginTop: '20px' },
-  manualBox: { background: '#fff8e6', padding: '18px', borderRadius: '12px', marginTop: '20px', border: '1px solid #ffe1a3' },
-  editBox: { background: '#eef4ff', padding: '18px', borderRadius: '12px', marginTop: '20px', border: '1px solid #b7ccff' },
-  waitlistBox: { background: '#fff8e6', padding: '18px', borderRadius: '12px', marginTop: '20px', border: '1px solid #ffe1a3' },
-
-  signupTitle: { marginTop: 0, marginBottom: '12px' },
-
-  input: { width: '100%', padding: '12px', marginBottom: '10px', border: '1px solid #ccd3dd', borderRadius: '8px', boxSizing: 'border-box', fontSize: '16px' },
-
-  goalieNote: { background: '#eef4ff', color: '#175cd3', padding: '10px', borderRadius: '8px', fontSize: '14px', marginTop: 0 },
-
-  postButton: { width: '100%', background: '#07152b', color: 'white', padding: '13px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px', marginTop: '8px' },
-  joinButton: { width: '100%', background: '#e53935', color: 'white', padding: '13px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
-  waitlistButton: { width: '100%', background: '#f59e0b', color: '#07152b', padding: '13px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
-  manualButton: { width: '100%', background: '#f59e0b', color: '#07152b', padding: '13px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' },
-  promoteButton: { width: '100%', background: '#187a3b', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '15px', marginTop: '12px' },
-  editButton: { marginTop: '20px', width: '100%', background: '#175cd3', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' },
-  saveButton: { width: '100%', background: '#187a3b', color: 'white', padding: '13px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px', marginTop: '8px' },
-  cancelButton: { width: '100%', background: '#667085', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '15px', marginTop: '10px' },
-  disabledButton: { width: '100%', background: '#999', color: 'white', padding: '13px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'not-allowed', fontSize: '16px' },
-  organizerToolsButton: { marginTop: '20px', width: '100%', background: '#07152b', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' },
-  closeButton: { marginTop: '20px', width: '100%', background: '#444', color: 'white', padding: '12px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' },
-
-  rosterHeader: { marginTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
-  rosterHeaderMobile: { marginTop: '24px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '4px' },
-
-  rosterTitle: { fontSize: '22px', margin: 0 },
-  rosterCount: { margin: 0, color: '#667085' },
-
-  rosterGrid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '14px' },
-  rosterGridMobile: { display: 'grid', gridTemplateColumns: '1fr', gap: '14px', marginTop: '14px' },
-
-  teamBox: { border: '1px solid #d8dee8', borderRadius: '12px', padding: '16px', background: '#fbfcfe' },
-  teamTitle: { textAlign: 'center', margin: '0 0 12px', fontSize: '20px', color: '#07152b', fontWeight: 'bold' },
-
-  rosterList: { paddingLeft: '24px', marginBottom: 0 },
-  goalieLine: { fontWeight: 'bold', marginBottom: '8px', color: '#07152b' },
-  playerLine: { marginBottom: '7px' },
-
-  playerRow: { display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: 'center' },
-  playerRowMobile: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '8px' },
-
-  buttonGroup: { display: 'flex', gap: '6px', flexWrap: 'wrap' },
-  buttonGroupMobile: { display: 'flex', gap: '6px', flexWrap: 'wrap', width: '100%' },
-
-  moveButton: { background: '#175cd3', color: 'white', border: 'none', borderRadius: '5px', padding: '5px 9px', fontSize: '12px', cursor: 'pointer' },
-  removeButton: { background: '#b42318', color: 'white', border: 'none', borderRadius: '5px', padding: '5px 9px', fontSize: '12px', cursor: 'pointer' },
-  paidButton: { background: '#187a3b', color: 'white', border: 'none', borderRadius: '5px', padding: '5px 9px', fontSize: '12px', cursor: 'pointer' },
-  unpaidButton: { background: '#667085', color: 'white', border: 'none', borderRadius: '5px', padding: '5px 9px', fontSize: '12px', cursor: 'pointer' },
-
-  paidBadge: { marginLeft: '8px', background: '#e9f7ef', color: '#187a3b', padding: '2px 6px', borderRadius: '999px', fontSize: '11px', fontWeight: 'bold' },
-  unpaidBadge: { marginLeft: '8px', background: '#fdecea', color: '#b42318', padding: '2px 6px', borderRadius: '999px', fontSize: '11px', fontWeight: 'bold' },
-
-  mobileFriendlyList: { paddingLeft: '20px', wordBreak: 'break-word' },
-  heroWrapper: {
-  background: '#ffffff',
-  paddingBottom: '20px'
-},
-
-
-
-hero: {
-  position: 'relative',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  minHeight: '720px',
-  padding: '60px 80px',
-  margin: '0 auto',
-  backgroundImage: 'url("/hero-hockey-bg.png.png")',
-  backgroundSize: 'cover',
-  backgroundPosition: 'center right',
-  backgroundRepeat: 'no-repeat',
-  borderBottom: '1px solid #e5e7eb',
-  overflow: 'hidden'
-},
-
-heroMobile: {
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'flex-start',
-  padding: '40px 22px 50px',
-  minHeight: 'auto',
-  width: '100%',
-  boxSizing: 'border-box',
-  overflow: 'hidden',
-  backgroundImage: 'url("/hero-hockey-bg.png.png")',
-  backgroundSize: 'cover',
-  backgroundPosition: 'center',
-  backgroundRepeat: 'no-repeat'
-},
-heroLeft: {
-  maxWidth: '620px',
-  zIndex: 2,
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center'
-},
-
-heroTitle: {
-  fontSize: '96px',
-  lineHeight: '0.88',
-  margin: 0,
-  fontWeight: '900',
-  letterSpacing: '-3px',
-  textTransform: 'uppercase'
-},
-
-heroTitleMobile: {
-  fontSize: '58px',
-  lineHeight: '0.92',
-  margin: 0,
-  fontWeight: '900',
-  letterSpacing: '-2px',
-  textTransform: 'uppercase'
-},
-
-heroSubtitle: {
-  fontSize: '30px',
-  color: '#07152b',
-  marginTop: '28px',
-  marginBottom: '10px',
-  fontWeight: '900'
-},
-
-heroText: {
-  fontSize: '18px',
-  color: '#475467',
-  marginBottom: '30px'
-},
-
-heroButtons: {
-  display: 'flex',
-  gap: '14px',
-  flexWrap: 'wrap',
-  marginBottom: '34px'
-},
-
-findGamesButton: {
-  background: '#D62828',
-  color: 'white',
-  border: 'none',
-  padding: '16px 28px',
-  borderRadius: '10px',
-  fontWeight: 'bold',
-  fontSize: '16px',
-  cursor: 'pointer'
-},
-
-postGameButton: {
-  background: 'white',
-  color: '#07152b',
-  border: '2px solid #07152b',
-  padding: '16px 28px',
-  borderRadius: '10px',
-  fontWeight: 'bold',
-  fontSize: '16px',
-  cursor: 'pointer'
-},
-
-statsRow: {
-  display: 'flex',
-  gap: '14px',
-  flexWrap: 'wrap',
-  width: '100%'
-},
-
-statBox: {
-  background: '#f8fafc',
-  padding: '16px 18px',
-  borderRadius: '12px',
-  flex: '1 1 120px',
-  border: '1px solid #e5e7eb'
-},
-
-statNumber: {
-  margin: 0,
-  fontSize: '26px',
-  fontWeight: '900',
-  color: '#07152b'
-},
-
-statLabel: {
-  margin: '4px 0 0',
-  fontSize: '12px',
-  fontWeight: 'bold',
-  color: '#667085'
-},
-
-heroRight: {
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center'
-},
-
-heroImage: {
-  width: '100%',
-  maxWidth: '700px',
-  borderRadius: '22px',
-  objectFit: 'cover'
-},
+  joinButton: {
+    width: "100%",
+    background: "#e53935",
+    color: "white",
+    padding: "13px",
+    border: "none",
+    borderRadius: "8px",
+    fontWeight: "bold",
+    cursor: "pointer",
+    fontSize: "16px"
+  }
 }
-  
