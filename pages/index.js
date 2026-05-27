@@ -47,9 +47,7 @@ async function handleJoinGame(gameId) {
     ])
 
   if (error) {
-
-    alert("Signup failed")
-
+    
     alert(error.message)
     console.log(error)
 
