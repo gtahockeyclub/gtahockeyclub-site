@@ -24,7 +24,39 @@ export default function Home() {
     loadGames()
 
   }, [])
+async function handleJoinGame(gameId) {
 
+  const {
+    data: { user }
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+
+    alert("Please login first")
+
+    return
+  }
+
+  const { error } = await supabase
+    .from("game_signups")
+    .insert([
+      {
+        game_id: gameId,
+        user_id: user.id
+      }
+    ])
+
+  if (error) {
+
+    alert("Signup failed")
+
+    console.log(error)
+
+    return
+  }
+
+  alert("Successfully joined game")
+}
   return (
     <>
       <Navbar />
@@ -148,11 +180,11 @@ export default function Home() {
               </p>
 
               <button
-                style={styles.joinButton}
-                onClick={() => alert("Live signup system reconnecting next")}
-              >
-                Join Game
-              </button>
+  style={styles.joinButton}
+  onClick={() => handleJoinGame(game.id)}
+>
+  Join Game
+</button>
 
             </div>
 
