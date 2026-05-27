@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-
+import Navbar from "../components/Navbar"
 export default function Home() {
 
   const [loaded, setLoaded] = useState(false)
@@ -9,6 +9,9 @@ export default function Home() {
   }, [])
 
   return (
+  <>
+    <Navbar />
+
     <div style={{
       padding: "40px",
       fontFamily: "Arial"
@@ -22,6 +25,6 @@ export default function Home() {
       <p>
         Loaded: {loaded ? "YES" : "NO"}
       </p>
-    </div>
-  )
-}
+     </div>
+  </>
+)
