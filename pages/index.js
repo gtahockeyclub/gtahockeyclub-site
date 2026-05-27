@@ -1357,75 +1357,7 @@ gameMetaColumn: {
   paddingBottom: '20px'
 },
 
-topNav: {
-  position: 'sticky',
-  top: 0,
-  zIndex: 1000,
-  background: 'white',
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  padding: '18px 40px',
-  borderBottom: '1px solid #e5e7eb',
-  boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
-},
 
-logoSection: {
-  display: 'flex',
-  alignItems: 'center',
-  gap: '14px'
-},
-
-logo: {
-  width: '70px',
-  height: '70px',
-  objectFit: 'contain'
-},
-
-logoText: {
-  margin: 0,
-  fontSize: '28px',
-  fontWeight: '900',
-  letterSpacing: '1px'
-},
-
-logoSubtext: {
-  margin: 0,
-  color: '#667085',
-  fontSize: '12px',
-  fontWeight: 'bold',
-  letterSpacing: '2px'
-},
-
-navLinks: {
-  display: 'flex',
-  gap: '28px',
-  alignItems: 'center'
-},
-
-navLink: {
-  color: '#07152b',
-  textDecoration: 'none',
-  fontWeight: 'bold',
-  cursor: 'pointer',
-  fontSize: '15px'
-},
-
-navButtons: {
-  display: 'flex',
-  gap: '10px',
-  alignItems: 'center'
-},
-
-loginButton: {
-  background: 'white',
-  border: '2px solid #07152b',
-  color: '#07152b',
-  padding: '10px 18px',
-  borderRadius: '8px',
-  fontWeight: 'bold',
-  cursor: 'pointer'
-},
 
 hero: {
   position: 'relative',
