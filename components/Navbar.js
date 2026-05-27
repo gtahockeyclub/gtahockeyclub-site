@@ -1,13 +1,18 @@
-import Link from "next/link"
-import { useEffect, useState } from "react"
-import { supabase } from "../lib/supabase"
-
 export default function Navbar() {
 
   const [user, setUser] = useState(null)
   const [profile, setProfile] = useState(null)
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
+
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768)
+    }
+
+    checkMobile()
+
+    window.addEventListener("resize", checkMobile)
 
     async function loadUser() {
 
@@ -31,12 +36,11 @@ export default function Navbar() {
 
     loadUser()
 
-  }, [])
+    return () => {
+      window.removeEventListener("resize", checkMobile)
+    }
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut()
-    window.location.href = "/"
-  }
+  }, [])
 
   return (
 <nav
