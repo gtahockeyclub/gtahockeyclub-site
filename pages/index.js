@@ -51,7 +51,7 @@ const { error } = await supabase
     {
       game_id: gameId,
       game_name: `${game.arena} - ${game.game_date} ${game.game_time}`,
-      player_name: profile?.full_name || user.email,
+      player_name: profile?.player_name || user.email,
       phone: profile?.phone || "0000000000",
       email: user.email,
       player_type: "Skater",
