@@ -1,13 +1,29 @@
 import { useEffect, useState } from "react"
 import Navbar from "../components/Navbar"
+import { supabase } from "../lib/supabase"
 
 export default function Home() {
 
-  const [loaded, setLoaded] = useState(false)
+  const [games, setGames] = useState([])
 
-  useEffect(() => {
-    setLoaded(true)
-  }, [])
+ useEffect(() => {
+
+  async function loadGames() {
+
+    const { data, error } = await supabase
+      .from("games")
+      .select("*")
+      .eq("is_active", true)
+      .order("game_date", { ascending: true })
+
+    if (!error && data) {
+      setGames(data)
+    }
+  }
+
+  loadGames()
+
+}, [])
 
   return (
     <>
