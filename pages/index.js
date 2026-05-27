@@ -1427,7 +1427,14 @@ hero: {
 heroMobile: {
   display: 'flex',
   flexDirection: 'column',
-  padding: '30px 20px'
+  justifyContent: 'center',
+  alignItems: 'flex-start',
+  padding: '40px 22px 50px',
+  minHeight: 'auto',
+  backgroundImage: 'url("/hero-hockey-bg.png.png")',
+  backgroundSize: 'cover',
+  backgroundPosition: 'center',
+  backgroundRepeat: 'no-repeat'
 },
 
 heroLeft: {
@@ -1448,10 +1455,12 @@ heroTitle: {
 },
 
 heroTitleMobile: {
-  fontSize: '54px',
-  lineHeight: '0.95',
+  fontSize: '58px',
+  lineHeight: '0.92',
   margin: 0,
-  fontWeight: '900'
+  fontWeight: '900',
+  letterSpacing: '-2px',
+  textTransform: 'uppercase'
 },
 
 heroSubtitle: {
@@ -1499,15 +1508,16 @@ postGameButton: {
 
 statsRow: {
   display: 'flex',
-  gap: '18px',
-  flexWrap: 'wrap'
+  gap: '14px',
+  flexWrap: 'wrap',
+  width: '100%'
 },
 
 statBox: {
   background: '#f8fafc',
-  padding: '16px 20px',
+  padding: '16px 18px',
   borderRadius: '12px',
-  minWidth: '120px',
+  flex: '1 1 120px',
   border: '1px solid #e5e7eb'
 },
 
