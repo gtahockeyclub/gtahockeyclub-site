@@ -38,13 +38,16 @@ async function handleJoinGame(gameId) {
   }
 
   const { error } = await supabase
-    .from("game_signups")
-    .insert([
-      {
-        game_id: gameId,
-        user_id: user.id
-      }
-    ])
+  .from("game_signups")
+  .insert([
+    {
+      game_id: gameId,
+      player_name: user.email,
+      email: user.email,
+      player_type: "Skater",
+      paid: false
+    }
+  ])
 
   if (error) {
     
