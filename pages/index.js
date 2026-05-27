@@ -43,7 +43,6 @@ const { error } = await supabase
   .from("game_signups")
   .insert([
     {
-   {
   game_id: gameId,
   game_name: `${game.arena} - ${game.game_date} ${game.game_time}`,
   player_name: user.email,
