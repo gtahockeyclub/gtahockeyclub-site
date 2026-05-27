@@ -39,21 +39,26 @@ async function handleJoinGame(gameId) {
 
   const game = games.find(g => g.id === gameId)
 
+const { data: profile } = await supabase
+  .from("profiles")
+  .select("*")
+  .eq("id", user.id)
+  .single()
+
 const { error } = await supabase
   .from("game_signups")
   .insert([
     {
-  game_id: gameId,
-  game_name: `${game.arena} - ${game.game_date} ${game.game_time}`,
-  player_name: user.email,
-  phone: "0000000000",
-  email: user.email,
-  player_type: "Skater",
-  paid: false,
-  team: "Team 1"
-}
+      game_id: gameId,
+      game_name: `${game.arena} - ${game.game_date} ${game.game_time}`,
+      player_name: profile?.full_name || user.email,
+      phone: profile?.phone || "0000000000",
+      email: user.email,
+      player_type: "Skater",
+      paid: false,
+      team: "Team 1"
+    }
   ])
-
   if (error) {
     
     alert(error.message)
