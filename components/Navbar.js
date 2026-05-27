@@ -1,120 +1,36 @@
+import Link from "next/link"
+
 export default function Navbar() {
 
-  const [user, setUser] = useState(null)
-  const [profile, setProfile] = useState(null)
-  const [isMobile, setIsMobile] = useState(false)
-
-  useEffect(() => {
-
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768)
-    }
-
-    checkMobile()
-
-    window.addEventListener("resize", checkMobile)
-
-    async function loadUser() {
-
-      const {
-        data: { user }
-      } = await supabase.auth.getUser()
-
-      setUser(user)
-
-      if (user) {
-
-        const { data: profileData } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", user.id)
-          .single()
-
-        setProfile(profileData)
-      }
-    }
-
-    loadUser()
-
-    return () => {
-      window.removeEventListener("resize", checkMobile)
-    }
-
-  }, [])
-
   return (
-<nav
-  style={{
-    width: "100%",
-    position: "sticky",
-    top: 0,
-    zIndex: 1000,
-    background: "white",
-    padding: isMobile ? "12px 14px" : "18px 40px",
-    display: "flex",
-    flexDirection: isMobile ? "column" : "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    gap: isMobile ? "14px" : "0",
-    boxSizing: "border-box",
-    borderBottom: "1px solid #e5e7eb",
-    boxShadow: "0 2px 8px rgba(0,0,0,0.04)"
-  }}
->
+
+    <nav
+      style={{
+        width: "100%",
+        background: "white",
+        padding: "18px 40px",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        boxSizing: "border-box",
+        borderBottom: "1px solid #e5e7eb"
+      }}
+    >
 
       <div
         style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "14px"
+          fontSize: "28px",
+          fontWeight: "900",
+          color: "#07152b"
         }}
       >
-
-        <img
-          src="/gtahockey-logo-clean.png.png"
-          alt="GTA Hockey Club"
-          style={{
-            width: "70px",
-            height: "70px",
-            objectFit: "contain"
-          }}
-        />
-
-        <div>
-
-          <h2
-            style={{
-              margin: 0,
-              fontSize: "28px",
-              fontWeight: "900",
-              letterSpacing: "1px"
-            }}
-          >
-            <span style={{ color: "#0B1F3A" }}>GTA </span>
-            <span style={{ color: "#D62828" }}>HOCKEY </span>
-            <span style={{ color: "#0B1F3A" }}>CLUB</span>
-          </h2>
-
-          <p
-            style={{
-              margin: 0,
-              color: "#667085",
-              fontSize: "12px",
-              fontWeight: "bold",
-              letterSpacing: "2px"
-            }}
-          >
-            POST. CONNECT. PLAY.
-          </p>
-
-        </div>
-
+        GTA Hockey Club
       </div>
 
       <div
         style={{
           display: "flex",
-          gap: "28px",
+          gap: "24px",
           alignItems: "center"
         }}
       >
@@ -131,71 +47,6 @@ export default function Navbar() {
           About
         </Link>
 
-        {profile?.role === "organizer" && (
-          <Link href="/dashboard" style={styles.link}>
-            Dashboard
-          </Link>
-        )}
-
-      </div>
-
-      <div
-        style={{
-          display: "flex",
-          gap: "10px",
-          alignItems: "center"
-        }}
-      >
-
-        {!user && (
-          <Link href="/login">
-            <button
-              style={{
-                background: "white",
-                border: "2px solid #07152b",
-                color: "#07152b",
-                padding: "10px 18px",
-                borderRadius: "8px",
-                fontWeight: "bold",
-                cursor: "pointer"
-              }}
-            >
-              Login
-            </button>
-          </Link>
-        )}
-
-        {user && (
-          <button
-            onClick={handleLogout}
-            style={{
-              background: "#dc2626",
-              color: "white",
-              border: "none",
-              padding: "10px 18px",
-              borderRadius: "8px",
-              fontWeight: "bold",
-              cursor: "pointer"
-            }}
-          >
-            Logout
-          </button>
-        )}
-
-        <button
-          style={{
-            background: "#ef4444",
-            color: "white",
-            border: "none",
-            padding: "12px 22px",
-            borderRadius: "10px",
-            fontWeight: "bold",
-            cursor: "pointer"
-          }}
-        >
-          Join Community
-        </button>
-
       </div>
 
     </nav>
@@ -207,8 +58,7 @@ const styles = {
   link: {
     color: "#07152b",
     textDecoration: "none",
-    fontWeight: "bold",
-    fontSize: "15px"
+    fontWeight: "bold"
   }
 
 }
