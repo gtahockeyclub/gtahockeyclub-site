@@ -39,20 +39,24 @@ export default function Navbar() {
   }
 
   return (
-    <nav
-      style={{
-        position: "sticky",
-        top: 0,
-        zIndex: 1000,
-        background: "white",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "18px 40px",
-        borderBottom: "1px solid #e5e7eb",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.04)"
-      }}
-    >
+<nav
+  style={{
+    width: "100%",
+    position: "sticky",
+    top: 0,
+    zIndex: 1000,
+    background: "white",
+    padding: isMobile ? "12px 14px" : "18px 40px",
+    display: "flex",
+    flexDirection: isMobile ? "column" : "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: isMobile ? "14px" : "0",
+    boxSizing: "border-box",
+    borderBottom: "1px solid #e5e7eb",
+    boxShadow: "0 2px 8px rgba(0,0,0,0.04)"
+  }}
+>
 
       <div
         style={{
