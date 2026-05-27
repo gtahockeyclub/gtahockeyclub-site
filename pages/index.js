@@ -126,9 +126,12 @@ export default function Home() {
               12 / 16 Skaters
             </p>
 
-            <button style={styles.joinButton}>
-              Join Game
-            </button>
+            <button
+  style={styles.joinButton}
+  onClick={() => alert("Game signup system coming next")}
+>
+  Join Game
+</button>
 
           </div>
 
