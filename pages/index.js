@@ -22,9 +22,11 @@ export default function Home() {
         Homepage working.
       </p>
 
-      <p>
+            <p>
         Loaded: {loaded ? "YES" : "NO"}
       </p>
-     </div>
+
+    </div>
   </>
 )
+}
